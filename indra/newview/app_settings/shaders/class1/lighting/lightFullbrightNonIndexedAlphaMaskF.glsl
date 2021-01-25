@@ -37,8 +37,8 @@ vec3 fullbrightScaleSoftClip(vec3 light);
 
 uniform sampler2D diffuseMap;
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+in vec4 vertex_color;
+in vec2 vary_texcoord0;
 
 void fullbright_lighting()
 {

@@ -40,7 +40,7 @@ uniform vec3 lumWeights;
 uniform vec3 warmthWeights;
 uniform float warmthAmount;
 
-VARYING vec2 vary_texcoord0;
+in vec2 vary_texcoord0;
 
 void main()
 {

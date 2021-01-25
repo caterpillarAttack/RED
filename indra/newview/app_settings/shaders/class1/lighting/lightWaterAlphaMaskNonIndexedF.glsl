@@ -36,8 +36,8 @@ uniform sampler2D diffuseMap;
 vec3 atmosLighting(vec3 light);
 vec4 applyWaterFog(vec4 color);
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+in vec4 vertex_color;
+in vec2 vary_texcoord0;
 
 void default_lighting_water()
 {

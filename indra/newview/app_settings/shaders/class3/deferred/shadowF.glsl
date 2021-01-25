@@ -34,11 +34,11 @@ out vec4 frag_color;
 uniform sampler2D diffuseMap;
 
 #if !defined(DEPTH_CLAMP)
-VARYING float pos_zd2;
+in float pos_zd2;
 #endif
 
-VARYING vec4 pos;
-VARYING float target_pos_x;
+in vec4 pos;
+in float target_pos_x;
 
 vec4 computeMoments(float depth, float a);
 

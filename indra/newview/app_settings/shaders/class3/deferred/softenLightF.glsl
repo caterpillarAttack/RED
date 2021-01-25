@@ -54,7 +54,7 @@ uniform mat3 env_mat;
 uniform vec4 shadow_clip;
 
 uniform vec3 sun_dir;
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 uniform mat4 inv_proj;
 uniform mat4 inv_modelview;

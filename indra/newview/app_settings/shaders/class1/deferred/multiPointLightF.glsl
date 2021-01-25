@@ -50,7 +50,7 @@ uniform vec2  screen_res;
 uniform float far_z;
 uniform mat4  inv_proj;
 
-VARYING vec4 vary_fragcoord;
+in vec4 vary_fragcoord;
 
 vec4 getPosition(vec2 pos_screen);
 vec3 getNorm(vec2 pos_screen);

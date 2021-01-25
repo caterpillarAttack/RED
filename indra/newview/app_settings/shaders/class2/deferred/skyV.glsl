@@ -25,13 +25,13 @@
 
 uniform mat4 modelview_projection_matrix;
 
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 
 // SKY ////////////////////////////////////////////////////////////////////////
 // The vertex shader for creating the atmospheric sky
 ///////////////////////////////////////////////////////////////////////////////
 
-VARYING vec3 pos;
+out vec3 pos;
 
 void main()
 {

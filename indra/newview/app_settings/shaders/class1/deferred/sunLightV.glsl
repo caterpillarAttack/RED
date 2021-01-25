@@ -25,9 +25,9 @@
 
 uniform mat4 modelview_projection_matrix;
  
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 
-VARYING vec2 vary_fragcoord;
+out vec2 vary_fragcoord;
 
 uniform vec2 screen_res;
 

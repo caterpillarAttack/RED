@@ -39,8 +39,8 @@ vec3 fullbrightScaleSoftClip(vec3 light);
 uniform sampler2D diffuseMap;
 uniform sampler2D altDiffuseMap;
 uniform float blend_factor; // interp factor between sun A/B
-VARYING vec2 vary_texcoord0;
-VARYING float sun_fade;
+in vec2 vary_texcoord0;
+in float sun_fade;
 
 void main() 
 {

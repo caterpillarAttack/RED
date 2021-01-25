@@ -38,7 +38,7 @@ uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
 uniform sampler2D specularMap;
 
-VARYING vec2 vary_texcoord0;
+in vec2 vary_texcoord0;
 
 vec3 linear_to_srgb(vec3 cl);// <FS:Beq/> Colour space and shader fixes for BUG-228586 (Rye)
 void main() 

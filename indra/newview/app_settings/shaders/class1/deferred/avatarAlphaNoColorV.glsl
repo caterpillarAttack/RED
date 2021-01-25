@@ -25,9 +25,9 @@
 
 uniform mat4 projection_matrix;
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec3 normal;
-ATTRIBUTE vec2 texcoord0;
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 texcoord0;
 
 mat4 getSkinnedTransform();
 void calcAtmospherics(vec3 inPositionEye);
@@ -37,13 +37,13 @@ float calcDirectionalLight(vec3 n, vec3 l);
 vec3 atmosAmbient();
 vec3 atmosAffectDirectionalLight(float lightIntensity);
 
-VARYING vec3 vary_position;
-VARYING vec3 vary_ambient;
-VARYING vec3 vary_directional;
-VARYING vec3 vary_fragcoord;
-VARYING vec3 vary_pointlight_col;
-VARYING vec2 vary_texcoord0;
-VARYING vec3 vary_norm;
+out vec3 vary_position;
+out vec3 vary_ambient;
+out vec3 vary_directional;
+out vec3 vary_fragcoord;
+out vec3 vary_pointlight_col;
+out vec2 vary_texcoord0;
+out vec3 vary_norm;
 
 
 uniform float near_clip;

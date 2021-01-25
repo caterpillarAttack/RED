@@ -25,12 +25,12 @@
  
 uniform mat4 modelview_projection_matrix;
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec2 texcoord0;
-ATTRIBUTE vec2 texcoord1;
+layout (location = 0) in vec3 position;
+layout (location = 2) in vec2 texcoord0;
+layout (location = 3) in vec2 texcoord1;
 
-VARYING vec2 vary_texcoord0;
-VARYING vec2 vary_texcoord1;
+out vec2 vary_texcoord0;
+out vec2 vary_texcoord1;
 
 void main()
 {

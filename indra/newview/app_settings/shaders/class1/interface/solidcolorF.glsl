@@ -33,7 +33,7 @@ uniform sampler2D tex0;
 
 uniform vec4 color;
 
-VARYING vec2 vary_texcoord0;
+in vec2 vary_texcoord0;
 
 void main() 
 {

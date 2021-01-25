@@ -22,8 +22,8 @@
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
-ATTRIBUTE vec3 position;
-VARYING vec4 vary_pos;
+layout (location = 0) in vec3 position;
+out vec4 vary_pos;
 
 void main()
 {

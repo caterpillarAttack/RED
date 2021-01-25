@@ -32,7 +32,7 @@ out vec4 frag_color;
 uniform sampler2D tex0;
 uniform float tolerance;
 
-VARYING vec2 vary_texcoord0;
+in vec2 vary_texcoord0;
 
 void main() 
 {

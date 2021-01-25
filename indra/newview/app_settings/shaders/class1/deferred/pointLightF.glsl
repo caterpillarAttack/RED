@@ -50,8 +50,8 @@ uniform vec3 color;
 uniform float falloff;
 uniform float size;
 
-VARYING vec4 vary_fragcoord;
-VARYING vec3 trans_center;
+in vec4 vary_fragcoord;
+in vec3 trans_center;
 
 uniform vec2 screen_res;
 

@@ -25,11 +25,11 @@
 
 uniform mat4 modelview_projection_matrix;
  
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec4 diffuse_color;
+layout (location = 0) in vec3 position;
+layout(location = 6) in vec4 diffuse_color;
 
-VARYING vec2 vary_fragcoord;
-VARYING vec4 vertex_color;
+out vec2 vary_fragcoord;
+out vec4 vertex_color;
 
 uniform vec2 screen_res;
 

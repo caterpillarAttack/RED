@@ -29,8 +29,8 @@ out vec4 frag_color;
 #define frag_color gl_FragColor
 #endif
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+in vec4 vertex_color;
+in vec2 vary_texcoord0;
 
 vec3 atmosLighting(vec3 light);
 vec4 applyWaterFog(vec4 color);

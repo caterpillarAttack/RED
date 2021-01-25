@@ -44,7 +44,7 @@ uniform float res_scale;
 uniform float dof_width;
 uniform float dof_height;
 
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 vec4 dofSample(sampler2DRect tex, vec2 tc)
 {

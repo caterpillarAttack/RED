@@ -31,12 +31,12 @@ out vec4 frag_data[3];
 #define frag_data gl_FragData
 #endif
 
-VARYING vec3 vary_normal;
+in vec3 vary_normal;
 
 uniform float minimum_alpha;
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+in vec4 vertex_color;
+in vec2 vary_texcoord0;
 
 vec2 encode_normal(vec3 n);
 

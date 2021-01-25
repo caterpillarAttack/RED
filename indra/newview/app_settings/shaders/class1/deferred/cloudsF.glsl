@@ -34,9 +34,9 @@ out vec4 frag_data[3];
 // The fragment shader for the sky
 /////////////////////////////////////////////////////////////////////////
 
-VARYING vec4 vary_CloudColorSun;
-VARYING vec4 vary_CloudColorAmbient;
-VARYING float vary_CloudDensity;
+in vec4 vary_CloudColorSun;
+in vec4 vary_CloudColorAmbient;
+in float vary_CloudDensity;
 
 uniform sampler2D cloud_noise_texture;
 uniform sampler2D cloud_noise_texture_next;
@@ -46,11 +46,11 @@ uniform vec4 cloud_pos_density2;
 uniform float cloud_scale;
 uniform float cloud_variance;
 
-VARYING vec2 vary_texcoord0;
-VARYING vec2 vary_texcoord1;
-VARYING vec2 vary_texcoord2;
-VARYING vec2 vary_texcoord3;
-VARYING float altitude_blend_factor;
+in vec2 vary_texcoord0;
+in vec2 vary_texcoord1;
+in vec2 vary_texcoord2;
+in vec2 vary_texcoord3;
+in float altitude_blend_factor;
 
 /// Soft clips the light with a gamma correction
 vec3 scaleSoftClip(vec3 light);

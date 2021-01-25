@@ -37,8 +37,8 @@ uniform sampler2D glowMap;
 uniform sampler2DRect screenMap;
 uniform vec3 exo_vignette;
 
-VARYING vec2 vary_texcoord0;
-VARYING vec2 vary_texcoord1;
+in vec2 vary_texcoord0;
+in vec2 vary_texcoord1;
 
 float saturate(float val)
 {

@@ -33,9 +33,9 @@ out vec4 frag_data[3];
 
 uniform sampler2D diffuseMap;
 
-VARYING vec4 vertex_color;
-VARYING vec3 vary_normal;
-VARYING vec2 vary_texcoord0;
+in vec4 vertex_color;
+in vec3 vary_normal;
+in vec2 vary_texcoord0;
 
 uniform float minimum_alpha;
 

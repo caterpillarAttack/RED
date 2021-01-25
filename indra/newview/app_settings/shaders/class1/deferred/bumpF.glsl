@@ -35,12 +35,12 @@ uniform float minimum_alpha;
 uniform sampler2D diffuseMap;
 uniform sampler2D bumpMap;
 
-VARYING vec3 vary_mat0;
-VARYING vec3 vary_mat1;
-VARYING vec3 vary_mat2;
+in vec3 vary_mat0;
+in vec3 vary_mat1;
+in vec3 vary_mat2;
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+in vec4 vertex_color;
+in vec2 vary_texcoord0;
 
 vec2 encode_normal(vec3 n);
 

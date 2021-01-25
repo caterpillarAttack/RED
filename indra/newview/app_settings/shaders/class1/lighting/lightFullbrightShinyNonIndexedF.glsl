@@ -29,9 +29,9 @@ out vec4 frag_color;
 #define frag_color gl_FragColor
 #endif
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
-VARYING vec3 vary_texcoord1;
+in vec4 vertex_color;
+in vec2 vary_texcoord0;
+in vec3 vary_texcoord1;
 
 uniform samplerCube environmentMap;
 uniform sampler2D diffuseMap;

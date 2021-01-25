@@ -31,7 +31,7 @@ out vec4 frag_color;
 
 uniform sampler2D diffuseMap;
 
-VARYING vec2 tc0;
+in vec2 tc0;
 
 void main() 
 {

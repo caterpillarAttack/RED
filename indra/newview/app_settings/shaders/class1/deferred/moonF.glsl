@@ -40,7 +40,7 @@ uniform vec3 moon_dir;
 uniform float moon_brightness;
 uniform sampler2D diffuseMap;
 
-VARYING vec2 vary_texcoord0;
+in vec2 vary_texcoord0;
 
 vec3 srgb_to_linear(vec3 c);
 

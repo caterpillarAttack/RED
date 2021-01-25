@@ -25,14 +25,14 @@
 
 uniform mat4 modelview_projection_matrix;
 
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 
 // SKY ////////////////////////////////////////////////////////////////////////
 // The vertex shader for creating the atmospheric sky
 ///////////////////////////////////////////////////////////////////////////////
 
 // Output parameters
-VARYING vec4 vary_HazeColor;
+out vec4 vary_HazeColor;
 
 // Inputs
 uniform vec3 camPosLocal;

@@ -27,10 +27,10 @@ uniform mat4 modelview_matrix;
 
 uniform int texture_index_in;
 
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 
-VARYING vec3 position_out;
-VARYING int texture_index_out;
+out vec3 position_out;
+out int texture_index_out;
 
 void main()
 {

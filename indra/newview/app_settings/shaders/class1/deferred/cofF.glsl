@@ -48,7 +48,7 @@ uniform float max_cof;
 uniform mat4 inv_proj;
 uniform vec2 screen_res;
 
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 float calc_cof(float depth)
 {

@@ -22,9 +22,9 @@
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 
-VARYING vec2 vary_fragcoord;
+out vec2 vary_fragcoord;
 
 uniform mat4 modelview_projection_matrix;
 uniform vec2 screen_res;

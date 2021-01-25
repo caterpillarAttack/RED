@@ -33,7 +33,7 @@ uniform float minimum_alpha;
 
 uniform sampler2D diffuseMap;
 
-VARYING vec2 vary_texcoord0;
+in vec2 vary_texcoord0;
 
 void main()
 {

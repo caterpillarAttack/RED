@@ -32,7 +32,7 @@ out vec4 frag_color;
 uniform vec4 color;
 uniform vec4 clip_plane;
 
-VARYING vec3 vary_position;
+in vec3 vary_position;
 
 
 void main() 

@@ -28,13 +28,13 @@ uniform mat4 texture_matrix0;
 uniform mat4 modelview_matrix;
 uniform mat4 modelview_projection_matrix;
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec4 diffuse_color;
-ATTRIBUTE vec3 normal;
-ATTRIBUTE vec2 texcoord0;
+layout (location = 0) in vec3 position;
+layout(location = 6) in vec4 diffuse_color;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 texcoord0;
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+out vec4 vertex_color;
+out vec2 vary_texcoord0;
 
 
 vec4 calcLightingSpecular(vec3 pos, vec3 norm, vec4 color, inout vec4 specularColor);

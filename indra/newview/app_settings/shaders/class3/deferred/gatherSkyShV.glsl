@@ -23,10 +23,10 @@
  * $/LicenseInfo$
  */
  
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec2 texcoord0;
+layout (location = 0) in vec3 position;
+layout (location = 2) in vec2 texcoord0;
 
-VARYING vec2 vary_frag;
+out vec2 vary_frag;
 uniform vec2 screen_res;
 
 void main()

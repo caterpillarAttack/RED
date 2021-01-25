@@ -37,9 +37,9 @@ out vec4 frag_color;
 uniform sampler2D diffuseMap;
 #endif
 
-VARYING vec3 vary_position;
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+in vec3 vary_position;
+in vec4 vertex_color;
+in vec2 vary_texcoord0;
 
 #ifdef WATER_FOG
 vec4 applyWaterFogView(vec3 pos, vec4 color);

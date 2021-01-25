@@ -52,7 +52,7 @@ uniform mat3 env_mat;
 uniform vec3 sun_dir;
 uniform vec3 moon_dir;
 uniform int sun_up_factor;
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 uniform mat4 inv_proj;
 uniform vec2 screen_res;

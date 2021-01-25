@@ -58,7 +58,7 @@ out vec4 frag_data[3];
 #define frag_data gl_FragData
 #endif
 
-VARYING vec3 pos;
+in vec3 pos;
 
 /////////////////////////////////////////////////////////////////////////
 // The fragment shader for the sky

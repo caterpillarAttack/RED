@@ -23,7 +23,7 @@
  * $/LicenseInfo$
  */
 
-// VARYING param funcs
+// out param funcs
 void setSunlitColor(vec3 v);
 void setAmblitColor(vec3 v);
 void setAdditiveColor(vec3 v);

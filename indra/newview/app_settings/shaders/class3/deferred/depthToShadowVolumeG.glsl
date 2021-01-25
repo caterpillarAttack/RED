@@ -34,7 +34,7 @@ uniform sampler2DRect depthMap;
 uniform mat4 shadowMatrix[6]; 
 uniform vec4 lightpos;
 
-VARYING vec2 vary_texcoord0;
+in vec2 vary_texcoord0;
 
 out vec3 to_vec;
 

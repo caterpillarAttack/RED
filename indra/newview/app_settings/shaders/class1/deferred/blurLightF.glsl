@@ -42,7 +42,7 @@ uniform vec2 delta;
 uniform vec3 kern[4];
 uniform float kern_scale;
 
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 vec4 getPosition(vec2 pos_screen);
 vec3 getNorm(vec2 pos_screen);

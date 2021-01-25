@@ -26,8 +26,8 @@ uniform mat4 projection_matrix;
 uniform mat4 modelview_matrix;
 uniform mat4 texture_matrix0;
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec2 texcoord0;
+layout (location = 0) in vec3 position;
+layout (location = 2) in vec2 texcoord0;
 
 mat4 getObjectSkinnedTransform();
 

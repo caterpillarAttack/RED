@@ -1,30 +1,30 @@
-/** 
+/**
  * @file llgl.cpp
  * @brief LLGL implementation
  *
  * $LicenseInfo:firstyear=2001&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
  * version 2.1 of the License only.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
 
-// This file sets some global GL parameters, and implements some 
+// This file sets some global GL parameters, and implements some
 // useful functions for GL operations.
 
 #define GLH_EXT_SINGLE_FILE
@@ -118,7 +118,7 @@ void ll_init_fail_log(std::string filename)
 
 void ll_fail(std::string msg)
 {
-	
+
 	if (gDebugSession)
 	{
 		std::vector<std::string> lines;
@@ -128,7 +128,7 @@ void ll_fail(std::string msg)
 		gFailLog << "Stack Trace:" << std::endl;
 
 		ll_get_stack_trace(lines);
-		
+
 		for(size_t i = 0; i < lines.size(); ++i)
 		{
 			gFailLog << lines[i] << std::endl;
@@ -478,7 +478,7 @@ LLGLManager::LLGLManager() :
 	mDriverVersionRelease(0),
 	mGLVersion(1.0f),
 	mGLSLVersionMajor(0),
-	mGLSLVersionMinor(0),		
+	mGLSLVersionMinor(0),
 	mVRAM(0),
 	mGLMaxVertexRange(0),
 	mGLMaxIndexRange(0)
@@ -506,7 +506,7 @@ void LLGLManager::initWGL()
 		LL_WARNS("RenderInit") << "No ARB create context extensions" << LL_ENDL;
 	}
 
-	// For retreiving information per AMD adapter, 
+	// For retreiving information per AMD adapter,
 	// because we can't trust curently selected/default one when there are multiple
 	mHasAMDAssociations = ExtensionExists("WGL_AMD_gpu_association", gGLHExts.mSysExts);
 	if (mHasAMDAssociations)
@@ -544,7 +544,7 @@ bool LLGLManager::initGL()
 		LL_ERRS("RenderInit") << "Calling init on LLGLManager after already initialized!" << LL_ENDL;
 	}
 
-	stop_glerror();
+
 
 #if LL_WINDOWS
 	if (!glGetStringi)
@@ -565,7 +565,7 @@ bool LLGLManager::initGL()
 			str << ext << " ";
 			LL_DEBUGS("GLExtensions") << ext << LL_ENDL;
 		}
-		
+
 		{
 			PFNWGLGETEXTENSIONSSTRINGARBPROC wglGetExtensionsStringARB = 0;
 			wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)wglGetProcAddress("wglGetExtensionsStringARB");
@@ -580,8 +580,8 @@ bool LLGLManager::initGL()
 		gGLHExts.mSysExts = strdup(extensions.c_str());
 	}
 #endif
-	
-	stop_glerror();
+
+
 
 	// Extract video card strings and convert to upper case to
 	// work around driver-to-driver variation in capitalization.
@@ -591,9 +591,9 @@ bool LLGLManager::initGL()
 	mGLRenderer = ll_safe_string((const char *)glGetString(GL_RENDERER));
 	LLStringUtil::toUpper(mGLRenderer);
 
-	parse_gl_version( &mDriverVersionMajor, 
-		&mDriverVersionMinor, 
-		&mDriverVersionRelease, 
+	parse_gl_version( &mDriverVersionMajor,
+		&mDriverVersionMinor,
+		&mDriverVersionRelease,
 		&mDriverVersionVendorString,
 		&mGLVersionString);
 
@@ -621,7 +621,7 @@ bool LLGLManager::initGL()
 	{ //GL version is < 3.0, always disable texture compression
 		LLImageGL::sCompressTextures = false;
 	}
-	
+
 	// Trailing space necessary to keep "nVidia Corpor_ati_on" cards
 	// from being recognized as ATI.
 	if (mGLVendor.substr(0,4) == "ATI ")
@@ -639,7 +639,7 @@ bool LLGLManager::initGL()
 
 #if (LL_WINDOWS || LL_LINUX) && !LL_MESA_HEADLESS
 		// count any pre OpenGL 3.0 implementation as an old driver
-		if (mGLVersion < 3.f) 
+		if (mGLVersion < 3.f)
 		{
 			mATIOldDriver = TRUE;
 		}
@@ -693,11 +693,11 @@ bool LLGLManager::initGL()
 	{
 		mGLVendorShort = "MISC";
 	}
-	
-	stop_glerror();
+
+
 	// This is called here because it depends on the setting of mIsGF2or4MX, and sets up mHasMultitexture.
 	initExtensions();
-	stop_glerror();
+
 
 	S32 old_vram = mVRAM;
 	mVRAM = 0;
@@ -778,9 +778,9 @@ bool LLGLManager::initGL()
 		LL_WARNS("RenderInit") << "VRAM detected via MemInfo OpenGL extension most likely broken. Reverting to " << mVRAM << " MB" << LL_ENDL;
 	}
 
-	stop_glerror();
 
-	stop_glerror();
+
+
 
 	if (mHasFragmentShader)
 	{
@@ -795,7 +795,7 @@ bool LLGLManager::initGL()
 	}
 	else if (mHasMultitexture)
 	{
-		GLint num_tex_units;		
+		GLint num_tex_units;
 		glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB, &num_tex_units);
 		mNumTextureUnits = llmin(num_tex_units, (GLint)MAX_GL_TEXTURE_UNITS);
 		if (mIsIntel)
@@ -811,8 +811,8 @@ bool LLGLManager::initGL()
 		LL_WARNS("RenderInit") << "GL Drivers do not support GL_ARB_multitexture" << LL_ENDL;
 		return false;
 	}
-	
-	stop_glerror();
+
+
 
 	if (mHasTextureMultisample)
 	{
@@ -822,7 +822,7 @@ bool LLGLManager::initGL()
 		glGetIntegerv(GL_MAX_SAMPLE_MASK_WORDS, &mMaxSampleMaskWords);
 	}
 
-	stop_glerror();
+
 
 #if LL_WINDOWS
 	if (mHasDebugOutput && gDebugGL)
@@ -833,7 +833,7 @@ bool LLGLManager::initGL()
 	}
 #endif
 
-	stop_glerror();
+
 
 	//HACK always disable texture multisample, use FXAA instead
 	mHasTextureMultisample = FALSE;
@@ -857,22 +857,22 @@ bool LLGLManager::initGL()
 		glGetIntegerv(GL_MAX_SAMPLES, &mMaxSamples);
 	}
 
-	stop_glerror();
-	
+
+
 	setToDebugGPU();
 
-	stop_glerror();
+
 
 	initGLStates();
 
-	stop_glerror();
+
 
 	return true;
 }
 
 void LLGLManager::setToDebugGPU()
 {
-	//"MOBILE INTEL(R) 965 EXPRESS CHIP", 
+	//"MOBILE INTEL(R) 965 EXPRESS CHIP",
 	if (mGLRenderer.find("INTEL") != std::string::npos && mGLRenderer.find("965") != std::string::npos)
 	{
 		mDebugGPU = TRUE ;
@@ -925,12 +925,12 @@ std::string LLGLManager::getGLInfoString()
 		info_str += std::string("GL_VERSION     ") + ll_safe_string((const char *)glGetString(GL_VERSION)) + std::string("\n");
 	}
 
-#if !LL_MESA_HEADLESS 
+#if !LL_MESA_HEADLESS
 	std::string all_exts= ll_safe_string(((const char *)gGLHExts.mSysExts));
 	LLStringUtil::replaceChar(all_exts, ' ', '\n');
 	info_str += std::string("GL_EXTENSIONS:\n") + all_exts + std::string("\n");
 #endif
-	
+
 	return info_str;
 }
 
@@ -975,7 +975,7 @@ void LLGLManager::shutdownGL()
 	if (mInited)
 	{
 		glFinish();
-		stop_glerror();
+
 		mInited = FALSE;
 	}
 }
@@ -992,7 +992,7 @@ void LLGLManager::initExtensions()
 	mHasMultitexture = FALSE;
 # endif // GL_ARB_multitexture
 # ifdef GL_ARB_texture_env_combine
-	mHasARBEnvCombine = TRUE;	
+	mHasARBEnvCombine = TRUE;
 # else
 	mHasARBEnvCombine = FALSE;
 # endif // GL_ARB_texture_env_combine
@@ -1068,13 +1068,13 @@ void LLGLManager::initExtensions()
 #ifdef GL_EXT_texture_sRGB
 	mHassRGBTexture = ExtensionExists("GL_EXT_texture_sRGB", gGLHExts.mSysExts);
 #endif
-	
+
 #ifdef GL_ARB_framebuffer_sRGB
 	mHassRGBFramebuffer = ExtensionExists("GL_ARB_framebuffer_sRGB", gGLHExts.mSysExts);
 #else
 	mHassRGBFramebuffer = ExtensionExists("GL_EXT_framebuffer_sRGB", gGLHExts.mSysExts);
 #endif
-	
+
 #ifdef GL_EXT_texture_sRGB_decode
     mHasTexturesRGBDecode = ExtensionExists("GL_EXT_texture_sRGB_decode", gGLHExts.mSysExts);
 #else
@@ -1166,10 +1166,10 @@ void LLGLManager::initExtensions()
 		if (strchr(blacklist,'s')) mHasTextureRectangle = FALSE;
 		if (strchr(blacklist,'t')) mHasBlendFuncSeparate = FALSE;//S
 		if (strchr(blacklist,'u')) mHasDepthClamp = FALSE;
-		
+
 	}
 #endif // LL_LINUX || LL_SOLARIS
-	
+
 	if (!mHasMultitexture)
 	{
 		LL_INFOS("RenderInit") << "Couldn't initialize multitexturing" << LL_ENDL;
@@ -1240,12 +1240,12 @@ void LLGLManager::initExtensions()
 		mHasMipMapGeneration = FALSE;
 	}
 #endif
-	
+
 	// Misc
 	glGetIntegerv(GL_MAX_ELEMENTS_VERTICES, (GLint*) &mGLMaxVertexRange);
 	glGetIntegerv(GL_MAX_ELEMENTS_INDICES, (GLint*) &mGLMaxIndexRange);
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, (GLint*) &mGLMaxTextureSize);
-	
+
 #if (LL_WINDOWS || LL_LINUX || LL_SOLARIS) && !LL_MESA_HEADLESS
 	LL_DEBUGS("RenderInit") << "GL Probe: Getting symbols" << LL_ENDL;
 	if (mHasVertexBufferObject)
@@ -1534,7 +1534,7 @@ void log_glerror()
 	{
 		return ;
 	}
-	//  Create or update texture to be used with this data 
+	//  Create or update texture to be used with this data
 	GLenum error;
 	error = glGetError();
 	while (LL_UNLIKELY(error))
@@ -1542,7 +1542,7 @@ void log_glerror()
 		GLubyte const * gl_error_msg = gluErrorString(error);
 		if (NULL != gl_error_msg)
 		{
-			LL_WARNS() << "GL Error: " << error << " GL Error String: " << gl_error_msg << LL_ENDL ;			
+			LL_WARNS() << "GL Error: " << error << " GL Error String: " << gl_error_msg << LL_ENDL ;
 		}
 		else
 		{
@@ -1556,7 +1556,7 @@ void log_glerror()
 
 void do_assert_glerror()
 {
-	//  Create or update texture to be used with this data 
+	//  Create or update texture to be used with this data
 	GLenum error;
 	error = glGetError();
 	BOOL quit = FALSE;
@@ -1614,7 +1614,7 @@ void assert_glerror()
 	}
 */
 
-	if (!gDebugGL) 
+	if (!gDebugGL)
 	{
 		//funny looking if for branch prediction -- gDebugGL is almost always false and assert_glerror is called often
 	}
@@ -1623,7 +1623,7 @@ void assert_glerror()
 		do_assert_glerror();
 	}
 }
-	
+
 
 void clear_glerror()
 {
@@ -1644,11 +1644,11 @@ GLenum LLGLDepthTest::sDepthFunc = GL_LESS; // OpenGL default
 GLboolean LLGLDepthTest::sWriteEnabled = GL_TRUE; // OpenGL default
 
 //static
-void LLGLState::initClass() 
+void LLGLState::initClass()
 {
 	sStateMap[GL_DITHER] = GL_TRUE;
 	// sStateMap[GL_TEXTURE_2D] = GL_TRUE;
-	
+
 	//make sure multisample defaults to disabled
 	sStateMap[GL_MULTISAMPLE_ARB] = GL_FALSE;
 	glDisable(GL_MULTISAMPLE_ARB);
@@ -1667,7 +1667,7 @@ void LLGLState::resetTextureStates()
 {
 	gGL.flush();
 	GLint maxTextureUnits;
-	
+
 	glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB, &maxTextureUnits);
 	for (S32 j = maxTextureUnits-1; j >=0; j--)
 	{
@@ -1677,7 +1677,7 @@ void LLGLState::resetTextureStates()
 	}
 }
 
-void LLGLState::dumpStates() 
+void LLGLState::dumpStates()
 {
 	LL_INFOS("RenderState") << "GL States:" << LL_ENDL;
 	for (boost::unordered_map<LLGLenum, LLGLboolean>::iterator iter = sStateMap.begin();
@@ -1687,21 +1687,21 @@ void LLGLState::dumpStates()
 	}
 }
 
-void LLGLState::checkStates(const std::string& msg)  
+void LLGLState::checkStates(const std::string& msg)
 {
 	if (!gDebugGL)
 	{
 		return;
 	}
 
-	stop_glerror();
+
 
 	GLint src;
 	GLint dst;
 	glGetIntegerv(GL_BLEND_SRC, &src);
 	glGetIntegerv(GL_BLEND_DST, &dst);
-	
-	stop_glerror();
+
+
 
 	BOOL error = FALSE;
 
@@ -1717,15 +1717,15 @@ void LLGLState::checkStates(const std::string& msg)
 			LL_GL_ERRS << "Blend function corrupted: " << std::hex << src << " " << std::hex << dst << "  " << msg << std::dec << LL_ENDL;
 		}
 	}
-	
+
 	for (boost::unordered_map<LLGLenum, LLGLboolean>::iterator iter = sStateMap.begin();
 		 iter != sStateMap.end(); ++iter)
 	{
 		LLGLenum state = iter->first;
 		LLGLboolean cur_state = iter->second;
-		stop_glerror();
+
 		LLGLboolean gl_state = glIsEnabled(state);
-		stop_glerror();
+
 		if(cur_state != gl_state)
 		{
 			dumpStates();
@@ -1740,12 +1740,12 @@ void LLGLState::checkStates(const std::string& msg)
 			}
 		}
 	}
-	
+
 	if (error)
 	{
 		ll_fail("LLGLState::checkStates failed.");
 	}
-	stop_glerror();
+
 }
 
 void LLGLState::checkTextureChannels(const std::string& msg)
@@ -1755,11 +1755,11 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 	{
 		return;
 	}
-	stop_glerror();
+
 
 	GLint activeTexture;
 	glGetIntegerv(GL_ACTIVE_TEXTURE_ARB, &activeTexture);
-	stop_glerror();
+
 
 	BOOL error = FALSE;
 
@@ -1768,7 +1768,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 		GLint tex_env_mode = 0;
 
 		glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, &tex_env_mode);
-		stop_glerror();
+
 
 		if (tex_env_mode != GL_MODULATE)
 		{
@@ -1822,9 +1822,9 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 		if (i < gGLManager.mNumTextureUnits)
 		{
 			glClientActiveTextureARB(GL_TEXTURE0_ARB+i);
-			stop_glerror();
+
 			glGetIntegerv(GL_TEXTURE_STACK_DEPTH, &stackDepth);
-			stop_glerror();
+
 
 			if (stackDepth != 1)
 			{
@@ -1838,7 +1838,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 			}
 
 			glGetFloatv(GL_TEXTURE_MATRIX, (GLfloat*) mat.m);
-			stop_glerror();
+
 
 			if (mat != identity)
 			{
@@ -1849,8 +1849,8 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 					gFailLog << "Texture matrix in channel " << i << " corrupt." << std::endl;
 				}
 			}
-				
-			for (S32 j = (i == 0 ? 1 : 0); 
+
+			for (S32 j = (i == 0 ? 1 : 0);
 				j < 9; j++)
 			{
 				if (j == 8 && !gGLManager.mHasTextureRectangle ||
@@ -1858,7 +1858,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 				{
 					continue;
 				}
-				
+
 				if (glIsEnabled(value[j]))
 				{
 					error = TRUE;
@@ -1868,11 +1868,11 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 						gFailLog << "Texture channel " << i << " still has " << label[j] << " enabled." << std::endl;
 					}
 				}
-				stop_glerror();
+
 			}
 
 			glGetFloatv(GL_TEXTURE_MATRIX, mat.m);
-			stop_glerror();
+
 
 			if (mat != identity)
 			{
@@ -1887,9 +1887,9 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 
 		{
 			GLint tex = 0;
-			stop_glerror();
+
 			glGetIntegerv(GL_TEXTURE_BINDING_2D, &tex);
-			stop_glerror();
+
 
 			if (tex != 0)
 			{
@@ -1904,10 +1904,10 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 		}
 	}
 
-	stop_glerror();
+
 	gGL.getTexUnit(0)->activate();
 	glClientActiveTextureARB(GL_TEXTURE0_ARB);
-	stop_glerror();
+
 
 	if (error)
 	{
@@ -1925,12 +1925,12 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 
 void LLGLState::checkClientArrays(const std::string& msg, U32 data_mask)
 {
-	if (!gDebugGL || LLGLSLShader::sNoFixedFunction)
+	if (!gDebugGL)
 	{
 		return;
 	}
 
-	stop_glerror();
+
 	BOOL error = FALSE;
 
 	GLint active_texture;
@@ -1973,7 +1973,7 @@ void LLGLState::checkClientArrays(const std::string& msg, U32 data_mask)
 		GL_TEXTURE_COORD_ARRAY
 	};
 
-	static const U32 mask[] = 
+	static const U32 mask[] =
 	{ //copied from llvertexbuffer.h
 		0x0001, //MAP_VERTEX,
 		0x0002, //MAP_NORMAL,
@@ -2065,7 +2065,7 @@ void LLGLState::checkClientArrays(const std::string& msg, U32 data_mask)
 	glClientActiveTextureARB(GL_TEXTURE0_ARB);
 	gGL.getTexUnit(0)->activate();
 
-	if (gGLManager.mHasVertexShader && LLGLSLShader::sNoFixedFunction)
+	if (gGLManager.mHasVertexShader)
 	{	//make sure vertex attribs are all disabled
 		GLint count;
 		glGetIntegerv(GL_MAX_VERTEX_ATTRIBS_ARB, &count);
@@ -2103,34 +2103,31 @@ void LLGLState::checkClientArrays(const std::string& msg, U32 data_mask)
 LLGLState::LLGLState(LLGLenum state, S32 enabled) :
 	mState(state), mWasEnabled(FALSE), mIsEnabled(FALSE)
 {
-	if (LLGLSLShader::sNoFixedFunction)
-	{ //always ignore state that's deprecated post GL 3.0
-		switch (state)
-		{
-			case GL_ALPHA_TEST:
-			case GL_NORMALIZE:
-			case GL_TEXTURE_GEN_R:
-			case GL_TEXTURE_GEN_S:
-			case GL_TEXTURE_GEN_T:
-			case GL_TEXTURE_GEN_Q:
-			case GL_LIGHTING:
-			case GL_COLOR_MATERIAL:
-			case GL_FOG:
-			case GL_LINE_STIPPLE:
-			case GL_POLYGON_STIPPLE:
-				mState = 0;
-				break;
-		}
-	}
+  //always ignore state that's deprecated post GL 3.0
+  switch (state)
+  {
+  	case GL_ALPHA_TEST:
+  	case GL_NORMALIZE:
+  	case GL_TEXTURE_GEN_R:
+  	case GL_TEXTURE_GEN_S:
+  	case GL_TEXTURE_GEN_T:
+  	case GL_TEXTURE_GEN_Q:
+  	case GL_LIGHTING:
+  	case GL_COLOR_MATERIAL:
+  	case GL_FOG:
+  	case GL_LINE_STIPPLE:
+  	case GL_POLYGON_STIPPLE:
+  		mState = 0;
+  		break;
+  }
 
-	stop_glerror();
 	if (mState)
 	{
 		mWasEnabled = sStateMap[state];
         // we can't actually assert on this as queued changes to state are not reflected by glIsEnabled
 		//llassert(mWasEnabled == glIsEnabled(state));
 		setEnabled(enabled);
-		stop_glerror();
+
 	}
 }
 
@@ -2159,9 +2156,9 @@ void LLGLState::setEnabled(S32 enabled)
 	mIsEnabled = enabled;
 }
 
-LLGLState::~LLGLState() 
+LLGLState::~LLGLState()
 {
-	stop_glerror();
+
 	if (mState)
 	{
 		if (gDebugGL)
@@ -2194,7 +2191,7 @@ LLGLState::~LLGLState()
 			}
 		}
 	}
-	stop_glerror();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2209,7 +2206,7 @@ void LLGLManager::initGLStates()
 
 void parse_gl_version( S32* major, S32* minor, S32* release, std::string* vendor_specific, std::string* version_string )
 {
-	// GL_VERSION returns a null-terminated string with the format: 
+	// GL_VERSION returns a null-terminated string with the format:
 	// <major>.<minor>[.<release>] [<vendor specific>]
 
 	const char* version = (const char*) glGetString(GL_VERSION);
@@ -2292,13 +2289,13 @@ void parse_gl_version( S32* major, S32* minor, S32* release, std::string* vendor
 
 void parse_glsl_version(S32& major, S32& minor)
 {
-	// GL_SHADING_LANGUAGE_VERSION returns a null-terminated string with the format: 
+	// GL_SHADING_LANGUAGE_VERSION returns a null-terminated string with the format:
 	// <major>.<minor>[.<release>] [<vendor specific>]
 
 	const char* version = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
 	major = 0;
 	minor = 0;
-	
+
 	if( !version )
 	{
 		return;
@@ -2366,7 +2363,7 @@ void LLGLUserClipPlane::setPlane(F32 a, F32 b, F32 c, F32 d)
 {
 	glh::matrix4f& P = mProjection;
 	glh::matrix4f& M = mModelview;
-    
+
 	glh::matrix4f invtrans_MVP = (P * M).inverse().transpose();
     glh::vec4f oplane(a,b,c,d);
     glh::vec4f cplane;
@@ -2484,8 +2481,8 @@ void LLGLNamePool::cleanupPools()
 LLGLDepthTest::LLGLDepthTest(GLboolean depth_enabled, GLboolean write_enabled, GLenum depth_func)
 : mPrevDepthEnabled(sDepthEnabled), mPrevDepthFunc(sDepthFunc), mPrevWriteEnabled(sWriteEnabled)
 {
-	stop_glerror();
-	
+
+
 	checkState();
 
 	if (!depth_enabled)
@@ -2608,7 +2605,7 @@ LLGLSquashToFarClip::~LLGLSquashToFarClip()
 }
 
 
-	
+
 LLGLSyncFence::LLGLSyncFence()
 {
 #ifdef GL_ARB_sync
@@ -2671,24 +2668,10 @@ LLGLSPipelineSkyBox::LLGLSPipelineSkyBox()
 : mAlphaTest(GL_ALPHA_TEST)
 , mCullFace(GL_CULL_FACE)
 , mSquashClip()
-{ 
-    if (!LLGLSLShader::sNoFixedFunction)
-    {
-        glDisable(GL_LIGHTING);
-        glDisable(GL_FOG);
-        glDisable(GL_CLIP_PLANE0);
-    }
-}
+{}
 
 LLGLSPipelineSkyBox::~LLGLSPipelineSkyBox()
-{
-    if (!LLGLSLShader::sNoFixedFunction)
-    {
-        glEnable(GL_LIGHTING);
-        glEnable(GL_FOG);
-        glEnable(GL_CLIP_PLANE0);
-    }
-}
+{}
 
 LLGLSPipelineDepthTestSkyBox::LLGLSPipelineDepthTestSkyBox(bool depth_test, bool depth_write)
 : LLGLSPipelineSkyBox()
@@ -2698,15 +2681,15 @@ LLGLSPipelineDepthTestSkyBox::LLGLSPipelineDepthTestSkyBox(bool depth_test, bool
 }
 
 LLGLSPipelineBlendSkyBox::LLGLSPipelineBlendSkyBox(bool depth_test, bool depth_write)
-: LLGLSPipelineDepthTestSkyBox(depth_test, depth_write)    
+: LLGLSPipelineDepthTestSkyBox(depth_test, depth_write)
 , mBlend(GL_BLEND)
-{ 
+{
     gGL.setSceneBlendType(LLRender::BT_ALPHA);
 }
 
 #if LL_WINDOWS
 // Expose desired use of high-performance graphics processor to Optimus driver and to AMD driver
-extern "C" 
+extern "C"
 {
     __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
     __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;

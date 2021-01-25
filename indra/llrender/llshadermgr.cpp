@@ -1,25 +1,25 @@
-/** 
+/**
  * @file llshadermgr.cpp
  * @brief Shader manager implementation.
  *
  * $LicenseInfo:firstyear=2005&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
  * version 2.1 of the License only.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
@@ -73,7 +73,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 	//////////////////////////////////////
 	// Attach Vertex Shader Features First
 	//////////////////////////////////////
-	
+
 	// NOTE order of shader object attaching is VERY IMPORTANT!!!
 	if (features->calculatesAtmospherics)
 	{
@@ -97,7 +97,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 			return FALSE;
 		}
 	}
-		
+
 	if (features->calculatesLighting)
 	{
 		if (features->isSpecular)
@@ -106,7 +106,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 			{
 				return FALSE;
 			}
-		
+
 			if (!features->isAlphaLighting)
 			{
                 if (!shader->attachVertexObject("lighting/sumLightsSpecularV.glsl"))
@@ -114,19 +114,19 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					return FALSE;
 				}
 			}
-			
+
             if (!shader->attachVertexObject("lighting/lightSpecularV.glsl"))
 			{
 				return FALSE;
 			}
 		}
-		else 
+		else
 		{
             if (!shader->attachVertexObject("lighting/lightFuncV.glsl"))
 			{
 				return FALSE;
 			}
-			
+
 			if (!features->isAlphaLighting)
 			{
                 if (!shader->attachVertexObject("lighting/sumLightsV.glsl"))
@@ -134,14 +134,14 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					return FALSE;
 				}
 			}
-			
+
             if (!shader->attachVertexObject("lighting/lightV.glsl"))
 			{
 				return FALSE;
 			}
 		}
 	}
-	
+
 	// NOTE order of shader object attaching is VERY IMPORTANT!!!
 	if (features->calculatesAtmospherics)
     {
@@ -170,7 +170,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 			return FALSE;
 		}
 	}
-	
+
 	///////////////////////////////////////
 	// Attach Fragment Shader Features Next
 	///////////////////////////////////////
@@ -268,7 +268,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 			return FALSE;
 		}
 	}
-	
+
 	if (features->hasTransport)
 	{
         if (!shader->attachFragmentObject("windlight/transportF.glsl"))
@@ -276,7 +276,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 			return FALSE;
 		}
 
-		// Test hasFullbright and hasShiny and attach fullbright and 
+		// Test hasFullbright and hasShiny and attach fullbright and
 		// fullbright shiny atmos transport if we split them out.
 	}
 
@@ -288,7 +288,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 			return FALSE;
 		}
 	}
-	
+
 	if (features->hasLighting)
 	{
 		if (features->hasWaterFog)
@@ -310,7 +310,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					}
 				}
 			}
-			else 
+			else
 			{
 				if (features->hasAlphaMask)
 				{
@@ -329,7 +329,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
 		}
-		
+
 		else
 		{
 			if (features->disableTextureIndex)
@@ -349,7 +349,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					}
 				}
 			}
-			else 
+			else
 			{
 				if (features->hasAlphaMask)
 				{
@@ -369,11 +369,11 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 			}
 		}
 	}
-	
+
 	// NOTE order of shader object attaching is VERY IMPORTANT!!!
 	else if (features->isFullbright)
 	{
-	
+
 		if (features->isShiny && features->hasWaterFog)
 		{
 			if (features->disableTextureIndex)
@@ -383,7 +383,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					return FALSE;
 				}
 			}
-			else 
+			else
 			{
                 if (!shader->attachFragmentObject("lighting/lightFullbrightShinyWaterF.glsl"))
 				{
@@ -408,7 +408,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					return FALSE;
 				}
 			}
-			else 
+			else
 			{
 				if (features->hasAlphaMask)
 				{
@@ -424,7 +424,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
 		}
-		
+
 		else if (features->isShiny)
 		{
 			if (features->disableTextureIndex)
@@ -434,7 +434,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					return FALSE;
 				}
 			}
-			else 
+			else
 			{
                 if (!shader->attachFragmentObject("lighting/lightFullbrightShinyF.glsl"))
 				{
@@ -443,7 +443,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
 		}
-		
+
 		else
 		{
 			if (features->disableTextureIndex)
@@ -464,7 +464,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					}
 				}
 			}
-			else 
+			else
 			{
 				if (features->hasAlphaMask)
 				{
@@ -488,7 +488,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 	// NOTE order of shader object attaching is VERY IMPORTANT!!!
 	else if (features->isShiny)
 	{
-	
+
 		if (features->hasWaterFog)
 		{
 			if (features->disableTextureIndex)
@@ -498,7 +498,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					return FALSE;
 				}
 			}
-			else 
+			else
 			{
                 if (!shader->attachFragmentObject("lighting/lightShinyWaterF.glsl"))
 				{
@@ -507,8 +507,8 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
 		}
-		
-		else 
+
+		else
 		{
 			if (features->disableTextureIndex)
 			{
@@ -517,7 +517,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 					return FALSE;
 				}
 			}
-			else 
+			else
 			{
                 if (!shader->attachFragmentObject("lighting/lightShinyF.glsl"))
 				{
@@ -552,8 +552,8 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 static std::string get_object_log(GLhandleARB ret)
 {
 	std::string res;
-	
-	//get log length 
+
+	//get log length
 	GLint length;
 	glGetObjectParameterivARB(ret, GL_OBJECT_INFO_LOG_LENGTH_ARB, &length);
 	if (length > 0)
@@ -589,7 +589,7 @@ void LLShaderMgr::dumpShaderSource(U32 shader_code_count, GLcharARB** shader_cod
     LL_CONT << LL_ENDL;
 }
 
-void LLShaderMgr::dumpObjectLog(GLhandleARB ret, BOOL warns, const std::string& filename) 
+void LLShaderMgr::dumpObjectLog(GLhandleARB ret, BOOL warns, const std::string& filename)
 {
 	std::string log = get_object_log(ret);
     std::string fname = filename;
@@ -625,8 +625,8 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 			LL_SHADER_LOADING_WARNS() << "GL ERROR entering loadShaderFile(): " << error << LL_ENDL;
 		}
 	}
-	
-	if (filename.empty()) 
+
+	if (filename.empty())
 	{
 		return 0;
 	}
@@ -645,7 +645,7 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 		std::stringstream fname;
 		fname << getShaderDirPrefix();
 		fname << gpu_class << "/" << filename;
-		
+
         open_file_name = fname.str();
 
         /*
@@ -665,121 +665,77 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 		file = LLFile::fopen(open_file_name, "r");		/* Flawfinder: ignore */
 		if (file)
 		{
-			LL_DEBUGS("ShaderLoading") << "Loading file: " << open_file_name << " (Want class " << gpu_class << ")" << LL_ENDL;            
+			LL_DEBUGS("ShaderLoading") << "Loading file: " << open_file_name << " (Want class " << gpu_class << ")" << LL_ENDL;
 			break; // done
 		}
 	}
-	
+
 	if (file == NULL)
 	{
 		LL_SHADER_LOADING_WARNS() << "GLSL Shader file not found: " << open_file_name << LL_ENDL;
 		return 0;
 	}
 
-	//we can't have any lines longer than 1024 characters 
+	//we can't have any lines longer than 1024 characters
 	//or any shaders longer than 4096 lines... deal - DaveP
     GLcharARB buff[1024];
     GLcharARB *extra_code_text[1024];
     GLcharARB *shader_code_text[4096 + LL_ARRAY_SIZE(extra_code_text)] = { NULL };
     GLuint extra_code_count = 0, shader_code_count = 0;
     BOOST_STATIC_ASSERT(LL_ARRAY_SIZE(extra_code_text) < LL_ARRAY_SIZE(shader_code_text));
-    
-    
+
+
 	S32 major_version = gGLManager.mGLSLVersionMajor;
 	S32 minor_version = gGLManager.mGLSLVersionMinor;
-	
-	if (major_version == 1 && minor_version < 30)
-	{
-		if (minor_version < 10)
-		{
-			//should NEVER get here -- if major version is 1 and minor version is less than 10, 
-			// viewer should never attempt to use shaders, continuing will result in undefined behavior
-			LL_ERRS() << "Unsupported GLSL Version." << LL_ENDL;
-		}
 
-		if (minor_version <= 19)
-		{
-			shader_code_text[shader_code_count++] = strdup("#version 110\n");
-			extra_code_text[extra_code_count++] = strdup("#define ATTRIBUTE attribute\n");
-			extra_code_text[extra_code_count++] = strdup("#define VARYING varying\n");
-			extra_code_text[extra_code_count++] = strdup("#define VARYING_FLAT varying\n");
-		}
-		else if (minor_version <= 29)
-		{
-			//set version to 1.20
-			shader_code_text[shader_code_count++] = strdup("#version 120\n");
-       		extra_code_text[extra_code_count++] = strdup("#define FXAA_GLSL_120 1\n");
-			extra_code_text[extra_code_count++] = strdup("#define FXAA_FAST_PIXEL_OFFSET 0\n");
-			extra_code_text[extra_code_count++] = strdup("#define ATTRIBUTE attribute\n");
-			extra_code_text[extra_code_count++] = strdup("#define VARYING varying\n");
-			extra_code_text[extra_code_count++] = strdup("#define VARYING_FLAT varying\n");
-		}
+
+	if (major_version >= 4){
+	    //set version to 400
+	shader_code_text[shader_code_count++] = strdup("#version 400\n");
+	}
+	if (major_version == 3){
+	    if (minor_version < 10){
+	  shader_code_text[shader_code_count++] = strdup("#version 300\n");
+	}
+	else if (minor_version <= 19)
+	{
+	  shader_code_text[shader_code_count++] = strdup("#version 310\n");
+	}
+	else if (minor_version <= 29)
+	{
+	  shader_code_text[shader_code_count++] = strdup("#version 320\n");
+	}
+  else
+  {
+      shader_code_text[shader_code_count++] = strdup("#version 330\n");
+  }
+	}
+
+
+	extra_code_text[extra_code_count++] = strdup("#define DEFINE_GL_FRAGCOLOR 1\n");
+	extra_code_text[extra_code_count++] = strdup("#define FXAA_GLSL_130 1\n");
+
+
+	if (type == GL_VERTEX_SHADER_ARB){
+		//"varying" state is "out" in a vertex program, "in" in a fragment program
+		// ("varying" is deprecated after version 1.20)
 	}
 	else
-	{  
-        if (major_version >= 4)
-        {
-            //set version to 400
-			shader_code_text[shader_code_count++] = strdup("#version 400\n");
-        }
-        else if (major_version == 3)
-        {
-            if (minor_version < 10)
-		    {
-			    shader_code_text[shader_code_count++] = strdup("#version 300\n");
-		    }
-		    else if (minor_version <= 19)
-		    {
-			    shader_code_text[shader_code_count++] = strdup("#version 310\n");
-		    }
-		    else if (minor_version <= 29)
-		    {
-			    shader_code_text[shader_code_count++] = strdup("#version 320\n");
-		    }
-            else
-            {
-                shader_code_text[shader_code_count++] = strdup("#version 330\n");
-            }
-        }
-		else
-		{
-			//set version to 1.30
-			shader_code_text[shader_code_count++] = strdup("#version 130\n");
-			//some implementations of GLSL 1.30 require integer precision be explicitly declared
-			extra_code_text[extra_code_count++] = strdup("precision mediump int;\n");
-			extra_code_text[extra_code_count++] = strdup("precision highp float;\n");
-		}
-
-		extra_code_text[extra_code_count++] = strdup("#define DEFINE_GL_FRAGCOLOR 1\n");
-		extra_code_text[extra_code_count++] = strdup("#define FXAA_GLSL_130 1\n");
-
-		extra_code_text[extra_code_count++] = strdup("#define ATTRIBUTE in\n");
-
-		if (type == GL_VERTEX_SHADER_ARB)
-		{ //"varying" state is "out" in a vertex program, "in" in a fragment program 
-			// ("varying" is deprecated after version 1.20)
-			extra_code_text[extra_code_count++] = strdup("#define VARYING out\n");
-			extra_code_text[extra_code_count++] = strdup("#define VARYING_FLAT flat out\n");
-		}
-		else
-		{
-			extra_code_text[extra_code_count++] = strdup("#define VARYING in\n");
-			extra_code_text[extra_code_count++] = strdup("#define VARYING_FLAT flat in\n");
-		}
-
-		//backwards compatibility with legacy texture lookup syntax
-		extra_code_text[extra_code_count++] = strdup("#define texture2D texture\n");
-		extra_code_text[extra_code_count++] = strdup("#define textureCube texture\n");
-		extra_code_text[extra_code_count++] = strdup("#define texture2DLod textureLod\n");
-		extra_code_text[extra_code_count++] = strdup("#define shadow2D(a,b) vec2(texture(a,b))\n");
-		
-		if (major_version > 1 || minor_version >= 40)
-		{ //GLSL 1.40 replaces texture2DRect et al with texture
-			extra_code_text[extra_code_count++] = strdup("#define texture2DRect texture\n");
-			extra_code_text[extra_code_count++] = strdup("#define shadow2DRect(a,b) vec2(texture(a,b))\n");
-		}
+	{
+		extra_code_text[extra_code_count++] = strdup("#define VARYING in\n");
+		extra_code_text[extra_code_count++] = strdup("#define VARYING_FLAT flat in\n");
 	}
-	
+
+	//backwards compatibility with legacy texture lookup syntax
+	extra_code_text[extra_code_count++] = strdup("#define texture2D texture\n");
+	extra_code_text[extra_code_count++] = strdup("#define textureCube texture\n");
+	extra_code_text[extra_code_count++] = strdup("#define texture2DLod textureLod\n");
+	extra_code_text[extra_code_count++] = strdup("#define shadow2D(a,b) vec2(texture(a,b))\n");
+	extra_code_text[extra_code_count++] = strdup("#define texture2DRect texture\n");
+	extra_code_text[extra_code_count++] = strdup("#define shadow2DRect(a,b) vec2(texture(a,b))\n");
+
+
+
 	if (defines)
 	{
 		for (boost::unordered_map<std::string,std::string>::iterator iter = defines->begin(); iter != defines->end(); ++iter)
@@ -789,46 +745,10 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 		}
 	}
 
-	if( gGLManager.mIsATI )
-	{
-		extra_code_text[extra_code_count++] = strdup( "#define IS_AMD_CARD 1\n" );
-	}
-	
+
+
 	if (texture_index_channels > 0 && type == GL_FRAGMENT_SHADER_ARB)
 	{
-		//use specified number of texture channels for indexed texture rendering
-
-		/* prepend shader code that looks like this:
-
-		uniform sampler2D tex0;
-		uniform sampler2D tex1;
-		uniform sampler2D tex2;
-		.
-		.
-		.
-		uniform sampler2D texN;
-		
-		VARYING_FLAT ivec4 vary_texture_index;
-
-		vec4 ret = vec4(1,0,1,1);
-
-		vec4 diffuseLookup(vec2 texcoord)
-		{
-			switch (vary_texture_index.r))
-			{
-				case 0: ret = texture2D(tex0, texcoord); break;
-				case 1: ret = texture2D(tex1, texcoord); break;
-				case 2: ret = texture2D(tex2, texcoord); break;
-				.
-				.
-				.
-				case N: return texture2D(texN, texcoord); break;
-			}
-
-			return ret;
-		}
-		*/
-
 		extra_code_text[extra_code_count++] = strdup("#define HAS_DIFFUSE_LOOKUP\n");
 
 		//uniform declartion
@@ -845,8 +765,8 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 
 		extra_code_text[extra_code_count++] = strdup("vec4 diffuseLookup(vec2 texcoord)\n");
 		extra_code_text[extra_code_count++] = strdup("{\n");
-		
-		
+
+
 		if (texture_index_channels == 1)
 		{ //don't use flow control, that's silly
 			extra_code_text[extra_code_count++] = strdup("return texture2D(tex0, texcoord);\n");
@@ -858,7 +778,7 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 			{ //switches are unreliable on some NVIDIA drivers
 				for (U32 i = 0; i < texture_index_channels; ++i)
 				{
-					std::string if_string = llformat("\t%sif (vary_texture_index == %d) { return texture2D(tex%d, texcoord); }\n", i > 0 ? "else " : "", i, i); 
+					std::string if_string = llformat("\t%sif (vary_texture_index == %d) { return texture2D(tex%d, texcoord); }\n", i > 0 ? "else " : "", i, i);
 					extra_code_text[extra_code_count++] = strdup(if_string.c_str());
 				}
 				extra_code_text[extra_code_count++] = strdup("\treturn vec4(1,0,1,1);\n");
@@ -869,7 +789,7 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 				extra_code_text[extra_code_count++] = strdup("\tvec4 ret = vec4(1,0,1,1);\n");
 				extra_code_text[extra_code_count++] = strdup("\tswitch (vary_texture_index)\n");
 				extra_code_text[extra_code_count++] = strdup("\t{\n");
-		
+
 				//switch body
 				for (S32 i = 0; i < texture_index_channels; ++i)
 				{
@@ -883,29 +803,29 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 			}
 		}
 		else
-		{ //should never get here.  Indexed texture rendering requires GLSL 1.30 or later 
+		{ //should never get here.  Indexed texture rendering requires GLSL 1.30 or later
 			// (for passing integers between vertex and fragment shaders)
 			LL_ERRS() << "Indexed texture rendering requires GLSL 1.30 or later." << LL_ENDL;
 		}
 	}
-    
+
 	//copy file into memory
 	enum {
 		  flag_write_to_out_of_extra_block_area = 0x01
 		, flag_extra_block_marker_was_found = 0x02
 	};
-	
+
 	unsigned char flags = flag_write_to_out_of_extra_block_area;
-	
+
 	GLuint out_of_extra_block_counter = 0, start_shader_code = shader_code_count, file_lines_count = 0;
-	
+
 	while(NULL != fgets((char *)buff, 1024, file)
 		  && shader_code_count < (LL_ARRAY_SIZE(shader_code_text) - LL_ARRAY_SIZE(extra_code_text)))
 	{
 		file_lines_count++;
 
 		bool extra_block_area_found = NULL != strstr((const char*)buff, "[EXTRA_CODE_HERE]");
-		
+
 		if(extra_block_area_found && !(flag_extra_block_marker_was_found & flags))
 		{
 			if(!(flag_write_to_out_of_extra_block_area & flags))
@@ -916,50 +836,50 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 				{
 					shader_code_text[to] = shader_code_text[from];
 				}
-				
+
 				shader_code_count -= extra_code_count;
 			}
-		  
+
 			//copy extra code
 			for(GLuint n = 0; n < extra_code_count
 				&& shader_code_count < (LL_ARRAY_SIZE(shader_code_text) - LL_ARRAY_SIZE(extra_code_text)); ++n)
 			{
 				shader_code_text[shader_code_count++] = extra_code_text[n];
 			}
-			
+
 			extra_code_count = 0;
-			
+
 			flags &= ~flag_write_to_out_of_extra_block_area;
 			flags |= flag_extra_block_marker_was_found;
 		}
         else
         {
             shader_code_text[shader_code_count] = (GLcharARB *)strdup((char *)buff);
-		
+
             if(flag_write_to_out_of_extra_block_area & flags)
             {
                 shader_code_text[extra_code_count + start_shader_code + out_of_extra_block_counter]
                     = shader_code_text[shader_code_count];
                 out_of_extra_block_counter++;
-			
+
                 if(out_of_extra_block_counter == extra_code_count)
                 {
                     shader_code_count += extra_code_count;
                     flags &= ~flag_write_to_out_of_extra_block_area;
                 }
             }
-		
+
             ++shader_code_count;
 		}
 	} //while
-	
+
 	if(!(flag_extra_block_marker_was_found & flags))
 	{
 		for(GLuint n = start_shader_code; n < extra_code_count + start_shader_code; ++n)
 		{
 			shader_code_text[n] = extra_code_text[n - start_shader_code];
 		}
-		
+
 		if (file_lines_count < extra_code_count)
 		{
 			shader_code_count += extra_code_count;
@@ -980,7 +900,7 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 			LL_WARNS("ShaderLoading") << "GL ERROR in glCreateShaderObjectARB: " << error << LL_ENDL;
 		}
 	}
-	
+
 	//load source
 	glShaderSourceARB(ret, shader_code_count, (const GLcharARB**) shader_code_text, NULL);
 
@@ -1004,7 +924,7 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 			LL_WARNS("ShaderLoading") << "GL ERROR in glCompileShaderARB: " << error << LL_ENDL;
 		}
 	}
-		
+
 	if (error == GL_NO_ERROR)
 	{
 		//check for errors
@@ -1013,7 +933,7 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 		if (gDebugGL || success == GL_FALSE)
 		{
 			error = glGetError();
-			if (error != GL_NO_ERROR || success == GL_FALSE) 
+			if (error != GL_NO_ERROR || success == GL_FALSE)
 			{
 				//an error occured, print log
 				LL_WARNS("ShaderLoading") << "GLSL Compilation Error:" << LL_ENDL;
@@ -1054,18 +974,18 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 			shader_level--;
 			return loadShaderFile(filename, shader_level, type, defines, texture_index_channels);
 		}
-		LL_WARNS("ShaderLoading") << "Failed to load " << filename << LL_ENDL;	
+		LL_WARNS("ShaderLoading") << "Failed to load " << filename << LL_ENDL;
 	}
 	return ret;
 }
 
-BOOL LLShaderMgr::linkProgramObject(GLhandleARB obj, BOOL suppress_errors) 
+BOOL LLShaderMgr::linkProgramObject(GLhandleARB obj, BOOL suppress_errors)
 {
 	//check for errors
 	glLinkProgramARB(obj);
 	GLint success = GL_TRUE;
 	glGetObjectParameterivARB(obj, GL_OBJECT_LINK_STATUS_ARB, &success);
-	if (!suppress_errors && success == GL_FALSE) 
+	if (!suppress_errors && success == GL_FALSE)
 	{
 		//an error occured, print log
 		LL_SHADER_LOADING_WARNS() << "GLSL Linker Error:" << LL_ENDL;
@@ -1079,7 +999,7 @@ BOOL LLShaderMgr::linkProgramObject(GLhandleARB obj, BOOL suppress_errors)
 		// Force an evaluation of the gl state so the driver can tell if the shader will run in hardware or software
 		// per Apple's suggestion
 		LLGLSLShader::sNoFixedFunction = false;
-		
+
 		glUseProgramObjectARB(obj);
 
 		gGL.begin(LLRender::TRIANGLES);
@@ -1088,22 +1008,22 @@ BOOL LLShaderMgr::linkProgramObject(GLhandleARB obj, BOOL suppress_errors)
 		gGL.vertex3f(0.0f, 0.0f, 0.0f);
 		gGL.end();
 		gGL.flush();
-		
+
 		glUseProgramObjectARB(0);
-		
+
 		LLGLSLShader::sNoFixedFunction = true;
 
 		// Query whether the shader can or cannot run in hardware
 		// http://developer.apple.com/qa/qa2007/qa1502.html
 		GLint vertexGPUProcessing, fragmentGPUProcessing;
 		CGLContextObj ctx = CGLGetCurrentContext();
-		CGLGetParameter(ctx, kCGLCPGPUVertexProcessing, &vertexGPUProcessing);	
+		CGLGetParameter(ctx, kCGLCPGPUVertexProcessing, &vertexGPUProcessing);
 		CGLGetParameter(ctx, kCGLCPGPUFragmentProcessing, &fragmentGPUProcessing);
 		if (!fragmentGPUProcessing || !vertexGPUProcessing)
 		{
 			LL_SHADER_LOADING_WARNS() << "GLSL Linker: Running in Software:" << LL_ENDL;
 			success = GL_FALSE;
-			suppress_errors = FALSE;		
+			suppress_errors = FALSE;
 		}
 	}
 
@@ -1156,7 +1076,7 @@ void LLShaderMgr::initAttribsAndUniforms()
 	mReservedAttribs.push_back("weight4");
 	mReservedAttribs.push_back("clothing");
 	mReservedAttribs.push_back("texture_index");
-	
+
 	//matrix state
 	mReservedUniforms.push_back("modelview_matrix");
 	mReservedUniforms.push_back("projection_matrix");
@@ -1203,7 +1123,7 @@ void LLShaderMgr::initAttribsAndUniforms()
 	llassert(mReservedUniforms.size() == LLShaderMgr::PROJECTOR_AMBIENT_LOD+1);
 
 	mReservedUniforms.push_back("color");
-		
+
 	mReservedUniforms.push_back("diffuseMap");
     mReservedUniforms.push_back("altDiffuseMap");
 	mReservedUniforms.push_back("specularMap");
@@ -1280,14 +1200,14 @@ void LLShaderMgr::initAttribsAndUniforms()
 	mReservedUniforms.push_back("depth_cutoff");
 	mReservedUniforms.push_back("norm_cutoff");
 	mReservedUniforms.push_back("shadow_target_width");
-	
+
 	llassert(mReservedUniforms.size() == LLShaderMgr::DEFERRED_SHADOW_TARGET_WIDTH+1);
 
 	mReservedUniforms.push_back("tc_scale");
 	mReservedUniforms.push_back("rcp_screen_res");
 	mReservedUniforms.push_back("rcp_frame_opt");
 	mReservedUniforms.push_back("rcp_frame_opt2");
-	
+
 	mReservedUniforms.push_back("focal_distance");
 	mReservedUniforms.push_back("blur_constant");
 	mReservedUniforms.push_back("tan_pixel_angle");
@@ -1318,18 +1238,18 @@ void LLShaderMgr::initAttribsAndUniforms()
 	mReservedUniforms.push_back("projectionMap");
 	mReservedUniforms.push_back("norm_mat");
 	mReservedUniforms.push_back("texture_gamma");
-	
+
 	mReservedUniforms.push_back("specular_color");
 	mReservedUniforms.push_back("env_intensity");
 
 	mReservedUniforms.push_back("matrixPalette");
 	mReservedUniforms.push_back("translationPalette");
-	
+
 // <FS:CR> Import Vignette from Exodus
 	mReservedUniforms.push_back("exo_vignette");
 	mReservedUniforms.push_back("exo_screen");
 // </FS:CR> Import Vignette from Exodus
-	
+
 	mReservedUniforms.push_back("screenTex");
 	mReservedUniforms.push_back("screenDepth");
 	mReservedUniforms.push_back("refTex");
@@ -1353,7 +1273,7 @@ void LLShaderMgr::initAttribsAndUniforms()
 	mReservedUniforms.push_back("sunAngle");
 	mReservedUniforms.push_back("scaledAngle");
 	mReservedUniforms.push_back("sunAngle2");
-	
+
 	mReservedUniforms.push_back("camPosLocal");
 
 	mReservedUniforms.push_back("gWindDir");
@@ -1409,4 +1329,3 @@ void LLShaderMgr::initAttribsAndUniforms()
 		dupe_check.insert(mReservedUniforms[i]);
 	}
 }
-

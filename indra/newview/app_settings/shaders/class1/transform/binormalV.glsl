@@ -25,9 +25,9 @@
 
 uniform mat3 normal_matrix;
 
-ATTRIBUTE vec4 tangent;
+layout (location = 8) in vec4 tangent;
 
-VARYING vec4 tangent_out;
+out vec4 tangent_out;
 
 void main()
 {

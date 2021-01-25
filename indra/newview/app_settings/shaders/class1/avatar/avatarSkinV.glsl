@@ -24,7 +24,7 @@
  */
  
 
-ATTRIBUTE vec4 weight;
+layout (location = 9) in vec4 weight;
 
 uniform vec4 matrixPalette[45];
 

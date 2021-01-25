@@ -29,7 +29,7 @@ out vec4 frag_data[3];
 #define frag_data gl_FragData
 #endif
 
-VARYING vec2 vary_frag;
+in vec2 vary_frag;
 
 uniform vec2 screen_res;
 uniform sampler2D sh_input_r;

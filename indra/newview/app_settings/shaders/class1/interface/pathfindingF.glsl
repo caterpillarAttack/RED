@@ -29,7 +29,7 @@ out vec4 frag_color;
 #define frag_color gl_FragColor
 #endif
 
-VARYING vec4 vertex_color;
+in vec4 vertex_color;
 
 void main() 
 {

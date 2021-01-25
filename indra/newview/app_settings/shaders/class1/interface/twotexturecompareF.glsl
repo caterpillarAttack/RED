@@ -36,8 +36,8 @@ uniform float dither_scale;
 uniform float dither_scale_s;
 uniform float dither_scale_t;
 
-VARYING vec2 vary_texcoord0;
-VARYING vec2 vary_texcoord1;
+in vec2 vary_texcoord0;
+in vec2 vary_texcoord1;
 
 void main() 
 {

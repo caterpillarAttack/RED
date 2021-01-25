@@ -25,14 +25,14 @@
  
 uniform mat4 modelview_projection_matrix;
 
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 
 uniform vec2 screen_res;
 
 void setAtmosAttenuation(vec3 c);
 void setAdditiveColor(vec3 c);
 
-VARYING vec2 vary_fragcoord;
+out vec2 vary_fragcoord;
 void main()
 {
     //transform vertex

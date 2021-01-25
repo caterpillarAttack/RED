@@ -35,7 +35,7 @@ out vec4 frag_data[3];
 // The fragment shader for the sky
 /////////////////////////////////////////////////////////////////////////
 
-VARYING vec4 vary_HazeColor;
+in vec4 vary_HazeColor;
 
 /// Soft clips the light with a gamma correction
 vec3 scaleSoftClip(vec3 light);

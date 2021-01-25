@@ -58,10 +58,10 @@ uniform mat4 norm_mat; //region space to screen space
 uniform int water_edge;
 
 //bigWave is (refCoord.w, view.w);
-VARYING vec4 refCoord;
-VARYING vec4 littleWave;
-VARYING vec4 view;
-VARYING vec4 vary_position;
+in vec4 refCoord;
+in vec4 littleWave;
+in vec4 view;
+in vec4 vary_position;
 
 vec2 encode_normal(vec3 n);
 vec3 scaleSoftClip(vec3 l);

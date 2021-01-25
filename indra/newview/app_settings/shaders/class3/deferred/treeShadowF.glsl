@@ -35,8 +35,8 @@ uniform float minimum_alpha;
 
 uniform sampler2D diffuseMap;
 
-VARYING vec4 pos;
-VARYING vec2 vary_texcoord0;
+in vec4 pos;
+in vec2 vary_texcoord0;
 
 vec4 computeMoments(float d, float a);
 

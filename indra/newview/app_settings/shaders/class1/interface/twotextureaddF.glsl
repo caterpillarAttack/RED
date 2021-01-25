@@ -32,8 +32,8 @@ out vec4 frag_color;
 uniform sampler2D tex0;
 uniform sampler2D tex1;
 
-VARYING vec2 vary_texcoord0;
-VARYING vec2 vary_texcoord1;
+in vec2 vary_texcoord0;
+in vec2 vary_texcoord1;
 
 void main() 
 {

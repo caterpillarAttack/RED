@@ -31,13 +31,13 @@ out vec4 frag_color;
 
 uniform sampler2D diffuseMap;
 
-VARYING vec4 pos;
-VARYING float target_pos_x;
-VARYING float vary_CloudDensity;
-VARYING vec2 vary_texcoord0;
-VARYING vec2 vary_texcoord1;
-VARYING vec2 vary_texcoord2;
-VARYING vec2 vary_texcoord3;
+in vec4 pos;
+in float target_pos_x;
+in float vary_CloudDensity;
+in vec2 vary_texcoord0;
+in vec2 vary_texcoord1;
+in vec2 vary_texcoord2;
+in vec2 vary_texcoord3;
 
 uniform sampler2D cloud_noise_texture;
 uniform sampler2D cloud_noise_texture_next;
@@ -55,7 +55,7 @@ uniform float sun_size;
 uniform float far_z;
 
 #if !defined(DEPTH_CLAMP)
-VARYING vec4 post_pos;
+in vec4 post_pos;
 #endif
 
 vec4 cloudNoise(vec2 uv)

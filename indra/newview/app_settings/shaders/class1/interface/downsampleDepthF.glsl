@@ -31,15 +31,15 @@ out vec4 frag_color;
 
 uniform sampler2D depthMap;
 
-VARYING vec2 tc0;
-VARYING vec2 tc1;
-VARYING vec2 tc2;
-VARYING vec2 tc3;
-VARYING vec2 tc4;
-VARYING vec2 tc5;
-VARYING vec2 tc6;
-VARYING vec2 tc7;
-VARYING vec2 tc8;
+in vec2 tc0;
+in vec2 tc1;
+in vec2 tc2;
+in vec2 tc3;
+in vec2 tc4;
+in vec2 tc5;
+in vec2 tc6;
+in vec2 tc7;
+in vec2 tc8;
 
 void main() 
 {

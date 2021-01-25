@@ -27,15 +27,15 @@ uniform mat4 projection_matrix;
 
 mat4 getSkinnedTransform();
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec3 normal;
-ATTRIBUTE vec2 texcoord0;
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 texcoord0;
 
 #if !defined(DEPTH_CLAMP)
-VARYING vec4 post_pos;
+out vec4 post_pos;
 #endif
 
-VARYING vec4 pos;
+out vec4 pos;
 
 void main()
 {

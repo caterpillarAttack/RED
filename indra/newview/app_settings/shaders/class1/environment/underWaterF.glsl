@@ -51,9 +51,9 @@ uniform float waterFogKS;
 uniform vec2 screenRes;
 
 //bigWave is (refCoord.w, view.w);
-VARYING vec4 refCoord;
-VARYING vec4 littleWave;
-VARYING vec4 view;
+in vec4 refCoord;
+in vec4 littleWave;
+in vec4 view;
 
 vec4 applyWaterFogView(vec3 pos, vec4 color);
 

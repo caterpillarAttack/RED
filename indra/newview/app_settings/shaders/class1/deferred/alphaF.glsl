@@ -47,13 +47,13 @@ uniform vec3 moon_dir;
 uniform sampler2D diffuseMap;
 #endif
 
-VARYING vec3 vary_fragcoord;
-VARYING vec3 vary_position;
-VARYING vec2 vary_texcoord0;
-VARYING vec3 vary_norm;
+in vec3 vary_fragcoord;
+in vec3 vary_position;
+in vec2 vary_texcoord0;
+in vec3 vary_norm;
 
 #ifdef USE_VERTEX_COLOR
-VARYING vec4 vertex_color; //vertex color should be treated as sRGB
+in vec4 vertex_color; //vertex color should be treated as sRGB
 #endif
 
 uniform mat4 proj_mat;

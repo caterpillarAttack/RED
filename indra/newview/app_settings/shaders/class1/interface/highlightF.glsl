@@ -32,7 +32,7 @@ out vec4 frag_color;
 uniform vec4 color;
 uniform sampler2D diffuseMap;
 
-VARYING vec2 vary_texcoord0;
+in vec2 vary_texcoord0;
 
 void main() 
 {

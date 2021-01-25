@@ -44,7 +44,7 @@ uniform int kern_length;
 uniform float kern_scale;
 uniform vec3 blur_quad;
 
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 uniform mat4 inv_proj;
 uniform vec2 screen_res;

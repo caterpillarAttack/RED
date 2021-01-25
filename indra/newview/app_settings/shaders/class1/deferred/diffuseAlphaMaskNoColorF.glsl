@@ -35,8 +35,8 @@ uniform float minimum_alpha;
 
 uniform sampler2D diffuseMap;
 
-VARYING vec3 vary_normal;
-VARYING vec2 vary_texcoord0;
+in vec3 vary_normal;
+in vec2 vary_texcoord0;
 
 vec2 encode_normal(vec3 n);
 

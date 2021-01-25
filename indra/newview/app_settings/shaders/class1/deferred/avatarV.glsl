@@ -25,17 +25,17 @@
  
 uniform mat4 projection_matrix;
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec3 normal;
-ATTRIBUTE vec2 texcoord0;
-ATTRIBUTE vec4 clothing; 
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 texcoord0;
+in vec4 clothing; 
 
 mat4 getSkinnedTransform();
 
-ATTRIBUTE vec4 weight;
+layout (location = 9) in vec4 weight;
 
-VARYING vec3 vary_normal;
-VARYING vec2 vary_texcoord0;
+out vec3 vary_normal;
+out vec2 vary_texcoord0;
 
 // <FS> Fix avatar cloth failing to work in deferred
 uniform vec4 gWindDir;

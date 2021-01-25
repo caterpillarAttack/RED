@@ -53,9 +53,9 @@ uniform float blurMultiplier;
 
 
 //bigWave is (refCoord.w, view.w);
-VARYING vec4 refCoord;
-VARYING vec4 littleWave;
-VARYING vec4 view;
+in vec4 refCoord;
+in vec4 littleWave;
+in vec4 view;
 
 vec3 BlendNormal(vec3 bump1, vec3 bump2)
 {

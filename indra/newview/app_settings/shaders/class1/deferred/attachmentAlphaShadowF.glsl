@@ -32,15 +32,15 @@ out vec4 frag_color;
 uniform float minimum_alpha;
 uniform sampler2D diffuseMap;
 
-VARYING float pos_w;
-VARYING float target_pos_x;
+in float pos_w;
+in float target_pos_x;
 
 #if !DEPTH_CLAMP
-VARYING vec4 post_pos;
+in vec4 post_pos;
 #endif
 
-VARYING vec2 vary_texcoord0;
-VARYING vec4 vertex_color;
+in vec2 vary_texcoord0;
+in vec4 vertex_color;
 
 void main() 
 {

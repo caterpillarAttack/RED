@@ -36,7 +36,7 @@ out vec4 frag_color;
 uniform sampler2DRect diffuseRect;
 
 uniform vec2 screen_res;
-VARYING vec2 vary_tc;
+in vec2 vary_tc;
 
 void main() 
 {

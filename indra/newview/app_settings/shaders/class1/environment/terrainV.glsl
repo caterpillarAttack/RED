@@ -31,15 +31,15 @@ uniform mat4 modelview_projection_matrix;
 uniform vec4 object_plane_t;
 uniform vec4 object_plane_s;
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec3 normal;
-ATTRIBUTE vec2 texcoord0;
-ATTRIBUTE vec2 texcoord1;
-ATTRIBUTE vec4 diffuse_color;
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 texcoord0;
+layout (location = 3) in vec2 texcoord1;
+layout(location = 6) in vec4 diffuse_color;
 
-VARYING vec4 vertex_color;
-VARYING vec4 vary_texcoord0;
-VARYING vec4 vary_texcoord1;
+out vec4 vertex_color;
+out vec4 vary_texcoord0;
+out vec4 vary_texcoord1;
 
 void calcAtmospherics(vec3 inPositionEye);
 

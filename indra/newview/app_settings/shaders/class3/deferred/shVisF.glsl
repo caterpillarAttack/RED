@@ -39,7 +39,7 @@ uniform sampler2D sh_input_b;
 
 uniform mat3 inv_modelviewprojection;
 
-VARYING vec4 vary_pos;
+in vec4 vary_pos;
 
 void main(void) 
 {

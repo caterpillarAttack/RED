@@ -27,21 +27,21 @@ uniform mat4 modelview_matrix;
 uniform mat4 texture_matrix0;
 uniform float shadow_target_width;
 
-ATTRIBUTE vec4 diffuse_color;
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec3 normal;
-ATTRIBUTE vec2 texcoord0;
+layout(location = 6) in vec4 diffuse_color;
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 texcoord0;
 
 mat4 getObjectSkinnedTransform();
 void passTextureIndex();
 
 #if !DEPTH_CLAMP
-VARYING vec4 post_pos;
+out vec4 post_pos;
 #endif
-VARYING vec2 vary_texcoord0;
-VARYING float pos_w;
-VARYING float target_pos_x;
-VARYING vec4 vertex_color;
+out vec2 vary_texcoord0;
+out float pos_w;
+out float target_pos_x;
+out vec4 vertex_color;
 
 void main()
 {

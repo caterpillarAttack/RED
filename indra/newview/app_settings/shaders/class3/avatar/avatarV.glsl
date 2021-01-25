@@ -25,13 +25,13 @@
 
 uniform mat4 projection_matrix;
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec3 normal;
-ATTRIBUTE vec2 texcoord0;
-ATTRIBUTE vec4 clothing; 
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 texcoord0;
+in vec4 clothing; 
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+out vec4 vertex_color;
+out vec2 vary_texcoord0;
 
 vec4 calcLighting(vec3 pos, vec3 norm, vec4 color);
 mat4 getSkinnedTransform();

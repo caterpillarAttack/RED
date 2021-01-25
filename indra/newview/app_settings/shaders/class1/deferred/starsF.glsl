@@ -31,9 +31,9 @@ out vec4 frag_data[3];
 #define frag_data gl_FragData
 #endif
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
-VARYING vec2 screenpos;
+in vec4 vertex_color;
+in vec2 vary_texcoord0;
+in vec2 screenpos;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D altDiffuseMap;

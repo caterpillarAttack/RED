@@ -26,7 +26,7 @@
 uniform mat4 modelview_matrix;
 uniform mat4 modelview_projection_matrix;
 
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 
 
 void calcAtmospherics(vec3 inPositionEye);
@@ -37,11 +37,11 @@ uniform float time;
 uniform vec3 eyeVec;
 uniform float waterHeight;
 
-VARYING vec4 refCoord;
-VARYING vec4 littleWave;
-VARYING vec4 view;
+out vec4 refCoord;
+out vec4 littleWave;
+out vec4 view;
 
-VARYING vec4 vary_position;
+out vec4 vary_position;
 
 float wave(vec2 v, float t, float f, vec2 d, float s) 
 {

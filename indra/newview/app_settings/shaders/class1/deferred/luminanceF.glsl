@@ -32,7 +32,7 @@ out vec4 frag_color;
 #endif
 
 uniform sampler2DRect diffuseMap;
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 void main() 
 {

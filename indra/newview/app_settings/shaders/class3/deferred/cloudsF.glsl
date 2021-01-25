@@ -33,14 +33,14 @@ out vec4 frag_data[3];
 // The fragment shader for the sky
 /////////////////////////////////////////////////////////////////////////
 
-VARYING vec4 vary_CloudColorSun;
-VARYING vec4 vary_CloudColorAmbient;
-VARYING float vary_CloudDensity;
-VARYING vec2 vary_texcoord0;
-VARYING vec2 vary_texcoord1;
-VARYING vec2 vary_texcoord2;
-VARYING vec2 vary_texcoord3;
-VARYING vec3 vary_pos;
+in vec4 vary_CloudColorSun;
+in vec4 vary_CloudColorAmbient;
+in float vary_CloudDensity;
+in vec2 vary_texcoord0;
+in vec2 vary_texcoord1;
+in vec2 vary_texcoord2;
+in vec2 vary_texcoord3;
+in vec3 vary_pos;
 
 uniform sampler2D cloud_noise_texture;
 uniform sampler2D cloud_noise_texture_next;

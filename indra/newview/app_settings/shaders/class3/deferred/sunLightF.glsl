@@ -36,7 +36,7 @@ out vec4 frag_color;
 //class 2, shadows, no SSAO
 
 // Inputs
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 vec4 getPosition(vec2 pos_screen);
 vec3 getNorm(vec2 pos_screen);

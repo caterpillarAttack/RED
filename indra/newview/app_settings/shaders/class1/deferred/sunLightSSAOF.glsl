@@ -38,7 +38,7 @@ out vec4 frag_color;
 uniform sampler2DRect normalMap;
 
 // Inputs
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 vec3 getNorm(vec2 pos_screen);
 vec4 getPosition(vec2 pos_screen);

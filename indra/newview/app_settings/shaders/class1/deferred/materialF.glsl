@@ -74,9 +74,9 @@ uniform mat3 env_mat;
 
 uniform vec3 sun_dir;
 uniform vec3 moon_dir;
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
-VARYING vec3 vary_position;
+in vec3 vary_position;
 
 uniform mat4 proj_mat;
 uniform mat4 inv_proj;
@@ -188,7 +188,7 @@ uniform sampler2D bumpMap;
 #ifdef HAS_SPECULAR_MAP
 uniform sampler2D specularMap;
 
-VARYING vec2 vary_texcoord2;
+in vec2 vary_texcoord2;
 #endif
 
 uniform float env_intensity;
@@ -199,16 +199,16 @@ uniform float minimum_alpha;
 #endif
 
 #ifdef HAS_NORMAL_MAP
-VARYING vec3 vary_mat0;
-VARYING vec3 vary_mat1;
-VARYING vec3 vary_mat2;
-VARYING vec2 vary_texcoord1;
+in vec3 vary_mat0;
+in vec3 vary_mat1;
+in vec3 vary_mat2;
+in vec2 vary_texcoord1;
 #else
-VARYING vec3 vary_normal;
+in vec3 vary_normal;
 #endif
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+in vec4 vertex_color;
+in vec2 vary_texcoord0;
 
 vec2 encode_normal(vec3 n);
 

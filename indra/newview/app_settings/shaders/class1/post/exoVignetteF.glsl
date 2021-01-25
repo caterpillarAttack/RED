@@ -16,7 +16,7 @@ out vec4 frag_color;
 uniform sampler2DRect exo_screen;
 uniform vec2 screen_res;
 uniform vec3 exo_vignette;
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 
 void main ()

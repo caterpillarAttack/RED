@@ -24,9 +24,9 @@
  */
 
 
-ATTRIBUTE vec2 texcoord0;
+layout (location = 2) in vec2 texcoord0;
 
-VARYING vec2 texcoord_out;
+out vec2 texcoord_out;
 
 void main()
 {

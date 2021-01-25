@@ -29,7 +29,7 @@ out vec4 frag_data[3];
 #define frag_data gl_FragData
 #endif
 
-VARYING vec2 vary_frag;
+in vec2 vary_frag;
 
 uniform vec3 sun_dir;
 

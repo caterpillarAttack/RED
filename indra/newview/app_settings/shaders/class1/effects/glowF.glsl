@@ -32,10 +32,10 @@ out vec4 frag_color;
 uniform sampler2D diffuseMap;
 uniform float glowStrength;
 
-VARYING vec4 vary_texcoord0;
-VARYING vec4 vary_texcoord1;
-VARYING vec4 vary_texcoord2;
-VARYING vec4 vary_texcoord3;
+in vec4 vary_texcoord0;
+in vec4 vary_texcoord1;
+in vec4 vary_texcoord2;
+in vec4 vary_texcoord3;
 
 void main()
 {

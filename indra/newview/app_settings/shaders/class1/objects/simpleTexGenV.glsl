@@ -28,10 +28,10 @@ uniform mat4 texture_matrix0;
 uniform mat4 modelview_matrix;
 uniform mat4 modelview_projection_matrix;
 
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 void passTextureIndex();
-ATTRIBUTE vec2 texcoord0;
-ATTRIBUTE vec3 normal;
+layout (location = 2) in vec2 texcoord0;
+layout (location = 1) in vec3 normal;
 
 uniform vec4 color;
 uniform vec4 object_plane_t;
@@ -40,8 +40,8 @@ uniform vec4 object_plane_s;
 vec4 calcLighting(vec3 pos, vec3 norm, vec4 color);
 void calcAtmospherics(vec3 inPositionEye);
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+out vec4 vertex_color;
+out vec2 vary_texcoord0;
 
 vec4 texgen_object(vec4  vpos, vec4 tc, mat4 mat, vec4 tp0, vec4 tp1)
 {

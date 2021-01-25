@@ -36,7 +36,7 @@ out vec4 frag_color;
 //class 2, shadows, no SSAO
 
 // Inputs
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 uniform vec3 sun_dir;
 uniform float shadow_bias;

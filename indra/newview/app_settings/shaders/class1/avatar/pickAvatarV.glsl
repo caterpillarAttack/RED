@@ -25,12 +25,12 @@
 
 uniform mat4 projection_matrix;
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec4 diffuse_color;
-ATTRIBUTE vec2 texcoord0;
+layout (location = 0) in vec3 position;
+layout(location = 6) in vec4 diffuse_color;
+layout (location = 2) in vec2 texcoord0;
 
-VARYING vec4 vertex_color;
-VARYING vec2 vary_texcoord0;
+out vec4 vertex_color;
+out vec2 vary_texcoord0;
 
 mat4 getSkinnedTransform();
 

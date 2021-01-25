@@ -25,9 +25,9 @@
 
 uniform int color_in;
 
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 
-VARYING int color_out;
+out int color_out;
 
 void main()
 {

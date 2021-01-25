@@ -35,7 +35,7 @@ out vec4 frag_color;
 
 uniform sampler2D alphaMap;
 
-VARYING vec2 vary_texcoord0;
+in vec2 vary_texcoord0;
 
 uniform float stepX;
 uniform float stepY;

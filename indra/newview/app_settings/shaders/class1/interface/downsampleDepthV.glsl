@@ -25,21 +25,21 @@
 
 uniform mat4 modelview_projection_matrix;
 
-ATTRIBUTE vec3 position;
+layout (location = 0) in vec3 position;
 
 uniform vec2 screen_res;
 
 uniform vec2 delta;
 
-VARYING vec2 tc0;
-VARYING vec2 tc1;
-VARYING vec2 tc2;
-VARYING vec2 tc3;
-VARYING vec2 tc4;
-VARYING vec2 tc5;
-VARYING vec2 tc6;
-VARYING vec2 tc7;
-VARYING vec2 tc8;
+out vec2 tc0;
+out vec2 tc1;
+out vec2 tc2;
+out vec2 tc3;
+out vec2 tc4;
+out vec2 tc5;
+out vec2 tc6;
+out vec2 tc7;
+out vec2 tc8;
 
 void main()
 {

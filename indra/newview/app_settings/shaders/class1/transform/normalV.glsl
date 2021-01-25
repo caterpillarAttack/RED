@@ -25,9 +25,9 @@
 
 uniform mat3 normal_matrix;
 
-ATTRIBUTE vec3 normal;
+layout (location = 1) in vec3 normal;
 
-VARYING vec4 normal_out;
+out vec4 normal_out;
 
 void main()
 {

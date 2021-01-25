@@ -26,19 +26,19 @@
 uniform mat4 modelview_projection_matrix;
 uniform mat4 modelview_matrix;
 
-ATTRIBUTE vec3 position;
-ATTRIBUTE vec2 texcoord0;
+layout (location = 0) in vec3 position;
+layout (location = 2) in vec2 texcoord0;
 
 //////////////////////////////////////////////////////////////////////////
 // The vertex shader for creating the atmospheric sky
 ///////////////////////////////////////////////////////////////////////////////
 
 // Output parameters
-VARYING vec2 vary_texcoord0;
-VARYING vec2 vary_texcoord1;
-VARYING vec2 vary_texcoord2;
-VARYING vec2 vary_texcoord3;
-VARYING vec3 vary_pos;
+out vec2 vary_texcoord0;
+out vec2 vary_texcoord1;
+out vec2 vary_texcoord2;
+out vec2 vary_texcoord3;
+out vec3 vary_pos;
 
 // Inputs
 uniform float cloud_scale;

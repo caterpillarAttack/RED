@@ -40,7 +40,7 @@ uniform vec2 screen_res;
 uniform float max_cof;
 uniform float res_scale;
 
-VARYING vec2 vary_fragcoord;
+in vec2 vary_fragcoord;
 
 void dofSample(inout vec4 diff, inout float w, float min_sc, vec2 tc)
 {
