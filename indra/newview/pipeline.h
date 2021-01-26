@@ -1,25 +1,25 @@
-﻿/** 
+﻿/**
  * @file pipeline.h
  * @brief Rendering pipeline definitions
  *
  * $LicenseInfo:firstyear=2001&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
  * version 2.1 of the License only.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
@@ -135,7 +135,7 @@ public:
     bool allocateShadowBuffer(U32 resX, U32 resY);
 
 	void allocatePhysicsBuffer();
-	
+
 	void resetVertexBuffers(LLDrawable* drawable);
 	void generateImpostor(LLVOAvatar* avatar);
 	void bindScreenToTexture();
@@ -194,7 +194,7 @@ public:
 												LLVector4a* intersection = NULL,         // return the intersection point
 												LLVector2* tex_coord = NULL,            // return the texture coordinates of the intersection point
 												LLVector4a* normal = NULL,               // return the surface normal at the intersection point
-												LLVector4a* tangent = NULL             // return the surface tangent at the intersection point  
+												LLVector4a* tangent = NULL             // return the surface tangent at the intersection point
 		);
 
 	//get the closest particle to start between start and end, returns the LLVOPartGroup and particle index
@@ -218,16 +218,14 @@ public:
 
 	U32         addObject(LLViewerObject *obj);
 
-	void		enableShadows(const bool enable_shadows);
     void        releaseShadowTargets();
     void        releaseShadowTarget(U32 index);
 
 // 	void		setLocalLighting(const bool local_lighting);
 // 	bool		isLocalLightingEnabled() const;
-	S32			setLightingDetail(S32 level);
+	S32			setLightingDetail();
 	S32			getLightingDetail() const { return mLightingDetail; }
-	S32			getMaxLightingDetail() const;
-		
+
 	void		setUseVertexShaders(bool use_shaders);
 	bool		getUseVertexShaders() const { return mVertexShadersEnabled; }
 	bool		canUseVertexShaders();
@@ -330,13 +328,13 @@ public:
 	void shiftObjects(const LLVector3 &offset);
 
 	void setLight(LLDrawable *drawablep, bool is_light);
-	
+
 	bool hasRenderBatches(const U32 type) const;
 	LLCullResult::drawinfo_iterator beginRenderMap(U32 type);
 	LLCullResult::drawinfo_iterator endRenderMap(U32 type);
 	LLCullResult::sg_iterator beginAlphaGroups();
 	LLCullResult::sg_iterator endAlphaGroups();
-	
+
 
 	void addTrianglesDrawn(S32 index_count, U32 render_type = LLRender::TRIANGLES);
 
@@ -357,7 +355,7 @@ public:
 	void clearRenderTypeMask(U32 type, ...);
 	void setAllRenderTypes();
 	void clearAllRenderTypes();
-	
+
 	void pushRenderTypeMask();
 	void popRenderTypeMask();
 
@@ -416,7 +414,7 @@ public:
 
 	static void throttleNewMemoryAllocation(bool disable);
 
-	
+
 
 	void addDebugBlip(const LLVector3& position, const LLColor4& color);
 
@@ -454,7 +452,7 @@ public:
 		// Following are pool types (some are also object types)
 		RENDER_TYPE_SKY							= LLDrawPool::POOL_SKY,
 		RENDER_TYPE_WL_SKY						= LLDrawPool::POOL_WL_SKY,
-		RENDER_TYPE_GROUND						= LLDrawPool::POOL_GROUND,	
+		RENDER_TYPE_GROUND						= LLDrawPool::POOL_GROUND,
 		RENDER_TYPE_TERRAIN						= LLDrawPool::POOL_TERRAIN,
 		RENDER_TYPE_SIMPLE						= LLDrawPool::POOL_SIMPLE,
 		RENDER_TYPE_GRASS						= LLDrawPool::POOL_GRASS,
@@ -562,11 +560,11 @@ public:
 	};
 
 public:
-	
+
 	LLSpatialPartition* getSpatialPartition(LLViewerObject* vobj);
 
 	void updateCamera(bool reset = false);
-	
+
 	LLVector3				mFlyCamPosition;
 	LLQuaternion			mFlyCamRotation;
 
@@ -628,7 +626,7 @@ public:
 	//screen texture
 	U32 					mScreenWidth;
 	U32 					mScreenHeight;
-	
+
 	LLRenderTarget			mScreen;
 	LLRenderTarget			mUIScreen;
 	LLRenderTarget			mDeferredScreen;
@@ -721,7 +719,7 @@ protected:
 	U64						mOldRenderDebugMask;
 	std::stack<U32>			mRenderDebugFeatureStack;
 
-	
+
 	/////////////////////////////////////////////
 	//
 	//
@@ -756,11 +754,11 @@ protected:
 		};
 	};
 	typedef std::set< Light, Light::compare > light_set_t;
-	
+
 	LLDrawable::drawable_set_t		mLights;
 	light_set_t						mNearbyLights; // lights near camera
 	LLColor4						mHWLightColors[8];
-	
+
 	/////////////////////////////////////////////
 	//
 	// Different queues of drawables being processed.
@@ -776,8 +774,8 @@ protected:
 	U32 mMeshDirtyQueryObject;
 
 	// <FS:ND> A vector is much better suited for the use case of mPartitionQ
-	// LLDrawable::drawable_list_t		mPartitionQ; //drawables that need to update their spatial partition radius 
-	LLDrawable::drawable_vector_t	mPartitionQ; //drawables that need to update their spatial partition radius 
+	// LLDrawable::drawable_list_t		mPartitionQ; //drawables that need to update their spatial partition radius
+	LLDrawable::drawable_vector_t	mPartitionQ; //drawables that need to update their spatial partition radius
 	// </FS:ND>
 
 	bool mGroupQ2Locked;
@@ -786,7 +784,7 @@ protected:
 	bool mResetVertexBuffers; //if true, clear vertex buffers on next update
 
 	LLViewerObject::vobj_list_t		mCreateQ;
-		
+
 	LLDrawable::drawable_set_t		mRetexturedList;
 
 	class HighlightItem
@@ -848,7 +846,7 @@ protected:
  	typedef std::set<LLDrawPool*, compare_pools > pool_set_t;
 	pool_set_t mPools;
 	LLDrawPool*	mLastRebuildPool;
-	
+
 	// For quick-lookups into mPools (mapped by texture pointer)
 	std::map<uintptr_t, LLDrawPool*>	mTerrainPools;
 	std::map<uintptr_t, LLDrawPool*>	mTreePools;
@@ -868,7 +866,7 @@ protected:
 	LLDrawPool*					mMaterialsPool;
 	LLDrawPool*					mWLSkyPool;
 	// Note: no need to keep an quick-lookup to avatar pools, since there's only one per avatar
-	
+
 public:
 	std::vector<LLFace*>		mHighlightFaces;	// highlight faces on physical objects
 protected:
@@ -889,11 +887,11 @@ protected:
 	std::list<DebugBlip> mDebugBlips;
 
 	LLPointer<LLViewerFetchedTexture>	mFaceSelectImagep;
-	
+
 	U32						mLightMask;
 	U32						mLightMovingMask;
 	S32						mLightingDetail;
-		
+
 	static bool				sRenderPhysicalBeacons;
 	static bool				sRenderMOAPBeacons;
 	static bool				sRenderScriptedTouchBeacons;
@@ -961,7 +959,7 @@ public:
 	// <FS:Beq> FIRE-16728
 	static bool FSFocusPointLocked;
 	static bool FSFocusPointFollowsPointer;
-	// </FS:Beq>	
+	// </FS:Beq>
 	static F32 CameraFocusTransitionTime;
 	static F32 CameraFNumber;
 	static F32 CameraFocalLength;

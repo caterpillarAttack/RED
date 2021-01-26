@@ -512,7 +512,7 @@ static bool handleRenderDynamicLODChanged(const LLSD& newvalue)
 
 static bool handleRenderLocalLightsChanged(const LLSD& newvalue)
 {
-	gPipeline.setLightingDetail(-1);
+	gPipeline.setLightingDetail();
 	return true;
 }
 

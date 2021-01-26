@@ -561,7 +561,7 @@ void LLPipeline::init()
 	//mDeferredVB->allocateBuffer(8, 0, true);
 	initDeferredVB();
 	// </FS:Ansariel>
-	setLightingDetail(-1);
+	setLightingDetail();
 
 	// <FS:Ansariel> FIRE-16829: Visual Artifacts with ALM enabled on AMD graphics
 	initAuxiliaryVB();
@@ -1563,42 +1563,9 @@ void LLPipeline::assertInitializedDoError()
 }
 
 //============================================================================
-
-void LLPipeline::enableShadows(const bool enable_shadows)
-{
-	//should probably do something here to wrangle shadows....
-}
-
-S32 LLPipeline::getMaxLightingDetail() const
-{
-	/*if (mShaderLevel[SHADER_OBJECT] >= LLDrawPoolSimple::SHADER_LEVEL_LOCAL_LIGHTS)
-	{
-		return 3;
-	}
-	else*/
-	{
-		return 1;
-	}
-}
-
-S32 LLPipeline::setLightingDetail(S32 level)
-{
+S32 LLPipeline::setLightingDetail(){
 	refreshCachedSettings();
-
-	if (level < 0)
-	{
-		if (RenderLocalLights)
-		{
-			level = 1;
-		}
-		else
-		{
-			level = 0;
-		}
-	}
-	level = llclamp(level, 0, getMaxLightingDetail());
-	mLightingDetail = level;
-
+	mLightingDetail = RenderLocalLights;
 	return mLightingDetail;
 }
 
@@ -6584,22 +6551,16 @@ void LLPipeline::enableLights(U32 mask)
 		stop_glerror();
 	}
 }
-
-void LLPipeline::enableLightsStatic()
-{
+//------------------------------------------------------------------------------
+void LLPipeline::enableLightsStatic(){
 	assertInitialized();
 	U32 mask = 0x01; // Sun
-	if (mLightingDetail >= 2)
-	{
+	if (mLightingDetail >= 1){
 		mask |= mLightMovingMask; // Hardware moving lights
-	}
-	else
-	{
-		mask |= 0xff & (~2); // Hardware local lights
 	}
 	enableLights(mask);
 }
-
+//-------------------------------------------------------------------------------
 void LLPipeline::enableLightsDynamic()
 {
 	assertInitialized();
@@ -7786,8 +7747,7 @@ void LLPipeline::renderFinalize()
 
     LLVertexBuffer::unbind();
 
-    if (LLPipeline::sRenderDeferred)
-    {
+    if (LLPipeline::sRenderDeferred){
 
         //<FS:TS> FIRE-16251: Depth of Field does not work underwater
         //bool dof_enabled = !LLViewerCamera::getInstance()->cameraUnderWater() &&
@@ -7801,8 +7761,7 @@ void LLPipeline::renderFinalize()
 
         gViewerWindow->setup3DViewport();
 
-        if (dof_enabled)
-        {
+        if (dof_enabled){
             LLGLSLShader *shader = &gDeferredPostProgram;
             LLGLDisable blend(GL_BLEND);
 
@@ -8047,8 +8006,7 @@ void LLPipeline::renderFinalize()
                 }
             }
         }
-        else
-        {
+        else{
             if (multisample)
             {
                 mDeferredLight.bindTarget();

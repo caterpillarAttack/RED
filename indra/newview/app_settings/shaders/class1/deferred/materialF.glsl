@@ -267,7 +267,7 @@ void main()
 #endif
 
     vec4 final_specular = spec;
-    
+
 #ifdef HAS_SPECULAR_MAP
     vec4 final_normal = vec4(encode_normal(normalize(tnorm)), env_intensity * spec.a, 0.0);
 	final_specular.a = specular_color.a * norm.a;
@@ -302,7 +302,7 @@ void main()
     vec3 atten;
 
     calcAtmosphericVars(pos.xyz, light_dir, 1.0, sunlit, amblit, additive, atten, false);
-    
+
         // This call breaks the Mac GLSL compiler/linker for unknown reasons (17Mar2020)
         // The call is either a no-op or a pure (pow) gamma adjustment, depending on GPU level
         // TODO: determine if we want to re-apply the gamma adjustment, and if so understand & fix Mac breakage
@@ -310,14 +310,14 @@ void main()
 
     vec3 refnormpersp = normalize(reflect(pos.xyz, norm.xyz));
 
-    //we're in sRGB space, so gamma correct this dot product so 
+    //we're in sRGB space, so gamma correct this dot product so
     // lighting from the sun stays sharp
     float da = clamp(dot(normalize(norm.xyz), light_dir.xyz), 0.0, 1.0);
     da = pow(da, 1.0 / 1.3);
 
     color = amblit;
 
-    //darken ambient for normals perpendicular to light vector so surfaces in shadow 
+    //darken ambient for normals perpendicular to light vector so surfaces in shadow
     // and facing away from light still have some definition to them.
     // do NOT gamma correct this dot product so ambient lighting stays soft
     float ambient = min(abs(dot(norm.xyz, sun_dir.xyz)), 1.0);
@@ -326,7 +326,7 @@ void main()
     ambient = (1.0 - ambient);
 
     vec3 sun_contrib = min(da, shadow) * sunlit;
-    
+
     color *= ambient;
 
     color += sun_contrib;
@@ -406,7 +406,7 @@ void main()
 
     vec3 light = vec3(0, 0, 0);
     final_specular.rgb = srgb_to_linear(final_specular.rgb);// <FS:Beq/> Colour space and shader fixes for BUG-228586 (Rye)
-    
+
 #define LIGHT_LOOP(i) light.rgb += calcPointLightOrSpotLight(light_diffuse[i].rgb, npos, diffuse.rgb, final_specular, pos.xyz, norm.xyz, light_position[i], light_direction[i].xyz, light_attenuation[i].x, light_attenuation[i].y, light_attenuation[i].z, glare, light_attenuation[i].w );
 
     LIGHT_LOOP(1)
@@ -433,7 +433,7 @@ void main()
 
     frag_color = vec4(color, al);
 
-#else // mode is not DIFFUSE_ALPHA_MODE_BLEND, encode to gbuffer 
+#else // mode is not DIFFUSE_ALPHA_MODE_BLEND, encode to gbuffer
 
     // deferred path
     frag_data[0] = final_color; //gbuffer is sRGB
@@ -441,4 +441,3 @@ void main()
     frag_data[2] = final_normal; // XY = Normal.  Z = Env. intensity.
 #endif
 }
-

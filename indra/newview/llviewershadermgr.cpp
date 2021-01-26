@@ -447,7 +447,7 @@ void LLViewerShaderMgr::setShaders()
     }
 
     // Lighting
-    gPipeline.setLightingDetail(-1);
+    gPipeline.setLightingDetail();
 
     // Shaders
     LL_INFOS("ShaderLoading") << "\n~~~~~~~~~~~~~~~~~~\n Loading Shaders:\n~~~~~~~~~~~~~~~~~~" << LL_ENDL;
@@ -468,7 +468,6 @@ void LLViewerShaderMgr::setShaders()
     S32 shadow_detail            = gSavedSettings.getS32("RenderShadowDetail");
     bool useRenderDeferred       = canRenderDeferred && gSavedSettings.getBOOL("RenderDeferred") && gSavedSettings.getBOOL("RenderAvatarVP");
     bool doingWindLight          = hasWindLightShaders && gSavedSettings.getBOOL("WindLightUseAtmosShaders");
-
 
 
     S32 light_class = 3;

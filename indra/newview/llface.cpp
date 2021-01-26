@@ -660,8 +660,6 @@ void LLFace::renderOneWireframe(const LLColor4 &color, F32 fogCfx, bool wirefram
         }
         else
         {
-            // <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
-            // </FS:Ansariel>
             LLGLEnable fog(GL_FOG);
             glFogi(GL_FOG_MODE, GL_LINEAR);
             float d = (LLViewerCamera::getInstance()->getPointOfInterest() - LLViewerCamera::getInstance()->getOrigin()).magVec();
@@ -669,9 +667,7 @@ void LLFace::renderOneWireframe(const LLColor4 &color, F32 fogCfx, bool wirefram
             glFogf(GL_FOG_START, d);
             glFogf(GL_FOG_END, d*(1 + (LLViewerCamera::getInstance()->getView() / LLViewerCamera::getInstance()->getDefaultFOV())));
             glFogfv(GL_FOG_COLOR, fogCol.mV);
-            // <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
 
-            // </FS:Ansariel>
 
             gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
             {

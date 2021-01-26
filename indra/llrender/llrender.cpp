@@ -36,6 +36,7 @@
 #include "lltexture.h"
 #include "llshadermgr.h"
 
+//Initializes a gl instance
 LLRender gGL;
 
 // Handy copies of last good GL matrices
@@ -54,8 +55,7 @@ bool LLRender::sNsightDebugSupport = false;
 static const U32 LL_NUM_TEXTURE_LAYERS = 32;
 static const U32 LL_NUM_LIGHT_UNITS = 8;
 
-static const GLenum sGLTextureType[] =
-{
+static const GLenum sGLTextureType[] ={
 	GL_TEXTURE_2D,
 	// <FS:Ansariel> Replace GL_TEXTURE_RECTANGLE_ARB with GL_TEXTURE_RECTANGLE
 	//GL_TEXTURE_RECTANGLE_ARB,
@@ -66,15 +66,13 @@ static const GLenum sGLTextureType[] =
   GL_TEXTURE_3D
 };
 
-static const GLint sGLAddressMode[] =
-{
+static const GLint sGLAddressMode[] ={
 	GL_REPEAT,
 	GL_MIRRORED_REPEAT,
 	GL_CLAMP_TO_EDGE
 };
 
-static const GLenum sGLCompareFunc[] =
-{
+static const GLenum sGLCompareFunc[] ={
 	GL_NEVER,
 	GL_ALWAYS,
 	GL_LESS,
@@ -87,8 +85,7 @@ static const GLenum sGLCompareFunc[] =
 
 const U32 immediate_mask = LLVertexBuffer::MAP_VERTEX | LLVertexBuffer::MAP_COLOR | LLVertexBuffer::MAP_TEXCOORD0;
 
-static const GLenum sGLBlendFactor[] =
-{
+static const GLenum sGLBlendFactor[] ={
 	GL_ONE,
 	GL_ZERO,
 	GL_DST_COLOR,
@@ -116,21 +113,15 @@ LLTexUnit::LLTexUnit(S32 index)
 }
 
 //static
-U32 LLTexUnit::getInternalType(eTextureType type)
-{
+U32 LLTexUnit::getInternalType(eTextureType type){
 	return sGLTextureType[type];
 }
 
-void LLTexUnit::refreshState(void)
-{
+void LLTexUnit::refreshState(void){
 	// We set dirty to true so that the tex unit knows to ignore caching
 	// and we reset the cached tex unit state
-
 	gGL.flush();
-
 	glActiveTextureARB(GL_TEXTURE0_ARB + mIndex);
-
-	//
 	// Per apple spec, don't call glEnable/glDisable when index exceeds max texture units
 	// http://www.mailinglistarchive.com/html/mac-opengl@lists.apple.com/2008-07/msg00653.html
 	//
@@ -144,12 +135,9 @@ void LLTexUnit::refreshState(void)
   setTextureColorSpace(mTexColorSpace);
 }
 
-void LLTexUnit::activate(void)
-{
+void LLTexUnit::activate(void){
 	if (mIndex < 0) return;
-
-	if ((S32)gGL.mCurrTextureUnitIndex != mIndex || gGL.mDirty)
-	{
+	if ((S32)gGL.mCurrTextureUnitIndex != mIndex || gGL.mDirty){
 		gGL.flush();
 		glActiveTextureARB(GL_TEXTURE0_ARB + mIndex);
 		gGL.mCurrTextureUnitIndex = mIndex;
@@ -159,7 +147,6 @@ void LLTexUnit::activate(void)
 void LLTexUnit::enable(eTextureType type){
 	if (mIndex < 0) return;
 	if ( (mCurrTexType != type || gGL.mDirty) && (type != TT_NONE) ){
-
 		activate();
 		if (mCurrTexType != TT_NONE && !gGL.mDirty){
 			disable(); // Force a disable of a previous texture type if it's enabled.
@@ -169,12 +156,9 @@ void LLTexUnit::enable(eTextureType type){
 	}
 }
 
-void LLTexUnit::disable(void)
-{
+void LLTexUnit::disable(void){
 	if (mIndex < 0) return;
-
-	if (mCurrTexType != TT_NONE)
-	{
+	if (mCurrTexType != TT_NONE){
 		activate();
 		unbind(mCurrTexType);
 		gGL.flush();
@@ -209,13 +193,12 @@ bool LLTexUnit::bind(LLTexture* texture, bool for_rendering, bool forceBind)
 						texture->updateBindStatsForTester() ;
 					}
 					mHasMipMaps = gl_tex->mHasMipMaps;
-					if (gl_tex->mTexOptionsDirty)
-					{
+					if (gl_tex->mTexOptionsDirty){
 						gl_tex->mTexOptionsDirty = false;
 						setTextureAddressMode(gl_tex->mAddressMode);
 						setTextureFilteringOption(gl_tex->mFilterOption);
-                    }
-                    setTextureColorSpace(mTexColorSpace);
+          }
+          setTextureColorSpace(mTexColorSpace);
 				}
 			}
 			else
@@ -227,14 +210,11 @@ bool LLTexUnit::bind(LLTexture* texture, bool for_rendering, bool forceBind)
 				return texture->bindDefaultImage(mIndex);
 			}
 		}
-		else
-		{
-			if (texture)
-			{
+		else{
+			if (texture){
 				LL_DEBUGS() << "NULL LLTexUnit::bind GL image" << LL_ENDL;
 			}
-			else
-			{
+			else{
 				LL_DEBUGS() << "NULL LLTexUnit::bind texture" << LL_ENDL;
 			}
 			return false;
@@ -248,53 +228,33 @@ bool LLTexUnit::bind(LLTexture* texture, bool for_rendering, bool forceBind)
 	return true;
 }
 
-bool LLTexUnit::bind(LLImageGL* texture, bool for_rendering, bool forceBind)
-{
-
+bool LLTexUnit::bind(LLImageGL* texture, bool for_rendering, bool forceBind){
 	if (mIndex < 0) return false;
-
-	if(!texture)
-	{
+	if(!texture){
 		LL_DEBUGS() << "NULL LLTexUnit::bind texture" << LL_ENDL;
 		return false;
 	}
-
-	if(!texture->getTexName())
-	{
-		if(LLImageGL::sDefaultGLTexture && LLImageGL::sDefaultGLTexture->getTexName())
-		{
+	if(!texture->getTexName()){
+		if(LLImageGL::sDefaultGLTexture && LLImageGL::sDefaultGLTexture->getTexName()){
 			return bind(LLImageGL::sDefaultGLTexture) ;
 		}
-
 		return false ;
 	}
-
-	if ((mCurrTexture != texture->getTexName()) || forceBind)
-	{
+	if ((mCurrTexture != texture->getTexName()) || forceBind){
 		gGL.flush();
-
 		activate();
-
 		enable(texture->getTarget());
-
 		mCurrTexture = texture->getTexName();
 		glBindTexture(sGLTextureType[texture->getTarget()], mCurrTexture);
-
 		texture->updateBindStats(texture->mTextureMemory);
 		mHasMipMaps = texture->mHasMipMaps;
-		if (texture->mTexOptionsDirty)
-		{
-
+		if (texture->mTexOptionsDirty){
 			texture->mTexOptionsDirty = false;
 			setTextureAddressMode(texture->mAddressMode);
 			setTextureFilteringOption(texture->mFilterOption);
-
 		}
-        setTextureColorSpace(mTexColorSpace);
+    setTextureColorSpace(mTexColorSpace);
 	}
-
-
-
 	return true;
 }
 
@@ -982,52 +942,42 @@ void LLRender::syncMatrices()
 	static glh::matrix4f cached_normal;
 	static U32 cached_normal_hash = 0xFFFFFFFF;
 
-	if (shader)
-	{
+	if (shader){
 		//llassert(shader);
-
 		bool mvp_done = false;
-
 		U32 i = MM_MODELVIEW;
-		if (mMatHash[MM_MODELVIEW] != shader->mMatHash[MM_MODELVIEW])
-		{ //update modelview, normal, and MVP
+		if (mMatHash[MM_MODELVIEW] != shader->mMatHash[MM_MODELVIEW]){
+			//update modelview, normal, and MVP
 			glh::matrix4f& mat = mMatrix[MM_MODELVIEW][mMatIdx[MM_MODELVIEW]];
 
-            // if MDV has changed, update the cached inverse as well
-            if (cached_mvp_mdv_hash != mMatHash[MM_MODELVIEW])
-            {
-                cached_inv_mdv = mat.inverse();
-            }
-
+			// if MDV has changed, update the cached inverse as well
+      if (cached_mvp_mdv_hash != mMatHash[MM_MODELVIEW]){
+          cached_inv_mdv = mat.inverse();
+      }
 			shader->uniformMatrix4fv(name[MM_MODELVIEW], 1, GL_FALSE, mat.m);
 			shader->mMatHash[MM_MODELVIEW] = mMatHash[MM_MODELVIEW];
 
 			//update normal matrix
 			S32 loc = shader->getUniformLocation(LLShaderMgr::NORMAL_MATRIX);
-			if (loc > -1)
-			{
-				if (cached_normal_hash != mMatHash[i])
-				{
+			if (loc > -1){
+				if (cached_normal_hash != mMatHash[i]){
 					cached_normal = cached_inv_mdv.transpose();
 					cached_normal_hash = mMatHash[i];
 				}
-
 				glh::matrix4f& norm = cached_normal;
-
 				F32 norm_mat[] =
 				{
 					norm.m[0], norm.m[1], norm.m[2],
 					norm.m[4], norm.m[5], norm.m[6],
 					norm.m[8], norm.m[9], norm.m[10]
 				};
-
 				shader->uniformMatrix3fv(LLShaderMgr::NORMAL_MATRIX, 1, GL_FALSE, norm_mat);
 			}
 
-            if (shader->getUniformLocation(LLShaderMgr::INVERSE_MODELVIEW_MATRIX))
-            {
-	            shader->uniformMatrix4fv(LLShaderMgr::INVERSE_MODELVIEW_MATRIX, 1, GL_FALSE, cached_inv_mdv.m);
-            }
+			//update inverse modelview matrix
+      if (shader->getUniformLocation(LLShaderMgr::INVERSE_MODELVIEW_MATRIX)){
+        shader->uniformMatrix4fv(LLShaderMgr::INVERSE_MODELVIEW_MATRIX, 1, GL_FALSE, cached_inv_mdv.m);
+      }
 
 			//update MVP matrix
 			mvp_done = true;
@@ -1266,35 +1216,27 @@ void LLRender::loadIdentity()
 	}
 }
 
-const glh::matrix4f& LLRender::getModelviewMatrix()
-{
+const glh::matrix4f& LLRender::getModelviewMatrix(){
 	return mMatrix[MM_MODELVIEW][mMatIdx[MM_MODELVIEW]];
 }
 
-const glh::matrix4f& LLRender::getProjectionMatrix()
-{
+const glh::matrix4f& LLRender::getProjectionMatrix(){
 	return mMatrix[MM_PROJECTION][mMatIdx[MM_PROJECTION]];
 }
 
-void LLRender::translateUI(F32 x, F32 y, F32 z)
-{
-	if (mUIOffset.empty())
-	{
+void LLRender::translateUI(F32 x, F32 y, F32 z){
+	if (mUIOffset.empty()){
 		LL_ERRS() << "Need to push a UI translation frame before offsetting" << LL_ENDL;
 	}
-
 	mUIOffset.back().mV[0] += x;
 	mUIOffset.back().mV[1] += y;
 	mUIOffset.back().mV[2] += z;
 }
 
-void LLRender::scaleUI(F32 x, F32 y, F32 z)
-{
-	if (mUIScale.empty())
-	{
+void LLRender::scaleUI(F32 x, F32 y, F32 z){
+	if (mUIScale.empty()){
 		LL_ERRS() << "Need to push a UI transformation frame before scaling." << LL_ENDL;
 	}
-
 	mUIScale.back().scaleVec(LLVector3(x,y,z));
 }
 
@@ -1386,8 +1328,7 @@ void LLRender::setColorMask(bool writeColorR, bool writeColorG, bool writeColorB
 
 void LLRender::setSceneBlendType(eBlendType type)
 {
-	switch (type)
-	{
+	switch (type){
 		case BT_ALPHA:
 			blendFunc(BF_SOURCE_ALPHA, BF_ONE_MINUS_SOURCE_ALPHA);
 			break;
