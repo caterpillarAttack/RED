@@ -1071,9 +1071,8 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			LLViewerCamera::sCurCameraID = LLViewerCamera::CAMERA_WORLD;
 
 			// <FS:Ansariel> gSavedSettings replacement
-			//if (gSavedSettings.getBOOL("RenderDepthPrePass") && LLGLSLShader::sNoFixedFunction)
 			static LLCachedControl<bool> renderDepthPrePass(gSavedSettings, "RenderDepthPrePass");
-			if (renderDepthPrePass && LLGLSLShader::sNoFixedFunction)
+			if (renderDepthPrePass)
 			// </FS:Ansariel>
 			{
 				gGL.setColorMask(false, false);
@@ -1581,11 +1580,8 @@ void render_ui_3d()
 	// Debugging stuff goes before the UI.
 
 	stop_glerror();
-	
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gUIProgram.bind();
-	}
+	gUIProgram.bind();
+
 
 	// Coordinate axes
 	// <FS:Ansariel> gSavedSettings replacement
@@ -1736,11 +1732,7 @@ void render_ui_2d()
 
 void render_disconnected_background()
 {
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gUIProgram.bind();
-	}
-
+	gUIProgram.bind();
 	gGL.color4f(1,1,1,1);
 	if (!gDisconnectedImagep && gDisconnected)
 	{
@@ -1810,11 +1802,8 @@ void render_disconnected_background()
 		gGL.popMatrix();
 	}
 	gGL.flush();
+	gUIProgram.unbind();
 
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gUIProgram.unbind();
-	}
 
 }
 

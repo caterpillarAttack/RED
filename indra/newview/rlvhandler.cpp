@@ -3874,11 +3874,8 @@ void RlvHandler::renderOverlay()
 {
 	if ( (hasBehaviour(RLV_BHVR_SETOVERLAY)) && (m_pOverlayImage) )
 	{
-		if (LLGLSLShader::sNoFixedFunction)
-		{
-			gUIProgram.bind();
-		}
 
+		gUIProgram.bind();
 		int nWidth = gViewerWindow->getWorldViewWidthScaled();
 		int nHeight = gViewerWindow->getWorldViewHeightScaled();
 
@@ -3903,11 +3900,8 @@ void RlvHandler::renderOverlay()
 		gGL.popMatrix();
 		gGL.flush();
 		gViewerWindow->setup3DRender();
+		gUIProgram.unbind();
 
-		if (LLGLSLShader::sNoFixedFunction)
-		{
-			gUIProgram.unbind();
-		}
 	}
 }
 

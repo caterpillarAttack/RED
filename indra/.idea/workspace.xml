@@ -10,17 +10,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8683bfdc-ae70-42a0-8d1d-46e7b29b994c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/llrender/llgl.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llgl.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llrender.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llrender.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llrender.h" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llrender.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llshadermgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llshadermgr.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/app_settings/shaders/class1/deferred/softenLightF.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/newview/app_settings/shaders/class1/deferred/softenLightF.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/lldrawpoolalpha.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawpoolalpha.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/lldrawpoolbump.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawpoolbump.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llmaniprotate.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llmaniprotate.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llmaniptranslate.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llmaniptranslate.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llvosky.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvosky.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/pipeline.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/llrender/llcubemap.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llcubemap.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/lldrawpoolavatar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawpoolavatar.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/lldrawpoolsky.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawpoolsky.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/lldrawpoolterrain.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawpoolterrain.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/lldrawpooltree.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawpooltree.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/lldrawpoolwater.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawpoolwater.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/lldrawpoolwlsky.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawpoolwlsky.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llface.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llfloaterbvhpreview.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llfloaterbvhpreview.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llfloaterimagepreview.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llfloaterimagepreview.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llglsandbox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llglsandbox.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/lllegacyatmospherics.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lllegacyatmospherics.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llmodelpreview.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llmodelpreview.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llscenemonitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llscenemonitor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llselectmgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llselectmgr.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llspatialpartition.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llspatialpartition.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/lltoolmorph.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lltoolmorph.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llviewercontrol.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llviewercontrol.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llviewerdisplay.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llviewerdisplay.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llviewerjointmesh.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llviewerjointmesh.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llviewershadermgr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llviewershadermgr.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llvoavatar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvoavatar.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llvosurfacepatch.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvosurfacepatch.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/llvowater.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvowater.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newview/rlvhandler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/rlvhandler.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,23 +54,69 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="cpp" value="1" />
+          <entry key="cpp" value="6" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="ObjectiveC" value="1" />
+          <entry key="ObjectiveC" value="6" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="cpp" value="7" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="ObjectiveC" value="7" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/llrender/llrender.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="134" column="66" selection-start-line="134" selection-start-column="66" selection-end-line="134" selection-end-column="66" />
+            <state relative-caret-position="302">
+              <caret line="141" column="35" selection-start-line="141" selection-start-column="35" selection-end-line="141" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newview/llscenemonitor.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="203">
+              <caret line="731" lean-forward="true" selection-start-line="731" selection-end-line="731" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newview/llvosurfacepatch.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="218">
+              <caret line="63" column="5" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newview/llmodelpreview.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="202">
+              <caret line="3215" selection-start-line="3215" selection-end-line="3215" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/newview/llviewershadermgr.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="721" selection-start-line="721" selection-end-line="721" />
             </state>
           </provider>
         </entry>
@@ -69,11 +129,13 @@
       <find>varying_flat</find>
       <find>flat in</find>
       <find>FIXEDFUNCTION</find>
-      <find>fixedfunction</find>
       <find>mGLVersion</find>
       <find>setTextureCombiner</find>
       <find>setTextureBlend</find>
       <find>gGL.getTexUnit(0)</find>
+      <find>fixedfunction</find>
+      <find>LLGLSLShader::sNoFixedFunction</find>
+      <find>use_shaders</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\Artemis\Desktop\SecondLifeVanillaDev\PullerDevFirestorm\RED\indra</dir>
@@ -81,6 +143,16 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/newview/llscenemonitor.cpp" />
+        <option value="$PROJECT_DIR$/newview/llvosurfacepatch.cpp" />
+        <option value="$PROJECT_DIR$/newview/llmodelpreview.cpp" />
+        <option value="$PROJECT_DIR$/newview/llviewershadermgr.cpp" />
+      </list>
+    </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
@@ -143,15 +215,16 @@
       <option name="presentableId" value="Default" />
       <updated>1611546001176</updated>
       <workItem from="1611546004363" duration="3549000" />
-      <workItem from="1611606963731" duration="12366000" />
+      <workItem from="1611606963731" duration="14589000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15915000" />
+    <option name="totallyTimeSpent" value="18138000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="22" width="1936" height="1066" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15405117" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -181,10 +254,45 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/newview/lltoolmorph.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="20" column="73" selection-start-line="20" selection-start-column="73" selection-end-line="20" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/llrender/llrender.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="134" column="66" selection-start-line="134" selection-start-column="66" selection-end-line="134" selection-end-column="66" />
+        <state relative-caret-position="302">
+          <caret line="141" column="35" selection-start-line="141" selection-start-column="35" selection-end-line="141" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newview/llscenemonitor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="731" lean-forward="true" selection-start-line="731" selection-end-line="731" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newview/llvosurfacepatch.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="63" column="5" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newview/llmodelpreview.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="3215" selection-start-line="3215" selection-end-line="3215" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newview/llviewershadermgr.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="721" selection-start-line="721" selection-end-line="721" />
         </state>
       </provider>
     </entry>

@@ -601,25 +601,9 @@ void LLFace::renderSelected(LLViewerTexture *imagep, const LLColor4& color)
 					gGL.multMatrix((F32*) volume->getRelativeXform().mMatrix);
 					const LLVolumeFace& vol_face = rigged->getVolumeFace(getTEOffset());
 					// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
-					if (LLGLSLShader::sNoFixedFunction)
-					{
-						LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mNumVertices, vol_face.mPositions, vol_face.mTexCoords, vol_face.mNumIndices, vol_face.mIndices);
-					}
-					else
-					{
-					// </FS:Ansariel>
-						LLVertexBuffer::unbind();
-						glVertexPointer(3, GL_FLOAT, 16, vol_face.mPositions);
-						if (vol_face.mTexCoords)
-						{
-							glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-							glTexCoordPointer(2, GL_FLOAT, 8, vol_face.mTexCoords);
-						}
-						gGL.syncMatrices();
-						glDrawElements(GL_TRIANGLES, vol_face.mNumIndices, GL_UNSIGNED_SHORT, vol_face.mIndices);
-						glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-					// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
-					}
+					LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mNumVertices, vol_face.mPositions, vol_face.mTexCoords, vol_face.mNumIndices, vol_face.mIndices);
+
+
 					// </FS:Ansariel>
 				}
 			}
@@ -677,8 +661,6 @@ void LLFace::renderOneWireframe(const LLColor4 &color, F32 fogCfx, bool wirefram
         else
         {
             // <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
-            if (!LLGLSLShader::sNoFixedFunction)
-            {
             // </FS:Ansariel>
             LLGLEnable fog(GL_FOG);
             glFogi(GL_FOG_MODE, GL_LINEAR);
@@ -688,7 +670,7 @@ void LLFace::renderOneWireframe(const LLColor4 &color, F32 fogCfx, bool wirefram
             glFogf(GL_FOG_END, d*(1 + (LLViewerCamera::getInstance()->getView() / LLViewerCamera::getInstance()->getDefaultFOV())));
             glFogfv(GL_FOG_COLOR, fogCol.mV);
             // <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
-            }
+
             // </FS:Ansariel>
 
             gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);

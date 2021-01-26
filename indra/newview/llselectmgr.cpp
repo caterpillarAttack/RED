@@ -6796,18 +6796,17 @@ void LLSelectNode::renderOneSilhouette(const LLColor4 &color)
 			gGL.flush();
 			gGL.blendFunc(LLRender::BF_SOURCE_COLOR, LLRender::BF_ONE);
 			// <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
-			if (!LLGLSLShader::sNoFixedFunction)
-			{
+
 			// </FS:Ansariel>
-				LLGLEnable fog(GL_FOG);
-				glFogi(GL_FOG_MODE, GL_LINEAR);
-				float d = (camera.getPointOfInterest()-camera.getOrigin()).magVec();
-				LLColor4 fogCol = color * (F32)llclamp((selectmgr.getSelectionCenterGlobal()-gAgentCamera.getCameraPositionGlobal()).magVec()/(selectmgr.getBBoxOfSelection().getExtentLocal().magVec()*4), 0.0, 1.0);
-				glFogf(GL_FOG_START, d);
-				glFogf(GL_FOG_END, d*(1 + (camera.getView() / camera.getDefaultFOV())));
-				glFogfv(GL_FOG_COLOR, fogCol.mV);
+			LLGLEnable fog(GL_FOG);
+			glFogi(GL_FOG_MODE, GL_LINEAR);
+			float d = (camera.getPointOfInterest()-camera.getOrigin()).magVec();
+			LLColor4 fogCol = color * (F32)llclamp((selectmgr.getSelectionCenterGlobal()-gAgentCamera.getCameraPositionGlobal()).magVec()/(selectmgr.getBBoxOfSelection().getExtentLocal().magVec()*4), 0.0, 1.0);
+			glFogf(GL_FOG_START, d);
+			glFogf(GL_FOG_END, d*(1 + (camera.getView() / camera.getDefaultFOV())));
+			glFogfv(GL_FOG_COLOR, fogCol.mV);
 			// <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
-			}
+
 			// </FS:Ansariel>
 
 			LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE, GL_GEQUAL);

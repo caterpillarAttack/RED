@@ -199,10 +199,9 @@ BOOL LLVisualParamHint::render()
 	gGL.pushMatrix();
 	gGL.loadIdentity();
 
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gUIProgram.bind();
-	}
+
+	gUIProgram.bind();
+
 
 	LLGLSUIDefault gls_ui;
 	//LLGLState::verify(TRUE);

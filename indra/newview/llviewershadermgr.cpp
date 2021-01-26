@@ -459,7 +459,6 @@ void LLViewerShaderMgr::setShaders()
     }
     mMaxAvatarShaderLevel = 0;
 
-    LLGLSLShader::sNoFixedFunction = false;
     LLVertexBuffer::unbind();
 
     llassert((gGLManager.mGLSLVersionMajor > 1 || gGLManager.mGLSLVersionMinor >= 10));
@@ -470,8 +469,7 @@ void LLViewerShaderMgr::setShaders()
     bool useRenderDeferred       = canRenderDeferred && gSavedSettings.getBOOL("RenderDeferred") && gSavedSettings.getBOOL("RenderAvatarVP");
     bool doingWindLight          = hasWindLightShaders && gSavedSettings.getBOOL("WindLightUseAtmosShaders");
 
-    //using shaders, disable fixed function
-    LLGLSLShader::sNoFixedFunction = true;
+
 
     S32 light_class = 3;
     S32 interface_class = 2;
@@ -719,7 +717,6 @@ void LLViewerShaderMgr::setShaders()
     }
     else
     {
-        LLGLSLShader::sNoFixedFunction = false;
         gPipeline.mVertexShadersEnabled = FALSE;
         gPipeline.mVertexShadersLoaded = 0;
         mShaderLevel[SHADER_LIGHTING] = 0;

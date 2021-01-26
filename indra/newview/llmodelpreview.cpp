@@ -1377,9 +1377,7 @@ void LLModelPreview::genLODs(S32 which_lod, U32 decimation, bool enforce_tri_lim
 
     LLVertexBuffer::unbind();
 
-    bool no_ff = LLGLSLShader::sNoFixedFunction;
     LLGLSLShader* shader = LLGLSLShader::sCurBoundShaderPtr;
-    LLGLSLShader::sNoFixedFunction = false;
 
     if (shader)
     {
@@ -1793,7 +1791,6 @@ void LLModelPreview::genLODs(S32 which_lod, U32 decimation, bool enforce_tri_lim
     mResourceCost = calcResourceCost();
 
     LLVertexBuffer::unbind();
-    LLGLSLShader::sNoFixedFunction = no_ff;
     if (shader)
     {
         shader->bind();
@@ -2976,7 +2973,6 @@ BOOL LLModelPreview::render()
     LLMutexLock lock(this);
     mNeedsUpdate = FALSE;
 
-    bool use_shaders = LLGLSLShader::sNoFixedFunction;
 
     bool edges = mViewOption["show_edges"];
     bool joint_overrides = mViewOption["show_joint_overrides"];
@@ -3014,10 +3010,8 @@ BOOL LLModelPreview::render()
     LLGLDisable fog(GL_FOG);
 
     {
-        if (use_shaders)
-        {
-            gUIProgram.bind();
-        }
+
+        gUIProgram.bind();
         //clear background to grey
         gGL.matrixMode(LLRender::MM_PROJECTION);
         gGL.pushMatrix();
@@ -3036,10 +3030,8 @@ BOOL LLModelPreview::render()
 
         gGL.matrixMode(LLRender::MM_MODELVIEW);
         gGL.popMatrix();
-        if (use_shaders)
-        {
-            gUIProgram.unbind();
-        }
+        gUIProgram.unbind();
+
     }
 
     LLFloaterModelPreview* fmp = LLFloaterModelPreview::sInstance;
@@ -3220,10 +3212,7 @@ BOOL LLModelPreview::render()
         refresh();
     }
 
-    if (use_shaders)
-    {
-        gObjectPreviewProgram.bind();
-    }
+    gObjectPreviewProgram.bind();
 
     gGL.loadIdentity();
     gPipeline.enableLightsPreview();
@@ -3779,14 +3768,8 @@ BOOL LLModelPreview::render()
             }
         }
     }
-
-    if (use_shaders)
-    {
-        gObjectPreviewProgram.unbind();
-    }
-
+    gObjectPreviewProgram.unbind();
     gGL.popMatrix();
-
     return TRUE;
 }
 

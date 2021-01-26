@@ -1,25 +1,25 @@
-/** 
+/**
  * @file llcubemap.cpp
  * @brief LLCubeMap class implementation
  *
  * $LicenseInfo:firstyear=2002&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
  * version 2.1 of the License only.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
@@ -73,9 +73,9 @@ void LLCubeMap::initGL()
 		if (mImages[0].isNull())
 		{
 			U32 texname = 0;
-			
+
 			LLImageGL::generateTextures(1, &texname);
-			
+
 			for (int i = 0; i < 6; i++)
 			{
 				mImages[i] = new LLImageGL(RESOLUTION, RESOLUTION, 4, FALSE);
@@ -87,8 +87,8 @@ void LLCubeMap::initGL()
 				mImages[i]->setTarget(mTargets[i], LLTexUnit::TT_CUBE_MAP);
 				mRawImages[i] = new LLImageRaw(RESOLUTION, RESOLUTION, 4);
 				mImages[i]->createGLTexture(0, mRawImages[i], texname);
-				
-				gGL.getTexUnit(0)->bindManual(LLTexUnit::TT_CUBE_MAP, texname); 
+
+				gGL.getTexUnit(0)->bindManual(LLTexUnit::TT_CUBE_MAP, texname);
 				mImages[i]->setAddressMode(LLTexUnit::TAM_CLAMP);
 				stop_glerror();
 			}
@@ -107,7 +107,7 @@ void LLCubeMap::initRawData(const std::vector<LLPointer<LLImageRaw> >& rawimages
 	bool flip_x[6] =	{ false, true,  false, false, true,  false };
 	bool flip_y[6] = 	{ true,  true,  true,  false, true,  true  };
 	bool transpose[6] = { false, false, false, false, true,  true  };
-	
+
 	// Yes, I know that this is inefficient! - djs 08/08/02
 	for (int i = 0; i < 6; i++)
 	{
@@ -194,26 +194,6 @@ void LLCubeMap::enableTexture(S32 stage)
 void LLCubeMap::enableTextureCoords(S32 stage)
 {
 	mTextureCoordStage = stage;
-	if (!LLGLSLShader::sNoFixedFunction && gGLManager.mHasCubeMap && stage >= 0 && LLCubeMap::sUseCubeMaps)
-	{
-		if (stage > 0)
-		{
-			gGL.getTexUnit(stage)->activate();
-		}
-		
-		glEnable(GL_TEXTURE_GEN_R);
-		glEnable(GL_TEXTURE_GEN_S);
-		glEnable(GL_TEXTURE_GEN_T);
-
-		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-		glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
-		
-		if (stage > 0)
-		{
-			gGL.getTexUnit(0)->activate();
-		}
-	}
 }
 
 void LLCubeMap::disable(void)
@@ -236,28 +216,15 @@ void LLCubeMap::disableTexture(void)
 
 void LLCubeMap::disableTextureCoords(void)
 {
-	if (!LLGLSLShader::sNoFixedFunction && gGLManager.mHasCubeMap && mTextureCoordStage >= 0 && LLCubeMap::sUseCubeMaps)
-	{
-		if (mTextureCoordStage > 0)
-		{
-			gGL.getTexUnit(mTextureCoordStage)->activate();
-		}
-		glDisable(GL_TEXTURE_GEN_S);
-		glDisable(GL_TEXTURE_GEN_T);
-		glDisable(GL_TEXTURE_GEN_R);
-		if (mTextureCoordStage > 0)
-		{
-			gGL.getTexUnit(0)->activate();
-		}
-	}
+	return;
 }
 
 void LLCubeMap::setMatrix(S32 stage)
 {
 	mMatrixStage = stage;
-	
+
 	if (mMatrixStage < 0) return;
-	
+
 	//if (stage > 0)
 	{
 		gGL.getTexUnit(stage)->activate();
@@ -276,7 +243,7 @@ void LLCubeMap::setMatrix(S32 stage)
 	gGL.pushMatrix();
 	gGL.loadMatrix((F32 *)trans.mMatrix);
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
-	
+
 	/*if (stage > 0)
 	{
 		gGL.getTexUnit(0)->activate();
@@ -294,7 +261,7 @@ void LLCubeMap::restoreMatrix()
 	gGL.matrixMode(LLRender::MM_TEXTURE);
 	gGL.popMatrix();
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
-	
+
 	/*if (mMatrixStage > 0)
 	{
 		gGL.getTexUnit(0)->activate();
@@ -419,7 +386,7 @@ BOOL LLCubeMap::project(F32& v_val, F32& h_val, BOOL& outside,
 	return TRUE;
 }
 
-BOOL LLCubeMap::project(F32& v_min, F32& v_max, F32& h_min, F32& h_max, 
+BOOL LLCubeMap::project(F32& v_min, F32& v_max, F32& h_min, F32& h_max,
 						U8 side, LLVector3 dir[4]) const
 {
 	v_min = h_min = RESOLUTION;
@@ -463,7 +430,7 @@ void LLCubeMap::paintIn(LLVector3 dir[4], const LLColor4U& col)
 			continue;
 
 		U8 *td = mRawImages[side]->getData();
-		
+
 		U16 v_minu = (U16) v_min;
 		U16 v_maxu = (U16) (ceil(v_max) + 0.5);
 		U16 h_minu = (U16) h_min;
