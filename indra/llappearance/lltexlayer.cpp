@@ -1,25 +1,25 @@
-/** 
+/**
  * @file lltexlayer.cpp
  * @brief A texture layer. Used for avatars.
  *
  * $LicenseInfo:firstyear=2002&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
  * version 2.1 of the License only.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
@@ -70,7 +70,7 @@ public:
 
 private:
 	std::string				mName;
-	
+
 	BOOL					mWriteAllChannels; // Don't use masking.  Just write RGBA into buffer,
 	LLTexLayerInterface::ERenderPass mRenderPass;
 
@@ -143,24 +143,16 @@ BOOL LLTexLayerSetBuffer::renderTexLayerSet(LLRenderTarget* bound_target)
 	gGL.setColorMask(true, true);
 
 	BOOL success = TRUE;
-	
-	bool use_shaders = LLGLSLShader::sNoFixedFunction;
 
-	if (use_shaders)
-	{
-		gAlphaMaskProgram.bind();
-		gAlphaMaskProgram.setMinimumAlpha(0.004f);
-	}
-	else
-	{
-		gGL.setAlphaRejectSettings(LLRender::CF_GREATER, 0.00f);
-	}
+	gAlphaMaskProgram.bind();
+	gAlphaMaskProgram.setMinimumAlpha(0.004f);
+
 
 	LLVertexBuffer::unbind();
 
 	// Composite the color data
 	LLGLSUIDefault gls_ui;
-	success &= mTexLayerSet->render( getCompositeOriginX(), getCompositeOriginY(), 
+	success &= mTexLayerSet->render( getCompositeOriginX(), getCompositeOriginY(),
 									 getCompositeWidth(), getCompositeHeight(), bound_target );
 	gGL.flush();
 
@@ -168,14 +160,11 @@ BOOL LLTexLayerSetBuffer::renderTexLayerSet(LLRenderTarget* bound_target)
 	//midRenderTexLayerSet(success);
 	midRenderTexLayerSet(success, bound_target);
 	// </FS:Ansariel> [Legacy Bake]
+	gAlphaMaskProgram.unbind();
 
-	if (use_shaders)
-	{
-		gAlphaMaskProgram.unbind();
-	}
 
 	LLVertexBuffer::unbind();
-	
+
 	// reset GL state
 	gGL.setColorMask(true, true);
 	gGL.setSceneBlendType(LLRender::BT_ALPHA);
@@ -253,7 +242,7 @@ BOOL LLTexLayerSetInfo::parseXml(LLXmlTreeNode* node)
 			delete info;
 			return FALSE;
 		}
-		mLayerInfoList.push_back( info );		
+		mLayerInfoList.push_back( info );
 	}
 	return TRUE;
 }
@@ -308,8 +297,8 @@ BOOL LLTexLayerSet::setInfo(const LLTexLayerSetInfo *info)
 	//mID = info->mID; // No ID
 
 	mLayerList.reserve(info->mLayerInfoList.size());
-	for (LLTexLayerSetInfo::layer_info_list_t::const_iterator iter = info->mLayerInfoList.begin(); 
-		 iter != info->mLayerInfoList.end(); 
+	for (LLTexLayerSetInfo::layer_info_list_t::const_iterator iter = info->mLayerInfoList.begin();
+		 iter != info->mLayerInfoList.end();
 		 iter++)
 	{
 		LLTexLayerInterface *layer = NULL;
@@ -399,8 +388,6 @@ BOOL LLTexLayerSet::render( S32 x, S32 y, S32 width, S32 height, LLRenderTarget*
 		}
 	}
 
-	bool use_shaders = LLGLSLShader::sNoFixedFunction;
-
 	LLGLSUIDefault gls_ui;
 	LLGLDepthTest gls_depth(GL_FALSE, GL_FALSE);
 	gGL.setColorMask(true, true);
@@ -409,20 +396,13 @@ BOOL LLTexLayerSet::render( S32 x, S32 y, S32 width, S32 height, LLRenderTarget*
 	{
 		gGL.flush();
 		LLGLDisable no_alpha(GL_ALPHA_TEST);
-		if (use_shaders)
-		{
-			gAlphaMaskProgram.setMinimumAlpha(0.0f);
-		}
+		gAlphaMaskProgram.setMinimumAlpha(0.0f);
 		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 		gGL.color4f( 0.f, 0.f, 0.f, 1.f );
 
 		gl_rect_2d_simple( width, height );
-
 		gGL.flush();
-		if (use_shaders)
-		{
-			gAlphaMaskProgram.setMinimumAlpha(0.004f);
-		}
+		gAlphaMaskProgram.setMinimumAlpha(0.004f);
 	}
 
 	if (mIsVisible)
@@ -438,9 +418,9 @@ BOOL LLTexLayerSet::render( S32 x, S32 y, S32 width, S32 height, LLRenderTarget*
 				gGL.flush();
 			}
 		}
-		
+
 		renderAlphaMaskTextures(x, y, width, height, bound_target, false);
-	
+
 		stop_glerror();
 	}
 	else
@@ -449,36 +429,29 @@ BOOL LLTexLayerSet::render( S32 x, S32 y, S32 width, S32 height, LLRenderTarget*
 
 		gGL.setSceneBlendType(LLRender::BT_REPLACE);
 		LLGLDisable no_alpha(GL_ALPHA_TEST);
-		if (use_shaders)
-		{
-			gAlphaMaskProgram.setMinimumAlpha(0.f);
-		}
-
+		gAlphaMaskProgram.setMinimumAlpha(0.f);
 		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 		gGL.color4f( 0.f, 0.f, 0.f, 0.f );
 
 		gl_rect_2d_simple( width, height );
 		gGL.setSceneBlendType(LLRender::BT_ALPHA);
-
 		gGL.flush();
-		if (use_shaders)
-		{
-			gAlphaMaskProgram.setMinimumAlpha(0.004f);
-		}
+		gAlphaMaskProgram.setMinimumAlpha(0.004f);
+
 	}
 
 	return success;
 }
 
 
-BOOL LLTexLayerSet::isBodyRegion(const std::string& region) const 
-{ 
-	return mInfo->mBodyRegion == region; 
+BOOL LLTexLayerSet::isBodyRegion(const std::string& region) const
+{
+	return mInfo->mBodyRegion == region;
 }
 
-const std::string LLTexLayerSet::getBodyRegionName() const 
-{ 
-	return mInfo->mBodyRegion; 
+const std::string LLTexLayerSet::getBodyRegionName() const
+{
+	return mInfo->mBodyRegion;
 }
 
 
@@ -540,7 +513,7 @@ void LLTexLayerSet::gatherMorphMaskAlpha(U8 *data, S32 origin_x, S32 origin_y, S
 		LLTexLayerInterface* layer = *iter;
 		layer->gatherAlphaMasks(data, origin_x, origin_y, width, height, bound_target);
 	}
-	
+
 	// Set alpha back to that of our alpha masks.
 	renderAlphaMaskTextures(origin_x, origin_y, width, height, bound_target, true);
 }
@@ -550,12 +523,10 @@ void LLTexLayerSet::renderAlphaMaskTextures(S32 x, S32 y, S32 width, S32 height,
 {
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_ALPHA_MASK_TEXTURES);
 	const LLTexLayerSetInfo *info = getInfo();
-	
-	bool use_shaders = LLGLSLShader::sNoFixedFunction;
 
 	gGL.setColorMask(false, true);
 	gGL.setSceneBlendType(LLRender::BT_REPLACE);
-	
+
 	// (Optionally) replace alpha with a single component image from a tga file.
 	if (!info->mStaticAlphaFileName.empty())
 	{
@@ -577,22 +548,17 @@ void LLTexLayerSet::renderAlphaMaskTextures(S32 x, S32 y, S32 width, S32 height,
 		// Set the alpha channel to one (clean up after previous blending)
 		gGL.flush();
 		LLGLDisable no_alpha(GL_ALPHA_TEST);
-		if (use_shaders)
-		{
-			gAlphaMaskProgram.setMinimumAlpha(0.f);
-		}
+		gAlphaMaskProgram.setMinimumAlpha(0.f);
 		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 		gGL.color4f( 0.f, 0.f, 0.f, 1.f );
-		
+
 		gl_rect_2d_simple( width, height );
-		
+
 		gGL.flush();
-		if (use_shaders)
-		{
-			gAlphaMaskProgram.setMinimumAlpha(0.004f);
-		}
+		gAlphaMaskProgram.setMinimumAlpha(0.004f);
+
 	}
-	
+
 	// (Optional) Mask out part of the baked texture with alpha masks
 	// will still have an effect even if mClearAlpha is set or the alpha component was replaced
 	if (mMaskLayerList.size() > 0)
@@ -606,11 +572,11 @@ void LLTexLayerSet::renderAlphaMaskTextures(S32 x, S32 y, S32 width, S32 height,
 			layer->blendAlphaTexture(x,y,width, height);
 			gGL.flush();
 		}
-		
+
 	}
-	
+
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-	
+
 	gGL.getTexUnit(0)->setTextureBlendType(LLTexUnit::TB_MULT);
 	gGL.setColorMask(true, true);
 	gGL.setSceneBlendType(LLRender::BT_ALPHA);
@@ -679,7 +645,7 @@ BOOL LLTexLayerInfo::parseXml(LLXmlTreeNode* node)
 	{
 		return FALSE;
 	}
-	
+
 	static LLStdStringHandle write_all_channels_string = LLXmlTree::addAttributeString("write_all_channels");
 	node->getFastAttributeBOOL( write_all_channels_string, mWriteAllChannels );
 
@@ -752,7 +718,7 @@ BOOL LLTexLayerInfo::parseXml(LLXmlTreeNode* node)
 				return FALSE;
 			}
 		}
-		else	
+		else
 		{
 			LL_WARNS() << "<texture> element is missing a required attribute. " << mName << LL_ENDL;
 			return FALSE;
@@ -769,7 +735,7 @@ BOOL LLTexLayerInfo::parseXml(LLXmlTreeNode* node)
 		{
 			BOOL invert = FALSE;
 			static LLStdStringHandle invert_string = LLXmlTree::addAttributeString("invert");
-			maskNode->getFastAttributeBOOL(invert_string, invert);			
+			maskNode->getFastAttributeBOOL(invert_string, invert);
 			mMorphNameList.push_back(std::pair<std::string,BOOL>(morph_name,invert));
 		}
 	}
@@ -802,7 +768,7 @@ BOOL LLTexLayerInfo::parseXml(LLXmlTreeNode* node)
  			mParamAlphaInfoList.push_back(info);
 		}
 	}
-	
+
 	return TRUE;
 }
 
@@ -862,7 +828,7 @@ BOOL LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 {
 	// setInfo should only be called once. Code is not robust enough to handle redefinition of a texlayer.
 	// Not a critical warning, but could be useful for debugging later issues. -Nyx
-	if (mInfo != NULL) 
+	if (mInfo != NULL)
 	{
 			LL_WARNS() << "mInfo != NULL" << LL_ENDL;
 	}
@@ -870,8 +836,8 @@ BOOL LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 	//mID = info->mID; // No ID
 
 	mParamColorList.reserve(mInfo->mParamColorInfoList.size());
-	for (param_color_info_list_t::const_iterator iter = mInfo->mParamColorInfoList.begin(); 
-		 iter != mInfo->mParamColorInfoList.end(); 
+	for (param_color_info_list_t::const_iterator iter = mInfo->mParamColorInfoList.begin();
+		 iter != mInfo->mParamColorInfoList.end();
 		 iter++)
 	{
 		LLTexLayerParamColor* param_color;
@@ -897,8 +863,8 @@ BOOL LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 		}
 
 	mParamAlphaList.reserve(mInfo->mParamAlphaInfoList.size());
-	for (param_alpha_info_list_t::const_iterator iter = mInfo->mParamAlphaInfoList.begin(); 
-		 iter != mInfo->mParamAlphaInfoList.end(); 
+	for (param_alpha_info_list_t::const_iterator iter = mInfo->mParamAlphaInfoList.begin();
+		 iter != mInfo->mParamAlphaInfoList.end();
 		 iter++)
 		{
 			LLTexLayerParamAlpha* param_alpha;
@@ -933,7 +899,7 @@ BOOL LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 
 const std::string& LLTexLayerInterface::getName() const
 {
-	return mInfo->mName; 
+	return mInfo->mName;
 }
 
 ETextureIndex LLTexLayerInterface::getLocalTextureIndex() const
@@ -953,12 +919,12 @@ LLWearableType::EType LLTexLayerInterface::getWearableType() const
 		for (; color_iter != mParamColorList.end(); color_iter++)
 		{
 			LLTexLayerParamColor* param = *color_iter;
-			if (param) 
+			if (param)
 			{
 				LLWearableType::EType new_type = (LLWearableType::EType)param->getWearableType();
-				if (new_type != LLWearableType::WT_INVALID && new_type != type) 
+				if (new_type != LLWearableType::WT_INVALID && new_type != type)
 				{
-					if (type != LLWearableType::WT_INVALID) 
+					if (type != LLWearableType::WT_INVALID)
 					{
 						return LLWearableType::WT_INVALID;
 					}
@@ -970,12 +936,12 @@ LLWearableType::EType LLTexLayerInterface::getWearableType() const
 		for (; alpha_iter != mParamAlphaList.end(); alpha_iter++)
 		{
 			LLTexLayerParamAlpha* param = *alpha_iter;
-			if (param) 
+			if (param)
 			{
 				LLWearableType::EType new_type = (LLWearableType::EType)param->getWearableType();
-				if (new_type != LLWearableType::WT_INVALID && new_type != type) 
+				if (new_type != LLWearableType::WT_INVALID && new_type != type)
 				{
-					if (type != LLWearableType::WT_INVALID) 
+					if (type != LLWearableType::WT_INVALID)
 					{
 						return LLWearableType::WT_INVALID;
 					}
@@ -991,12 +957,12 @@ LLWearableType::EType LLTexLayerInterface::getWearableType() const
 
 LLTexLayerInterface::ERenderPass LLTexLayerInterface::getRenderPass() const
 {
-	return mInfo->mRenderPass; 
+	return mInfo->mRenderPass;
 }
 
 const std::string& LLTexLayerInterface::getGlobalColor() const
 {
-	return mInfo->mGlobalColor; 
+	return mInfo->mGlobalColor;
 }
 
 BOOL LLTexLayerInterface::isVisibilityMask() const
@@ -1067,7 +1033,7 @@ LLTexLayer::~LLTexLayer()
 	// deleted with ~LLCharacter()
 	//std::for_each(mParamAlphaList.begin(), mParamAlphaList.end(), DeletePointer());
 	//std::for_each(mParamColorList.begin(), mParamColorList.end(), DeletePointer());
-	
+
 	for( alpha_cache_t::iterator iter = mAlphaCache.begin();
 		 iter != mAlphaCache.end(); iter++ )
 	{
@@ -1092,7 +1058,7 @@ BOOL LLTexLayer::setInfo(const LLTexLayerInfo* info, LLWearable* wearable  )
 	return LLTexLayerInterface::setInfo(info, wearable);
 }
 
-//static 
+//static
 void LLTexLayer::calculateTexLayerColor(const param_color_list_t &param_list, LLColor4 &net_color)
 {
 	for (param_color_list_t::const_iterator iter = param_list.begin();
@@ -1136,18 +1102,9 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 	LLGLEnable color_mat(GL_COLOR_MATERIAL);
 	// *TODO: Is this correct?
 	//gPipeline.disableLights();
-	stop_glerror();
-	if (!LLGLSLShader::sNoFixedFunction)
-	{
-		glDisable(GL_LIGHTING);
-	}
-	stop_glerror();
-
-	bool use_shaders = LLGLSLShader::sNoFixedFunction;
-
 	LLColor4 net_color;
 	BOOL color_specified = findNetColor(&net_color);
-	
+
 	if (mTexLayerSet->getAvatarAppearance()->mIsDummy)
 	{
 		color_specified = true;
@@ -1155,7 +1112,7 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 	}
 
 	BOOL success = TRUE;
-	
+
 	// If you can't see the layer, don't render it.
 	if( is_approx_zero( net_color.mV[VW] ) )
 	{
@@ -1175,7 +1132,7 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 			while( iter != mParamAlphaList.end() )
 			{
 				const LLTexLayerParamAlpha* param = *iter;
-		
+
 				if( !param->getSkip() )
 				{
 					skip_layer = FALSE;
@@ -1183,7 +1140,7 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 				}
 
 				iter++;
-			} 
+			}
 
 			if( skip_layer )
 			{
@@ -1230,14 +1187,11 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 					LLGLDisable alpha_test(no_alpha_test ? GL_ALPHA_TEST : 0);
 					if (no_alpha_test)
 					{
-						if (use_shaders)
-						{
-							gAlphaMaskProgram.setMinimumAlpha(0.f);
-						}
+						gAlphaMaskProgram.setMinimumAlpha(0.f);
 					}
-					
+
 					LLTexUnit::eTextureAddressMode old_mode = tex->getAddressMode();
-					
+
 					gGL.getTexUnit(0)->bind(tex, TRUE);
 					gGL.getTexUnit(0)->setTextureAddressMode(LLTexUnit::TAM_CLAMP);
 
@@ -1247,10 +1201,7 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 					gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 					if (no_alpha_test)
 					{
-						if (use_shaders)
-						{
-							gAlphaMaskProgram.setMinimumAlpha(0.004f);
-						}
+						gAlphaMaskProgram.setMinimumAlpha(0.004f);
 					}
 				}
 			}
@@ -1284,18 +1235,11 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 		color_specified )
 	{
 		LLGLDisable no_alpha(GL_ALPHA_TEST);
-		if (use_shaders)
-		{
-			gAlphaMaskProgram.setMinimumAlpha(0.000f);
-		}
-
+		gAlphaMaskProgram.setMinimumAlpha(0.000f);
 		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 		gGL.color4fv( net_color.mV );
 		gl_rect_2d_simple( width, height );
-		if (use_shaders)
-		{
-			gAlphaMaskProgram.setMinimumAlpha(0.004f);
-		}
+		gAlphaMaskProgram.setMinimumAlpha(0.004f);
 	}
 
 	if( alpha_mask_specified || getInfo()->mWriteAllChannels )
@@ -1355,7 +1299,7 @@ BOOL LLTexLayer::findNetColor(LLColor4* net_color) const
 		{
 			net_color->setVec( 0.f, 0.f, 0.f, 0.f );
 		}
-		
+
 		calculateTexLayerColor(mParamColorList, *net_color);
 		return TRUE;
 	}
@@ -1382,8 +1326,7 @@ BOOL LLTexLayer::blendAlphaTexture(S32 x, S32 y, S32 width, S32 height)
 	BOOL success = TRUE;
 
 	gGL.flush();
-	
-	bool use_shaders = LLGLSLShader::sNoFixedFunction;
+
 
 	if( !getInfo()->mStaticImageFileName.empty() )
 	{
@@ -1391,17 +1334,11 @@ BOOL LLTexLayer::blendAlphaTexture(S32 x, S32 y, S32 width, S32 height)
 		if( tex )
 		{
 			LLGLSNoAlphaTest gls_no_alpha_test;
-			if (use_shaders)
-			{
-				gAlphaMaskProgram.setMinimumAlpha(0.f);
-			}
+			gAlphaMaskProgram.setMinimumAlpha(0.f);
 			gGL.getTexUnit(0)->bind(tex, TRUE);
 			gl_rect_2d_simple_tex( width, height );
 			gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-			if (use_shaders)
-			{
-				gAlphaMaskProgram.setMinimumAlpha(0.004f);
-			}
+			gAlphaMaskProgram.setMinimumAlpha(0.004f);
 		}
 		else
 		{
@@ -1416,22 +1353,16 @@ BOOL LLTexLayer::blendAlphaTexture(S32 x, S32 y, S32 width, S32 height)
 			if (tex)
 			{
 				LLGLSNoAlphaTest gls_no_alpha_test;
-				if (use_shaders)
-				{
-					gAlphaMaskProgram.setMinimumAlpha(0.f);
-				}
+				gAlphaMaskProgram.setMinimumAlpha(0.f);
 				gGL.getTexUnit(0)->bind(tex);
 				gl_rect_2d_simple_tex( width, height );
 				gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 				success = TRUE;
-				if (use_shaders)
-				{
-					gAlphaMaskProgram.setMinimumAlpha(0.004f);
-				}
+				gAlphaMaskProgram.setMinimumAlpha(0.004f);
 			}
 		}
 	}
-	
+
 	return success;
 }
 
@@ -1453,13 +1384,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 
 	llassert( !mParamAlphaList.empty() );
 
-	bool use_shaders = LLGLSLShader::sNoFixedFunction;
-
-	if (use_shaders)
-	{
-		gAlphaMaskProgram.setMinimumAlpha(0.f);
-	}
-
+	gAlphaMaskProgram.setMinimumAlpha(0.f);
 	gGL.setColorMask(false, true);
 
 	LLTexLayerParamAlpha* first_param = *mParamAlphaList.begin();
@@ -1468,7 +1393,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 	{
 		LLGLDisable no_alpha(GL_ALPHA_TEST);
 		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-	
+
 		// Clear the alpha
 		gGL.flush();
 		gGL.setSceneBlendType(LLRender::BT_REPLACE);
@@ -1503,7 +1428,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 		{
 			LLGLSNoAlphaTest gls_no_alpha_test;
 			LLTexUnit::eTextureAddressMode old_mode = tex->getAddressMode();
-			
+
 			gGL.getTexUnit(0)->bind(tex, TRUE);
 			gGL.getTexUnit(0)->setTextureAddressMode(LLTexUnit::TAM_CLAMP);
 
@@ -1528,7 +1453,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 			}
 			else
 			{
-				LL_WARNS() << "Skipping rendering of " << getInfo()->mStaticImageFileName 
+				LL_WARNS() << "Skipping rendering of " << getInfo()->mStaticImageFileName
 						<< "; expected 1 or 4 components." << LL_ENDL;
 			}
 		}
@@ -1543,22 +1468,17 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 		gGL.color4fv(layer_color.mV);
 		gl_rect_2d_simple( width, height );
 	}
-
-	if (use_shaders)
-	{
-		gAlphaMaskProgram.setMinimumAlpha(0.004f);
-	}
-
+	gAlphaMaskProgram.setMinimumAlpha(0.004f);
 	LLGLSUIDefault gls_ui;
 
 	gGL.setColorMask(true, true);
-	
+
 	if (hasMorph() && success)
 	{
 		LLCRC alpha_mask_crc;
 		const LLUUID& uuid = getUUID();
 		alpha_mask_crc.update((U8*)(&uuid.mData), UUID_BYTES);
-		
+
 		for (param_alpha_list_t::const_iterator iter = mParamAlphaList.begin(); iter != mParamAlphaList.end(); iter++)
 		{
 			const LLTexLayerParamAlpha* param = *iter;
@@ -1567,7 +1487,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 		}
 
 		U32 cache_index = alpha_mask_crc.getCRC();
-		U8* alpha_data = NULL; 
+		U8* alpha_data = NULL;
                 // We believe we need to generate morph masks, do not assume that the cached version is accurate.
                 // We can get bad morph masks during login, on minimize, and occasional gl errors.
                 // We should only be doing this when we believe something has changed with respect to the user's appearance.
@@ -1582,7 +1502,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
                 ll_aligned_free_32(alpha_data);
 				mAlphaCache.erase(iter2);
 			}
-			
+
             // GPUs tend to be very uptight about memory alignment as the DMA used to convey
             // said data to the card works better when well-aligned so plain old default-aligned heap mem is a no-no
             //new U8[width * height];
@@ -1599,7 +1519,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 			{
                 if (gGLManager.mIsIntel)
                 { // work-around for broken intel drivers which cannot do glReadPixels on an RGBA FBO
-                    // returning only the alpha portion without locking up downstream 
+                    // returning only the alpha portion without locking up downstream
 
                     // <FS:ND> glGetTexImagec will copy the whole texture, which might be   greater than width*height
                     // Also what about the shenanigans with  passing bound_target around everywhere rather than use LLRenderTarget::getCurrentBoundTarget
@@ -1687,7 +1607,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
                 }
                 else
                 { // platforms with working drivers...
-				    glReadPixels(x, y, width, height, GL_ALPHA, GL_UNSIGNED_BYTE, alpha_data);                
+				    glReadPixels(x, y, width, height, GL_ALPHA, GL_UNSIGNED_BYTE, alpha_data);
                 }
 			}
             else
@@ -1698,7 +1618,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 
             mAlphaCache[cache_index] = alpha_data;
 		}
-		
+
 		getTexLayerSet()->getAvatarAppearance()->dirtyMesh();
 
 		mMorphMasksValid = TRUE;
@@ -1816,7 +1736,7 @@ U32 LLTexLayerTemplate::updateWearableCache() const
 	LLWearableType::EType wearable_type = getWearableType();
 	if (LLWearableType::WT_INVALID == wearable_type)
 	{
-		//this isn't a cloneable layer 
+		//this isn't a cloneable layer
 		return 0;
 	}
 	U32 num_wearables = getAvatarAppearance()->getWearableData()->getWearableCount(wearable_type);
@@ -1914,14 +1834,14 @@ LLTexLayer* LLTexLayerTemplate::getLayer(U32 i) const
 }
 
 /*virtual*/ void LLTexLayerTemplate::setHasMorph(BOOL newval)
-{ 
+{
 	mHasMorph = newval;
 	U32 num_wearables = updateWearableCache();
 	for (U32 i = 0; i < num_wearables; i++)
 	{
 		LLTexLayer *layer = getLayer(i);
 		if (layer)
-		{	
+		{
 			layer->setHasMorph(newval);
 		}
 	}
@@ -2035,10 +1955,10 @@ void LLTexLayerStaticImageList::deleteCachedImages()
 		//	"KB TGA:" << (mTGABytes / 1024) << "KB" << LL_ENDL;
 
 		//mStaticImageLists uses LLPointers, clear() will cause deletion
-		
+
 		mStaticImageListTGA.clear();
 		mStaticImageList.clear();
-		
+
 		mGLBytes = 0;
 		mTGABytes = 0;
 	}
@@ -2146,4 +2066,3 @@ BOOL LLTexLayerStaticImageList::loadImageRaw(const std::string& file_name, LLIma
 
 	return success;
 }
-

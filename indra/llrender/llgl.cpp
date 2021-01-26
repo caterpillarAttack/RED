@@ -598,55 +598,12 @@ bool LLGLManager::initGL()
 		&mGLVersionString);
 
 	mGLVersion = mDriverVersionMajor + mDriverVersionMinor * .1f;
-
-	if (mGLVersion >= 2.f)
-	{
-		parse_glsl_version(mGLSLVersionMajor, mGLSLVersionMinor);
-
-#if LL_DARWIN
-		//never use GLSL greater than 1.20 on OSX
-		if (mGLSLVersionMajor > 1 || mGLSLVersionMinor >= 30)
-		{
-			mGLSLVersionMajor = 1;
-			mGLSLVersionMinor = 20;
-		}
-#endif
-	}
-
-	if (mGLVersion >= 2.1f && LLImageGL::sCompressTextures)
-	{ //use texture compression
-		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
-	}
-	else
-	{ //GL version is < 3.0, always disable texture compression
-		LLImageGL::sCompressTextures = false;
-	}
-
+	parse_glsl_version(mGLSLVersionMajor, mGLSLVersionMinor);
+	//use texture compression
+	glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
 	// Trailing space necessary to keep "nVidia Corpor_ati_on" cards
 	// from being recognized as ATI.
-	if (mGLVendor.substr(0,4) == "ATI ")
-	{
-		mGLVendorShort = "ATI";
-		// *TODO: Fix this?
-		mIsATI = TRUE;
-
-#if LL_WINDOWS && !LL_MESA_HEADLESS
-		if (mDriverVersionRelease < 3842)
-		{
-			mATIOffsetVerticalLines = TRUE;
-		}
-#endif // LL_WINDOWS
-
-#if (LL_WINDOWS || LL_LINUX) && !LL_MESA_HEADLESS
-		// count any pre OpenGL 3.0 implementation as an old driver
-		if (mGLVersion < 3.f)
-		{
-			mATIOldDriver = TRUE;
-		}
-#endif // (LL_WINDOWS || LL_LINUX) && !LL_MESA_HEADLESS
-	}
-	else if (mGLVendor.find("NVIDIA ") != std::string::npos)
-	{
+	if (mGLVendor.find("NVIDIA ") != std::string::npos){
 		mGLVendorShort = "NVIDIA";
 		mIsNVIDIA = TRUE;
 		if (   mGLRenderer.find("GEFORCE4 MX") != std::string::npos
@@ -838,10 +795,7 @@ bool LLGLManager::initGL()
 	//HACK always disable texture multisample, use FXAA instead
 	mHasTextureMultisample = FALSE;
 #if LL_WINDOWS
-	if (mIsATI)
-	{ //using multisample textures on ATI results in black screen for some reason
-		mHasTextureMultisample = FALSE;
-	}
+
 
 
 // <FS:CR> FIRE-7603: Revert MAINT-804 because FBO's and shadows appear to be working now!
@@ -1081,7 +1035,7 @@ void LLGLManager::initExtensions()
     mHasTexturesRGBDecode = ExtensionExists("GL_ARB_texture_sRGB_decode", gGLHExts.mSysExts);
 #endif
 
-	mHasMipMapGeneration = mHasFramebufferObject || mGLVersion >= 1.4f;
+	mHasMipMapGeneration = mHasFramebufferObject;
 
 	mHasDrawBuffers = ExtensionExists("GL_ARB_draw_buffers", gGLHExts.mSysExts);
 	mHasBlendFuncSeparate = ExtensionExists("GL_EXT_blend_func_separate", gGLHExts.mSysExts);
@@ -1233,13 +1187,7 @@ void LLGLManager::initExtensions()
 		LL_INFOS("RenderInit") << "Disabling mip-map generation for Intel GPUs" << LL_ENDL;
 		mHasMipMapGeneration = FALSE;
 	}
-#if !LL_DARWIN
-	if (mIsATI && mHasMipMapGeneration)
-	{
-		LL_INFOS("RenderInit") << "Disabling mip-map generation for ATI GPUs (performance opt)" << LL_ENDL;
-		mHasMipMapGeneration = FALSE;
-	}
-#endif
+
 
 	// Misc
 	glGetIntegerv(GL_MAX_ELEMENTS_VERTICES, (GLint*) &mGLMaxVertexRange);

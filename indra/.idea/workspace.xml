@@ -11,9 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8683bfdc-ae70-42a0-8d1d-46e7b29b994c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llrender2dutils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llrender2dutils.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llvertexbuffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llvertexbuffer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llviewerwindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llviewerwindow.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -48,8 +45,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/llrender/llrender.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="268">
-              <caret line="139" column="5" selection-start-line="139" selection-start-column="5" selection-end-line="139" selection-end-column="5" />
+            <state relative-caret-position="404">
+              <caret line="147" column="1" lean-forward="true" selection-start-line="147" selection-start-column="1" selection-end-line="147" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -132,12 +129,12 @@
       <option name="presentableId" value="Default" />
       <updated>1611546001176</updated>
       <workItem from="1611546004363" duration="3549000" />
-      <workItem from="1611606963731" duration="1970000" />
+      <workItem from="1611606963731" duration="4969000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5519000" />
+    <option name="totallyTimeSpent" value="8518000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="22" width="1936" height="1066" extended-state="6" />
@@ -173,8 +170,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/llrender/llrender.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="139" column="5" selection-start-line="139" selection-start-column="5" selection-end-line="139" selection-end-column="5" />
+        <state relative-caret-position="404">
+          <caret line="147" column="1" lean-forward="true" selection-start-line="147" selection-start-column="1" selection-end-line="147" selection-end-column="1" />
         </state>
       </provider>
     </entry>

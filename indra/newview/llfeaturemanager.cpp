@@ -1,25 +1,25 @@
-/** 
+/**
  * @file llfeaturemanager.cpp
  * @brief LLFeatureManager class implementation
  *
  * $LicenseInfo:firstyear=2003&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
  * version 2.1 of the License only.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
@@ -112,8 +112,8 @@ BOOL LLFeatureList::isFeatureAvailable(const std::string& name)
 	}
 
 	LL_WARNS_ONCE("RenderInit") << "Feature " << name << " not on feature list!" << LL_ENDL;
-	
-	// changing this to TRUE so you have to explicitly disable 
+
+	// changing this to TRUE so you have to explicitly disable
 	// something for it to be disabled
 	return TRUE;
 }
@@ -168,7 +168,7 @@ BOOL LLFeatureList::maskList(LLFeatureList &mask)
 	}
 
 	LL_DEBUGS("RenderInit") << "After applying mask " << mask.mName << std::endl;
-		// Will conditionally call dump only if the above message will be logged, thanks 
+		// Will conditionally call dump only if the above message will be logged, thanks
 		// to it being wrapped by the LL_DEBUGS and LL_ENDL macros.
 		dump();
 	LL_CONT << LL_ENDL;
@@ -292,7 +292,7 @@ bool LLFeatureManager::parseFeatureTable(std::string filename)
 	llifstream file;
 	std::string name;
 	U32		version;
-	
+
 	cleanupFeatureTables(); // in case an earlier attempt left partial results
 	file.open(filename.c_str()); 	 /*Flawfinder: ignore*/
 
@@ -319,14 +319,14 @@ bool LLFeatureManager::parseFeatureTable(std::string filename)
 	while (parse_ok && file >> name )
 	{
 		char buffer[MAX_STRING];		 /*Flawfinder: ignore*/
-		
+
 		if (name.substr(0,2) == "//")
 		{
 			// This is a comment.
 			file.getline(buffer, MAX_STRING);
 			continue;
 		}
-        
+
 		if (name == "list")
 		{
 			LL_DEBUGS("RenderInit") << "Before new list" << std::endl;
@@ -339,7 +339,7 @@ bool LLFeatureManager::parseFeatureTable(std::string filename)
 				LL_CONT << "No current list";
 			}
 			LL_CONT << LL_ENDL;
-			
+
 			// It's a new mask, create it.
 			file >> name;
 			if (!mMaskList.count(name))
@@ -376,7 +376,7 @@ bool LLFeatureManager::parseFeatureTable(std::string filename)
 		LL_WARNS("RenderInit") << "Discarding feature table data from " << filename << LL_ENDL;
 		cleanupFeatureTables();
 	}
-	
+
 	return parse_ok;
 }
 
@@ -443,40 +443,28 @@ bool LLFeatureManager::loadGPUClass()
 			gbps = -1.f;
 			LL_WARNS("RenderInit") << "GPU benchmark failed: " << e.what() << LL_ENDL;
 		}
-	
+
 		if (gbps < 0.f)
 		{ //couldn't bench, use GLVersion
-	#if LL_DARWIN
-		//GLVersion is misleading on OSX, just default to class 3 if we can't bench
-		LL_WARNS("RenderInit") << "Unable to get an accurate benchmark; defaulting to class 3" << LL_ENDL;
-		mGPUClass = GPU_CLASS_3;
-	#else
-			if (gGLManager.mGLVersion <= 2.f)
-			{
-				mGPUClass = GPU_CLASS_0;
-			}
-			else if (gGLManager.mGLVersion <= 3.f)
-			{
-				mGPUClass = GPU_CLASS_1;
-			}
-			else if (gGLManager.mGLVersion < 3.3f)
-			{
-				mGPUClass = GPU_CLASS_2;
-			}
-			else if (gGLManager.mGLVersion < 4.f)
-			{
-				mGPUClass = GPU_CLASS_3;
-			}
-			else 
-			{
-				mGPUClass = GPU_CLASS_4;
-			}
-			if (gGLManager.mIsIntel && mGPUClass > GPU_CLASS_1)
-			{
-				// Intels are generally weaker then other GPUs despite having advanced features
-				mGPUClass = (EGPUClass)(mGPUClass - 1);
-			}
-	#endif
+
+		if (gGLManager.mGLVersion < 3.3f)
+		{
+			mGPUClass = GPU_CLASS_2;
+		}
+		else if (gGLManager.mGLVersion < 4.f)
+		{
+			mGPUClass = GPU_CLASS_3;
+		}
+		else
+		{
+			mGPUClass = GPU_CLASS_4;
+		}
+
+		if (gGLManager.mIsIntel && mGPUClass > GPU_CLASS_1)
+		{
+			// Intels are generally weaker then other GPUs despite having advanced features
+			mGPUClass = (EGPUClass)(mGPUClass - 1);
+		}
 		}
 		else if (gGLManager.mGLVersion <= 2.f)
 		{
@@ -506,7 +494,7 @@ bool LLFeatureManager::loadGPUClass()
 		{
 			mGPUClass = GPU_CLASS_4;
 		}
-		else 
+		else
 		{
 			mGPUClass = GPU_CLASS_5;
 		}
@@ -515,7 +503,7 @@ bool LLFeatureManager::loadGPUClass()
 	{
 		//setting says don't benchmark MAINT-7558
         LL_WARNS("RenderInit") << "Setting 'SkipBenchmark' is true; defaulting to class 1 (may be required for some GPUs)" << LL_ENDL;
-        
+
 		mGPUClass = GPU_CLASS_1;
 	}
 
@@ -579,8 +567,8 @@ void LLFeatureManager::applyFeatures(bool skipFeatures)
 #endif
 
 	// scroll through all of these and set their corresponding control value
-	for(feature_map_t::iterator mIt = mFeatures.begin(); 
-		mIt != mFeatures.end(); 
+	for(feature_map_t::iterator mIt = mFeatures.begin();
+		mIt != mFeatures.end();
 		++mIt)
 	{
 		// skip features you want to skip
@@ -780,7 +768,7 @@ void LLFeatureManager::applyBaseMasks()
 	{
 		maskFeatures("RAM256MB");
 	}
-	
+
 #if LL_SOLARIS && defined(__sparc) 	//  even low MHz SPARCs are fast
 #error The 800 is hinky. Would something like a LL_MIN_MHZ make more sense here?
 	if (gSysCPU.getMHz() < 800)
@@ -814,7 +802,7 @@ LLSD LLFeatureManager::getRecommendedSettingsMap()
 
 	maskFeatures(features);
 
-	LLControlVariable* ctrl = gSavedSettings.getControl("RenderQualityPerformance"); // include the quality value for correct preset loading   
+	LLControlVariable* ctrl = gSavedSettings.getControl("RenderQualityPerformance"); // include the quality value for correct preset loading
 	map["RenderQualityPerformance"]["Value"] = (LLSD::Integer)level;
 	map["RenderQualityPerformance"]["Comment"] = ctrl->getComment();;
 	map["RenderQualityPerformance"]["Persist"] = 1;
@@ -852,6 +840,6 @@ LLSD LLFeatureManager::getRecommendedSettingsMap()
 		map[mIt->first]["Persist"] = 1;
 		map[mIt->first]["Type"] = LLControlGroup::typeEnumToString(ctrl->type());
 	}
-	
+
 	return map;
 }
