@@ -10,32 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8683bfdc-ae70-42a0-8d1d-46e7b29b994c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llgl.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llgl.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llgl.h" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llgl.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llglheaders.h" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llglheaders.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llrender.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llrender.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llrender2dutils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llrender2dutils.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/llrender/llvertexbuffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llvertexbuffer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llrender/llvertexbuffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/llrender/llvertexbuffer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llappviewer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llappviewer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/lldrawable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawable.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/lldrawpoolavatar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lldrawpoolavatar.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llfeaturemanager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llfeaturemanager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llglsandbox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llglsandbox.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llsprite.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llsprite.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/lltextureview.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/lltextureview.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llviewertexture.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llviewertexture.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llviewertexturelist.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llviewertexturelist.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llviewerwindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llviewerwindow.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llvograss.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvograss.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llvoground.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvoground.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llvopartgroup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvopartgroup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llvosky.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvosky.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llvosurfacepatch.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvosurfacepatch.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llvotree.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvotree.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llvovolume.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvovolume.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/newview/llvowater.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/newview/llvowater.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -82,37 +57,91 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/newview/llviewershadermgr.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="726" column="43" selection-start-line="726" selection-start-column="43" selection-end-line="726" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/newview/lldrawpoolterrain.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
-              <caret line="187" column="37" selection-start-line="187" selection-start-column="37" selection-end-line="187" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/llrender/llgl.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="372">
-              <caret line="428" selection-start-line="428" selection-end-line="428" />
+            <state relative-caret-position="440">
+              <caret line="423" column="4" selection-start-line="423" selection-start-column="4" selection-end-line="423" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newview/lldrawpoolbump.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="271">
+              <caret line="464" column="18" selection-start-line="464" selection-start-column="18" selection-end-line="464" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newview/llvoavatar.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1706">
+              <caret line="5417" column="4" selection-start-line="5417" selection-start-column="4" selection-end-line="5417" selection-end-column="4" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/llrender/llrender2dutils.cpp">
+        <entry file="file://$PROJECT_DIR$/llrender/llvertexbuffer.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="78">
-              <caret line="147" column="18" selection-start-line="147" selection-start-column="18" selection-end-line="147" selection-end-column="18" />
+            <state relative-caret-position="495">
+              <caret line="933" column="24" selection-start-line="933" selection-start-column="24" selection-end-line="933" selection-end-column="24" />
+              <folding>
+                <element signature="e#9289#9316#0" expanded="true" />
+                <element signature="e#22921#22942#0" expanded="true" />
+                <element signature="e#26228#26253#0" expanded="true" />
+                <element signature="e#31534#31558#0" expanded="true" />
+                <element signature="e#32045#32073#0" expanded="true" />
+                <element signature="e#37953#38484#0" expanded="true" />
+                <element signature="e#38554#39156#0" expanded="true" />
+                <element signature="e#42839#43339#0" expanded="true" />
+                <element signature="e#43408#43801#0" expanded="true" />
+                <element signature="e#48157#48215#0" expanded="true" />
+                <element signature="e#50689#50755#0" expanded="true" />
+                <element signature="e#50862#50972#0" expanded="true" />
+                <element signature="e#51360#51378#0" expanded="true" />
+                <element signature="e#56312#56340#0" expanded="true" />
+                <element signature="e#58102#58274#0" expanded="true" />
+                <element signature="e#62094#62115#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newview/pipeline.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="196">
+              <caret line="764" selection-start-line="764" selection-end-line="764" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newview/llspatialpartition.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="203">
+              <caret line="455" column="72" selection-start-line="455" selection-start-column="72" selection-end-line="455" selection-end-column="72" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newview/llfloaterpreference.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="186">
+              <caret line="2170" column="79" selection-start-line="2170" selection-start-column="79" selection-end-line="2170" selection-end-column="79" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/newview/llviewerwindow.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="186">
+              <caret line="1941" column="33" selection-start-line="1941" selection-start-column="33" selection-end-line="1941" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -121,9 +150,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>llgaussian</find>
-      <find>canUseAntiAliasing</find>
-      <find>gGLManager.mIsNVIDIA</find>
       <find>mHasMultitexture</find>
       <find>GL_TEXTURE0_ARB</find>
       <find>createLUTBuffers</find>
@@ -151,6 +177,9 @@
       <find>mHasPointParameters</find>
       <find>mIsATI</find>
       <find>mATIOffsetVerticalLines</find>
+      <find>VBO</find>
+      <find>glUniform1fARB</find>
+      <find>gGLManager.mGLSLVersionMajor</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\Artemis\Desktop\SecondLifeVanillaDev\PullerDevFirestorm\RED\indra\cmake-build-debug</dir>
@@ -254,7 +283,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49840000" />
+    <option name="totallyTimeSpent" value="51277000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="22" width="1936" height="1066" extended-state="6" />
@@ -297,8 +326,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/newview/pipeline.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="1584" column="33" selection-start-line="1584" selection-start-column="16" selection-end-line="1584" selection-end-column="33" />
+        <state relative-caret-position="196">
+          <caret line="764" selection-start-line="764" selection-end-line="764" />
         </state>
       </provider>
     </entry>
@@ -353,8 +382,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/newview/llviewerwindow.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="540" column="13" selection-start-line="540" selection-start-column="13" selection-end-line="540" selection-end-column="13" />
+        <state relative-caret-position="186">
+          <caret line="1941" column="33" selection-start-line="1941" selection-start-column="33" selection-end-line="1941" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -388,8 +417,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/llrender/llgl.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="428" selection-start-line="428" selection-end-line="428" />
+        <state relative-caret-position="440">
+          <caret line="423" column="4" selection-start-line="423" selection-start-column="4" selection-end-line="423" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -397,6 +426,31 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="78">
           <caret line="147" column="18" selection-start-line="147" selection-start-column="18" selection-end-line="147" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/llrender/llvertexbuffer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="933" column="24" selection-start-line="933" selection-start-column="24" selection-end-line="933" selection-end-column="24" />
+          <folding>
+            <element signature="e#9289#9316#0" expanded="true" />
+            <element signature="e#22921#22942#0" expanded="true" />
+            <element signature="e#26228#26253#0" expanded="true" />
+            <element signature="e#31534#31558#0" expanded="true" />
+            <element signature="e#32045#32073#0" expanded="true" />
+            <element signature="e#37953#38484#0" expanded="true" />
+            <element signature="e#38554#39156#0" expanded="true" />
+            <element signature="e#42839#43339#0" expanded="true" />
+            <element signature="e#43408#43801#0" expanded="true" />
+            <element signature="e#48157#48215#0" expanded="true" />
+            <element signature="e#50689#50755#0" expanded="true" />
+            <element signature="e#50862#50972#0" expanded="true" />
+            <element signature="e#51360#51378#0" expanded="true" />
+            <element signature="e#56312#56340#0" expanded="true" />
+            <element signature="e#58102#58274#0" expanded="true" />
+            <element signature="e#62094#62115#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

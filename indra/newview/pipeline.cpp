@@ -483,7 +483,7 @@ void LLPipeline::init()
 
 	mInitialized = true;
 
-	stop_glerror();
+
 
 	//create render pass pools
 	getPool(LLDrawPool::POOL_ALPHA);
@@ -538,13 +538,13 @@ void LLPipeline::init()
 
 	mBackfaceCull = true;
 
-	stop_glerror();
+
 
 	// Enable features
 
 	LLViewerShaderMgr::instance()->setShaders();
 
-	stop_glerror();
+
 
 	for (U32 i = 0; i < 2; ++i)
 	{
@@ -756,7 +756,7 @@ void LLPipeline::cleanup()
 
 void LLPipeline::destroyGL()
 {
-	stop_glerror();
+
 	unloadShaders();
 	mHighlightFaces.clear();
 	resetDrawOrders();
@@ -1056,7 +1056,7 @@ bool LLPipeline::allocateScreenBuffer(U32 resX, U32 resY, U32 samples)
 
 	gGL.getTexUnit(0)->disable();
 
-	stop_glerror();
+
 
 	return true;
 }
@@ -1346,7 +1346,7 @@ void LLPipeline::releaseShadowTargets()
 
 void LLPipeline::createGLBuffers()
 {
-	stop_glerror();
+
 	assertInitialized();
 
 	updateRenderDeferred();
@@ -1365,7 +1365,7 @@ void LLPipeline::createGLBuffers()
 
 	mHighlight.allocate(256,256,GL_RGBA, FALSE, FALSE);
 
-	stop_glerror();
+
 
 	GLuint resX = gViewerWindow->getWorldViewWidthRaw();
 	GLuint resY = gViewerWindow->getWorldViewHeightRaw();
@@ -2553,7 +2553,7 @@ void LLPipeline::updateCull(LLCamera& camera, LLCullResult& result, S32 water_cl
 		gSky.mVOSkyp->mDrawable->setVisible(camera);
 		sCull->pushDrawable(gSky.mVOSkyp->mDrawable);
 		gSky.updateCull();
-		stop_glerror();
+
 	}
 	if (hasRenderType(LLPipeline::RENDER_TYPE_GROUND) &&
 		!gPipeline.canUseWindLightShaders() &&
@@ -4385,7 +4385,7 @@ void LLPipeline::renderGeom(LLCamera& camera, bool forceVBOUpdate)
 	//
 	//
 
-	stop_glerror();
+
 
 	LLVertexBuffer::unbind();
 
@@ -4435,7 +4435,7 @@ void LLPipeline::renderGeom(LLCamera& camera, bool forceVBOUpdate)
 	// Actually render all of the geometry
 	//
 	//
-	stop_glerror();
+
 
 	LLAppViewer::instance()->pingMainloopTimeout("Pipeline:RenderDrawPools");
 
@@ -4528,7 +4528,7 @@ void LLPipeline::renderGeom(LLCamera& camera, bool forceVBOUpdate)
 				}
 			}
 			iter1 = iter2;
-			stop_glerror();
+
 		}
 
 		LLAppViewer::instance()->pingMainloopTimeout("Pipeline:RenderDrawPoolsEnd");
@@ -4687,7 +4687,7 @@ void LLPipeline::renderGeomDeferred(LLCamera& camera){
 			}
 		}
 		iter1 = iter2;
-		stop_glerror();
+
 	}
 
 	gGLLastMatrix = NULL;
@@ -4773,7 +4773,7 @@ void LLPipeline::renderGeomPostDeferred(LLCamera& camera, bool do_occlusion){
 			}
 		}
 		iter1 = iter2;
-		stop_glerror();
+
 	}
 
 	gGLLastMatrix = NULL;
@@ -4848,7 +4848,7 @@ void LLPipeline::renderGeomShadow(LLCamera& camera)
 			}
 		}
 		iter1 = iter2;
-		stop_glerror();
+
 	}
 
 	gGLLastMatrix = NULL;
@@ -6462,7 +6462,7 @@ void LLPipeline::enableLights(U32 mask)
 	{
 		if (mask)
 		{
-			stop_glerror();
+
 			for (S32 i=0; i<8; i++)
 			{
 				LLLightState* light = gGL.getLight(i);
@@ -6477,10 +6477,10 @@ void LLPipeline::enableLights(U32 mask)
 					light->setDiffuse(LLColor4::black);
 				}
 			}
-			stop_glerror();
+
 		}
 		mLightMask = mask;
-		stop_glerror();
+
 	}
 }
 //------------------------------------------------------------------------------
@@ -7392,7 +7392,8 @@ void LLPipeline::doResetVertexBuffers(bool forced)
 	LLVertexBuffer::sUseVAO = LLRender::sGLCoreProfile ? TRUE : gSavedSettings.getBOOL("RenderUseVAO");
 	// </FS:Ansariel>
 	LLVertexBuffer::sPreferStreamDraw = gSavedSettings.getBOOL("RenderPreferStreamDraw");
-	LLVertexBuffer::sEnableVBOs = gSavedSettings.getBOOL("RenderVBOEnable");
+	// LLVertexBuffer::sEnableVBOs = gSavedSettings.getBOOL("RenderVBOEnable");
+	LLVertexBuffer::sEnableVBOs = TRUE;
 	LLVertexBuffer::sDisableVBOMapping = LLVertexBuffer::sEnableVBOs && gSavedSettings.getBOOL("RenderVBOMappingDisable") ;
 	sBakeSunlight = gSavedSettings.getBOOL("RenderBakeSunlight");
 	sNoAlpha = gSavedSettings.getBOOL("RenderNoAlpha");
@@ -8178,7 +8179,7 @@ void LLPipeline::bindDeferredShader(LLGLSLShader& shader, LLRenderTarget* light_
 	if (channel > -1)
 	{
         gGL.getTexUnit(channel)->bind(deferred_depth_target, TRUE);
-		stop_glerror();
+
     }
 
     glh::matrix4f projection = get_current_projection();
@@ -8215,7 +8216,7 @@ void LLPipeline::bindDeferredShader(LLGLSLShader& shader, LLRenderTarget* light_
 		gGL.getTexUnit(channel)->bindManual(LLTexUnit::TT_TEXTURE, mLightFunc);
 	}
 
-	stop_glerror();
+
 
     light_target = light_target ? light_target : deferred_light_target;
     channel = shader.enableTexture(LLShaderMgr::DEFERRED_LIGHT, light_target->getUsage());
@@ -8230,7 +8231,7 @@ void LLPipeline::bindDeferredShader(LLGLSLShader& shader, LLRenderTarget* light_
 		mGlow[1].bindTexture(0, channel);
 	}
 
-	stop_glerror();
+
 
 	for (U32 i = 0; i < 4; i++)
 	{
@@ -8238,18 +8239,18 @@ void LLPipeline::bindDeferredShader(LLGLSLShader& shader, LLRenderTarget* light_
         if (shadow_target)
         {
 		channel = shader.enableTexture(LLShaderMgr::DEFERRED_SHADOW0+i, LLTexUnit::TT_TEXTURE);
-		stop_glerror();
+
 		if (channel > -1)
 		{
-			stop_glerror();
+
                 gGL.getTexUnit(channel)->bind(getShadowTarget(i), TRUE);
                 gGL.getTexUnit(channel)->setTextureFilteringOption(LLTexUnit::TFO_ANISOTROPIC);
 			gGL.getTexUnit(channel)->setTextureAddressMode(LLTexUnit::TAM_CLAMP);
-			stop_glerror();
+
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-			stop_glerror();
+
 		}
 	}
     }
@@ -8257,26 +8258,26 @@ void LLPipeline::bindDeferredShader(LLGLSLShader& shader, LLRenderTarget* light_
 	for (U32 i = 4; i < 6; i++)
 	{
 		channel = shader.enableTexture(LLShaderMgr::DEFERRED_SHADOW0+i);
-		stop_glerror();
+
 		if (channel > -1)
 		{
-			stop_glerror();
+
 			LLRenderTarget* shadow_target = getShadowTarget(i);
 			if (shadow_target)
 			{
 				gGL.getTexUnit(channel)->bind(shadow_target, TRUE);
 				gGL.getTexUnit(channel)->setTextureFilteringOption(LLTexUnit::TFO_ANISOTROPIC);
 			gGL.getTexUnit(channel)->setTextureAddressMode(LLTexUnit::TAM_CLAMP);
-			stop_glerror();
+
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-			stop_glerror();
+
 		}
 	}
 	}
 
-	stop_glerror();
+
 
 	F32 mat[16*6];
 	for (U32 i = 0; i < 16; i++)
@@ -8291,7 +8292,7 @@ void LLPipeline::bindDeferredShader(LLGLSLShader& shader, LLRenderTarget* light_
 
 	shader.uniformMatrix4fv(LLShaderMgr::DEFERRED_SHADOW_MATRIX, 6, FALSE, mat);
 
-	stop_glerror();
+
 
 	channel = shader.enableTexture(LLShaderMgr::ENVIRONMENT_MAP, LLTexUnit::TT_CUBE_MAP);
 	if (channel > -1)
@@ -8531,9 +8532,9 @@ void LLPipeline::renderDeferredLighting(LLRenderTarget *screen_target)
                 {
                     LLGLDisable   blend(GL_BLEND);
                     LLGLDepthTest depth(GL_TRUE, GL_FALSE, GL_ALWAYS);
-                    stop_glerror();
+
                     mDeferredVB->drawArrays(LLRender::TRIANGLES, 0, 3);
-                    stop_glerror();
+
                 }
 
                 unbindDeferredShader(gDeferredSunProgram);
@@ -8580,9 +8581,9 @@ void LLPipeline::renderDeferredLighting(LLRenderTarget *screen_target)
             {
                 LLGLDisable   blend(GL_BLEND);
                 LLGLDepthTest depth(GL_TRUE, GL_FALSE, GL_ALWAYS);
-                stop_glerror();
+
                 mDeferredVB->drawArrays(LLRender::TRIANGLES, 0, 3);
-                stop_glerror();
+
             }
 
             screen_target->flush();
@@ -8598,21 +8599,21 @@ void LLPipeline::renderDeferredLighting(LLRenderTarget *screen_target)
             {
                 LLGLDisable   blend(GL_BLEND);
                 LLGLDepthTest depth(GL_TRUE, GL_FALSE, GL_ALWAYS);
-                stop_glerror();
+
                 mDeferredVB->drawArrays(LLRender::TRIANGLES, 0, 3);
-                stop_glerror();
+
             }
             deferred_light_target->flush();
             unbindDeferredShader(gDeferredBlurLightProgram);
         }
 
-        stop_glerror();
+
         gGL.popMatrix();
-        stop_glerror();
+
         gGL.matrixMode(LLRender::MM_MODELVIEW);
-        stop_glerror();
+
         gGL.popMatrix();
-        stop_glerror();
+
 
         screen_target->bindTarget();
         // clear color buffer here - zeroing alpha (glow) is important or it will accumulate against sky
@@ -8767,7 +8768,7 @@ void LLPipeline::renderDeferredLighting(LLRenderTarget *screen_target)
                             gGL.syncMatrices();
 
                             mCubeVB->drawRange(LLRender::TRIANGLE_FAN, 0, 7, 8, get_box_fan_indices(camera, center));
-                            stop_glerror();
+
                         }
                     }
                     else
@@ -9188,7 +9189,7 @@ void LLPipeline::unbindDeferredShader(LLGLSLShader &shader)
     LLRenderTarget* deferred_depth_target = &mDeferredDepth;
     LLRenderTarget* deferred_light_target = &mDeferredLight;
 
-	stop_glerror();
+
     shader.disableTexture(LLShaderMgr::DEFERRED_NORMAL, deferred_target->getUsage());
     shader.disableTexture(LLShaderMgr::DEFERRED_DIFFUSE, deferred_target->getUsage());
     shader.disableTexture(LLShaderMgr::DEFERRED_SPECULAR, deferred_target->getUsage());
@@ -9639,12 +9640,12 @@ void LLPipeline::renderShadow(glh::matrix4f& view, glh::matrix4f& proj, LLCamera
 	gGL.pushMatrix();
 	gGL.loadMatrix(view.m);
 
-	stop_glerror();
+
 	gGLLastMatrix = NULL;
 
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 
-	stop_glerror();
+
 
     LLEnvironment& environment = LLEnvironment::instance();
 
@@ -10617,7 +10618,7 @@ void LLPipeline::generateSunShadow(LLCamera& camera)
 			mShadowProjection[j] = proj[j];
 			mSunShadowMatrix[j] = trans*proj[j]*view[j]*inv_view;
 
-			stop_glerror();
+
 
 			mShadow[j].bindTarget();
 			mShadow[j].getViewport(gGLViewport);
@@ -10761,7 +10762,7 @@ void LLPipeline::generateSunShadow(LLCamera& camera)
 
 			LLViewerCamera::updateFrustumPlanes(shadow_cam, FALSE, FALSE, TRUE);
 
-			stop_glerror();
+
 
 			mShadow[i+4].bindTarget();
 			mShadow[i+4].getViewport(gGLViewport);
