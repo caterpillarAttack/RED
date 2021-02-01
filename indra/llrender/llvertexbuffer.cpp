@@ -39,8 +39,7 @@
 
 //Next Highest Power Of Two
 //helper function, returns first number > v that is a power of 2, or v if v is already a power of 2
-U32 nhpo2(U32 v)
-{
+U32 nhpo2(U32 v){
 	U32 r = 1;
 	while (r < v) {
 		r *= 2;
@@ -50,15 +49,11 @@ U32 nhpo2(U32 v)
 
 //which power of 2 is i?
 //assumes i is a power of 2 > 0
-U32 wpo2(U32 i)
-{
+U32 wpo2(U32 i){
 	llassert(i > 0);
 	llassert(nhpo2(i) == i);
-
 	U32 r = 0;
-
 	while (i >>= 1) ++r;
-
 	return r;
 }
 
@@ -126,16 +121,12 @@ U32 LLVBOPool::genBuffer(){
 	return ret;
 }
 
-void LLVBOPool::deleteBuffer(U32 name)
-{
-	if (gGLManager.mInited)
-	{
-		LLVertexBuffer::unbind();
-		glBindBufferARB(mType, name);
-		glBufferDataARB(mType, 0, NULL, mUsage);
-		glBindBufferARB(mType, 0);
-		glDeleteBuffersARB(1, &name);
-	}
+void LLVBOPool::deleteBuffer(U32 name){
+	LLVertexBuffer::unbind();
+	glBindBufferARB(mType, name);
+	glBufferDataARB(mType, 0, NULL, mUsage);
+	glBindBufferARB(mType, 0);
+	glDeleteBuffersARB(1, &name);
 }
 
 
@@ -244,41 +235,28 @@ volatile U8* LLVBOPool::allocate(U32& name, U32 size, bool for_seed)
 	return ret;
 }
 
-void LLVBOPool::release(U32 name, volatile U8* buffer, U32 size)
-{
+void LLVBOPool::release(U32 name, volatile U8* buffer, U32 size){
 	llassert(vbo_block_size(size) == size);
-
 	deleteBuffer(name);
 	ll_aligned_free_fallback((U8*) buffer);
-
-	if (mType == GL_ARRAY_BUFFER)
-	{
+	if (mType == GL_ARRAY_BUFFER){
 		LLVertexBuffer::sAllocatedBytes -= size;
 	}
-	else
-	{
+	else{
 		LLVertexBuffer::sAllocatedIndexBytes -= size;
 	}
 }
 
-void LLVBOPool::seedPool()
-{
+void LLVBOPool::seedPool(){
 	U32 dummy_name = 0;
-
-	if (mFreeList.size() < LL_VBO_POOL_SEED_COUNT)
-	{
+	if (mFreeList.size() < LL_VBO_POOL_SEED_COUNT){
 		mFreeList.resize(LL_VBO_POOL_SEED_COUNT);
 	}
-
-	for (U32 i = 0; i < LL_VBO_POOL_SEED_COUNT; i++)
-	{
-		if (mMissCount[i] > mFreeList[i].size())
-		{
+	for (U32 i = 0; i < LL_VBO_POOL_SEED_COUNT; i++){
+		if (mMissCount[i] > mFreeList[i].size()){
 			U32 size = i*LL_VBO_BLOCK_SIZE;
-
 			S32 count = mMissCount[i] - mFreeList[i].size();
-			for (U32 j = 0; j < count; ++j)
-			{
+			for (U32 j = 0; j < count; ++j){
 				allocate(dummy_name, size, true);
 			}
 		}

@@ -44,10 +44,10 @@ vec3 getNorm(vec2 screenpos)
    vec2 enc = texture2DRect(normalMap, screenpos.xy).xy;
    vec2 fenc = enc*4-2;
    float f = dot(fenc,fenc);
-   float g = sqrt(1- (f * 0.25));
+   float g = sqrt(1-(f * 0.25));
    vec3 n;
    n.xy = fenc*g;
-   n.z = 1 - (f * 0.5);
+   n.z = 1- (f * 0.5);
    return n;
 }
 
@@ -61,7 +61,7 @@ vec4 getPosition(vec2 pos_screen)
 {
     float depth = getDepth(pos_screen);
     vec2 sc = getScreenCoordinate(pos_screen);
-    vec4 ndc = vec4(sc.xy, fma(depth, 2.0, -1.0), 1.0);
+    vec4 ndc = vec4(sc.xy, fma(depth,2.0,-1.0), 1.0);
     vec4 pos = inv_proj * ndc;
     pos /= pos.w;
     pos.w = 1.0;
@@ -71,7 +71,7 @@ vec4 getPosition(vec2 pos_screen)
 vec4 getPositionWithDepth(vec2 pos_screen, float depth)
 {
     vec2 sc = getScreenCoordinate(pos_screen);
-    vec4 ndc = vec4(sc.xy, fma(depth, 2.0, -1.0), 1.0);
+    vec4 ndc = vec4(sc.xy, fma(depth,2.0,-1.0), 1.0);
     vec4 pos = inv_proj * ndc;
     pos /= pos.w;
     pos.w = 1.0;

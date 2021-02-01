@@ -55,7 +55,7 @@ vec4 getPositionAo(vec2 pos_screen)
 {
     float depth = getDepthAo(pos_screen);
     vec2 sc = getScreenCoordinateAo(pos_screen);
-    vec4 ndc = vec4(sc.x, sc.y, fma(depth, 2.0, 1.0), 1.0);
+    vec4 ndc = vec4(sc.xy, fma(depth,2.0,-1.0), 1.0);
     vec4 pos = inv_proj * ndc;
     pos /= pos.w;
     pos.w = 1.0;
@@ -66,14 +66,6 @@ vec2 getKern(int i)
 {
     vec2 kern[32];
     // exponentially (^2) distant occlusion samples spread around origin
-    // kern[0] = vec2(-1.0, 0.0) * 0.125*0.125;
-    // kern[1] = vec2(1.0, 0.0) * 0.250*0.250;
-    // kern[2] = vec2(0.0, 1.0) * 0.375*0.375;
-    // kern[3] = vec2(0.0, -1.0) * 0.500*0.500;
-    // kern[4] = vec2(0.7071, 0.7071) * 0.625*0.625;
-    // kern[5] = vec2(-0.7071, -0.7071) * 0.750*0.750;
-    // kern[6] = vec2(-0.7071, 0.7071) * 0.875*0.875;
-    // kern[7] = vec2(0.7071, -0.7071) * 1.000*1.000;
     kern[0] = vec2(0.5588, -0.6478);
     kern[1] = vec2(-0.6156, -0.3037);
     kern[2] = vec2(0.4793, -0.3502);
@@ -106,6 +98,7 @@ vec2 getKern(int i)
     kern[29] = vec2(0.0888, -0.0179);
     kern[30] = vec2(-0.062, -0.0607);
     kern[31] = vec2(0.0075, 0.0016);
+
     return kern[i];
 }
 
@@ -115,9 +108,12 @@ float calcAmbientOcclusion(vec4 pos, vec3 norm, vec2 pos_screen)
     float ret = 1.0;
     vec3 pos_world = pos.xyz;
     vec2 noise_reflect = texture2D(noiseMap, pos_screen.xy/128.0).xy;
+
     float angle_hidden = 0.0;
     float points = 0;
+    float bias = 0.04;
     float scale = min(ssao_radius / -pos_world.z, ssao_max_radius);
+
     // it was found that keeping # of samples a constant was the fastest, probably due to compiler optimizations (unrolling?)
     for (int i = 0; i < 32; i++)
     {
@@ -132,7 +128,7 @@ float calcAmbientOcclusion(vec4 pos, vec3 norm, vec2 pos_screen)
         //radius is somewhat arbitrary, can approx with just some constant k * 1 / dist^2
         //(k should vary inversely with # of samples, but this is taken care of later)
 
-        float funky_val = (dot((samppos_world - 0.05*norm - pos_world), norm) > 0.0) ? 1.0 : 0.0;
+        float funky_val = (dot((samppos_world - bias * norm - pos_world), norm) > 0.0) ? 1.0 : 0.0;
         angle_hidden = angle_hidden + funky_val * min(1.0/dist2, ssao_factor_inv);
 
         // 'blocked' samples (significantly closer to camera relative to pos_world) are "no data", not "no occlusion"

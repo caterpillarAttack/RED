@@ -115,7 +115,7 @@ void main(){
 
     //Position Data
     float depth = texture2DRect(depthMap, vary_rectcoord.xy).r;
-    vec4 ndc = vec4(vary_fragcoord.xy, 2.0 * depth -1.0, 1.0);
+    vec4 ndc = vec4(vary_fragcoord.xy, fma(depth,2.0,-1.0), 1.0);
     vec4 vertexPosition = inv_proj * ndc;
       vertexPosition /= vertexPosition.w;
       vertexPosition.w = 1.0;
@@ -161,7 +161,7 @@ void main(){
     vec3 sun_contrib = min(da, scol) * sunlit;
 
     //shadow is handled above
-    vec3 radiance = sun_contrib;
+    vec3 radiance = sun_contrib * ambocc;
     vec3 Lo = vec3(0.0);
     vec3 L = normalize(lightDirection);
     vec3 eyeDirection = normalize(-vertexPosition.xyz);
@@ -178,7 +178,7 @@ void main(){
     kD *= 1.0 - Metallic;
     float NdotL = max(dot(Normal.xyz, L), 0.0);
     Lo += ((kD * albedo.rgb)  / PI + specular * spec.rgb) * radiance  * NdotL;
-    vec3 ambientF = amblit * albedo.rgb * ambocc; //*ao
+    vec3 ambientF = amblit * albedo.rgb; //*ao
     color.rgb += ambientF + Lo;
     color.rgb = mix(color.rgb, albedo.rgb, albedo.a);
 
@@ -189,9 +189,9 @@ void main(){
     float gt = max(0, min(gtdenom * NdotV / VdotH, gtdenom * da / VdotH));
 
     float scontrib = F.r * texture2D(lightFunc, vec2(NdotH , spec.a)).r  * gt / (NdotH * da);
-    vec3 sp = sun_contrib * scontrib / 6.0;
+    vec3 sp = sun_contrib * scontrib * 0.166667;
     sp = clamp(sp, vec3(0), vec3(1));
-    bloom += dot(sp, sp) / 4.0;
+    bloom += dot(sp, sp) * 0.25;
     bloom = clamp(bloom, 0.0, 1.0);
     color += sp * spec.rgb;
 
@@ -217,5 +217,7 @@ color = mix(atmosFragLighting(color, additive, atten), fullbrightAtmosTransportF
     // convert to linear as fullscreen lights need to sum in linear colorspace
     // and will be gamma (re)corrected downstream...
     frag_color.rgb = srgb_to_linear(color);
+    // frag_color.rgb = vec3(ambocc);
+
     frag_color.a   = bloom;
 }
