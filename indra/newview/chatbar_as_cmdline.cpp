@@ -16,7 +16,7 @@
  *      may be used to endorse or promote products derived from this
  *      software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY MODULAR SYSTEMS AND CONTRIBUTORS “AS IS”
+ * THIS SOFTWARE IS PROVIDED BY MODULAR SYSTEMS AND CONTRIBUTORS ï¿½AS ISï¿½
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL MODULAR SYSTEMS OR CONTRIBUTORS
@@ -657,7 +657,7 @@ bool cmd_line_chat(const std::string& revised_text, EChatType type, bool from_ge
 				S32 band_width;
 				if (i >> band_width)
 				{
-					band_width = llclamp(band_width, 50, 3000);
+					band_width = llclamp(band_width, 50, 100000);
 					gSavedSettings.setF32("ThrottleBandwidthKBPS", band_width);
 					LLStringUtil::format_map_t args;
 					std::string bw_cmd_respond;
