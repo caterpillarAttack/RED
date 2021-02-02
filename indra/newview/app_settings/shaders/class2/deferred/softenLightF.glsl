@@ -78,7 +78,7 @@ float DistributionGGX(vec3 N, vec3 H, float roughness){
     float NdotH = max(dot(N, H), 0.0);
     float NdotH2 = NdotH*NdotH;
     float nom   = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    float denom = fma(NdotH2, (a2 - 1.0), 1.0);
     denom = PI * denom * denom;
     return nom / denom;
 }
@@ -87,7 +87,7 @@ float GeometrySchlickGGX(float NdotV, float roughness){
     float r = (roughness + 1.0);
     float k = (r*r) / 8.0;
     float nom   = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
+    float denom = fma(NdotV, (1.0 - k), k);
     return nom / denom;
 }
 // ----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ void main(){
     float bloom = 0.0;
 
     //Position Data
-    float depth = texture2DRect(depthMap, vary_rectcoord.xy).r;
+    float depth = texture(depthMap, vary_rectcoord.xy).r;
     vec4 ndc = vec4(vary_fragcoord.xy, fma(depth,2.0,-1.0), 1.0);
     vec4 vertexPosition = inv_proj * ndc;
       vertexPosition /= vertexPosition.w;
@@ -153,7 +153,7 @@ void main(){
     calcAtmosphericVars(vertexPosition.xyz, lightDirection, ambocc, sunlit, amblit, additive, atten, true);
 
 
-    float ambient = min(abs(dot(Normal.xyz, sun_dir.xyz)), 1.0);
+    float ambient = min(abs(dot(Normal.xyz, lightDirection)), 1.0);
       ambient *= 0.5;
       ambient *= ambient;
       ambient = (1.0 - ambient);
@@ -162,7 +162,7 @@ void main(){
 
     //shadow is handled above
     //TODO:Investigate if moving amblight here improves anything.
-    vec3 radiance = sun_contrib;
+    vec3 radiance = sun_contrib ;
     vec3 Lo = vec3(0.0);
     vec3 L = normalize(lightDirection);
     vec3 eyeDirection = normalize(-vertexPosition.xyz);
@@ -202,9 +202,8 @@ void main(){
       float NoV = dot(Normal.xyz, eyeDirection);
       vec3 refnormpersp = normalize(reflect(vertexPosition.xyz, Normal.xyz));
       vec3 env_vec = env_mat * refnormpersp;
-      vec3 reflected_color = textureCube(environmentMap, env_vec).rgb ;
-      // reflected_color = (reflected_color * G * F * VoH) / ( NoH * NoV);
-      reflected_color = clamp((reflected_color * G * F * VoH) / denominator, vec3(0.0), vec3(1.0));
+      vec3 reflected_color = texture(environmentMap, env_vec).rgb ;
+      reflected_color = (reflected_color * G * F * VoH) / ( NoH * NoV) ;
       color.rgb += reflected_color * albedo.rgb;
     }
 color = mix(atmosFragLighting(color, additive, atten), fullbrightAtmosTransportFrag(color, additive, atten), albedo.a);
@@ -218,7 +217,5 @@ color = mix(atmosFragLighting(color, additive, atten), fullbrightAtmosTransportF
     // convert to linear as fullscreen lights need to sum in linear colorspace
     // and will be gamma (re)corrected downstream...
     frag_color.rgb = srgb_to_linear(color);
-    // frag_color.rgb = vec3(ambocc);
-
     frag_color.a   = bloom;
 }

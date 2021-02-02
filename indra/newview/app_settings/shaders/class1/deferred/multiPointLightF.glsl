@@ -49,7 +49,6 @@ in vec4 vary_fragcoord;	//[-1, 1]
 uniform vec2 screen_res;
 
 
-vec4 getPosition(vec2 pos_screen);
 vec3 getNorm(vec2 pos_screen);
 vec3 srgb_to_linear(vec3 c);
 vec3 linear_to_srgb(vec3 c);
@@ -102,7 +101,7 @@ void main(){
 #if defined(LOCAL_LIGHT_KILL)
     discard;
 #else
-  float depth = texture2DRect(depthMap, vary_rectcoord.xy).r;
+  float depth = texture(depthMap, vary_rectcoord.xy).r;
   vec4 ndc = vec4(vary_fragcoord.xy, fma(depth,2.0,-1.0), 1.0);
   vec4 vertexPosition = inv_proj * ndc;
     vertexPosition /= vertexPosition.w;
@@ -131,7 +130,8 @@ void main(){
         dist_atten *= dist_atten;
 			  dist_atten *= 2.0;
         dist_atten *= noise;
-      vec3 radiance = dist_atten *  light_col[i].rgb;
+      float da = dot(Normal.xyz, unitLightDirection);
+      vec3 radiance = dist_atten *  light_col[i].rgb * da;
 			vec3 H = normalize(unitLightDirection + eyeDirection);
       float NDF = DistributionGGX(Normal.xyz, H, Roughness);
       float G   = GeometrySmith(Normal.xyz, eyeDirection, unitLightDirection, Roughness);
@@ -146,7 +146,6 @@ void main(){
       outputColor += ((kD * Diffuse.rgb)  / PI + specular * Specular.rgb) * radiance  * NdotL;
       bloom += dot(specular, specular) * 0.166667;
       //
-      float da = dot(Normal.xyz, unitLightDirection);
       float NdotH = dot(Normal.xyz, H);
       float NdotV = dot(Normal.xyz, eyeDirection);
       float VdotH = dot(eyeDirection, H);
@@ -166,7 +165,7 @@ void main(){
 
 
 
-	frag_color.rgb = linear_to_srgb(outputColor);
+	frag_color.rgb = outputColor;
 	frag_color.a = bloom;
 
 #ifdef IS_AMD_CARD

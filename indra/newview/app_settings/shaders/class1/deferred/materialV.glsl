@@ -59,9 +59,6 @@ layout(location = 6) in vec4 diffuse_color;
 layout (location = 8) in vec4 tangent;
 layout (location = 3) in vec2 texcoord1;
 
-out vec3 vary_mat0;
-out vec3 vary_mat1;
-out vec3 vary_mat2;
 
 out vec2 vary_texcoord1;
 #else
@@ -75,7 +72,7 @@ out vec2 vary_texcoord2;
 
 out vec4 vertex_color;
 out vec2 vary_texcoord0;
-
+out mat3 TBN;
 void main()
 {
 #ifdef HAS_SKIN
@@ -115,10 +112,8 @@ void main()
 	// vec3 b = cross(n, t)*tangent.w;
 	vec3 b = normalize(cross(n, t)*tangent.w);
 // </FS:Beq>
+	TBN = mat3(t, b, n);
 
-	vary_mat0 = vec3(t.x, b.x, n.x);
-	vary_mat1 = vec3(t.y, b.y, n.y);
-	vary_mat2 = vec3(t.z, b.z, n.z);
 #else //HAS_NORMAL_MAP
 vary_normal  = n;
 #endif //HAS_NORMAL_MAP
@@ -129,12 +124,11 @@ vary_normal  = n;
 // <FS:Beq> normalize the bitangent (cross product of two normalised vectors is not itself normalised)
 	// vec3 b = cross(n,t)*tangent.w;
 	vec3 b = normalize(cross(n,t)*tangent.w);
+	TBN = mat3(t, b, n);
+
 // </FS:Beq>
 	//vec3 t = cross(b,n) * binormal.w;
 
-	vary_mat0 = vec3(t.x, b.x, n.x);
-	vary_mat1 = vec3(t.y, b.y, n.y);
-	vary_mat2 = vec3(t.z, b.z, n.z);
 #else //HAS_NORMAL_MAP
 	vary_normal = n;
 #endif //HAS_NORMAL_MAP

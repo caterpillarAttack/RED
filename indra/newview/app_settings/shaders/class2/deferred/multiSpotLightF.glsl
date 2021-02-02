@@ -142,13 +142,13 @@ void main()
 
     if (proj_shadow_idx >= 0)
     {
-        vec4 shd = texture2DRect(lightMap, frag.xy);
+        vec4 shd = texture(lightMap, frag.xy);
         shadow = (proj_shadow_idx==0)?shd.b:shd.a;
         shadow += shadow_fade;
         shadow = clamp(shadow, 0.0, 1.0);
     }
 
-    vec3 norm = texture2DRect(normalMap, frag.xy).xyz;
+    vec3 norm = texture(normalMap, frag.xy).xyz;
 
     float envIntensity = norm.z;
 
@@ -178,14 +178,14 @@ void main()
     lv = normalize(lv);
     float da = dot(norm, lv);
 
-    vec3 diff_tex = texture2DRect(diffuseRect, frag.xy).rgb;
+    vec3 diff_tex = texture(diffuseRect, frag.xy).rgb;
     // <FS:Beq> Colour space and shader fixes for BUG-228586
     // removing comments as colour space change
     // // SL-12005 Projector light pops as we get closer, more objectionable than being in wrong color space.
     // //          We can't switch to linear here unless we do it everywhere*
     // // *gbuffer IS sRGB, convert to linear since this shader outputs linear
     // diff_tex.rgb = srgb_to_linear(diff_tex.rgb);
-    vec4 spec = texture2DRect(specularRect, frag.xy);
+    vec4 spec = texture(specularRect, frag.xy);
 
     vec3 dlit = vec3(0, 0, 0);
 

@@ -73,9 +73,9 @@ vec4 applyWaterFogView(vec3 pos, vec4 color);
 void main()
 {
     vec2 tc = vary_fragcoord.xy;
-    float depth = texture2DRect(depthMap, tc.xy).r;
+    float depth = texture(depthMap, tc.xy).r;
     vec4 pos = getPositionWithDepth(tc, depth);
-    vec4 norm = texture2DRect(normalMap, tc);
+    vec4 norm = texture(normalMap, tc);
     float envIntensity = norm.z;
     norm.xyz = getNorm(tc);
 
@@ -84,12 +84,12 @@ void main()
     float light_gamma = 1.0/1.3;
     da = pow(da, light_gamma);
 
-    vec4 diffuse = texture2DRect(diffuseRect, tc);
+    vec4 diffuse = texture(diffuseRect, tc);
 
     //convert to gamma space
     diffuse.rgb = linear_to_srgb(diffuse.rgb);// <FS:Beq> Colour space and shader fixes for BUG-228586 (Rye) uniform sampler2DRect depthMap;
 
-    vec4 spec = texture2DRect(specularRect, vary_fragcoord.xy);
+    vec4 spec = texture(specularRect, vary_fragcoord.xy);
     vec3 color = vec3(0);
     float bloom = 0.0;
     {
@@ -135,7 +135,7 @@ void main()
         if (envIntensity > 0.0)
         { //add environmentmap
             vec3 env_vec = env_mat * refnormpersp;
-            vec3 reflected_color = textureCube(environmentMap, env_vec).rgb;
+            vec3 reflected_color = texture(environmentMap, env_vec).rgb;
             color = mix(color.rgb, reflected_color, envIntensity);
         }
 

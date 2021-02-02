@@ -47,7 +47,7 @@ vec2 getScreenCoordinateAo(vec2 screenpos)
 
 float getDepthAo(vec2 pos_screen)
 {
-    float depth = texture2DRect(depthMap, pos_screen).r;
+    float depth = texture(depthMap, pos_screen).r;
     return depth;
 }
 

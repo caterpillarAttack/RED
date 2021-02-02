@@ -73,7 +73,6 @@ uniform vec3 moon_dir;
 in vec2 vary_fragcoord;
 
 in vec3 vary_position;
-
 uniform mat4 proj_mat;
 uniform mat4 inv_proj;
 uniform vec2 screen_res;
@@ -85,8 +84,7 @@ uniform vec3 light_diffuse[8];
 
 float getAmbientClamp();
 
-vec3 calcPointLightOrSpotLight(vec3 light_col, vec3 npos, vec3 diffuse, vec4 spec, vec3 v, vec3 n, vec4 lp, vec3 ln, float la, float fa, float is_pointlight, inout float glare, float ambiance)
-{
+vec3 calcPointLightOrSpotLight(vec3 light_col, vec3 npos, vec3 diffuse, vec4 spec, vec3 v, vec3 n, vec4 lp, vec3 ln, float la, float fa, float is_pointlight, inout float glare, float ambiance){
     vec3 col = vec3(0);
 
     //get light vector
@@ -102,14 +100,11 @@ vec3 calcPointLightOrSpotLight(vec3 light_col, vec3 npos, vec3 diffuse, vec4 spe
     {
         //normalize light vector
         lv = normalize(lv);
-
         //distance attenuation
         float dist_atten = clamp(1.0 - (dist - 1.0*(1.0 - fa)) / fa, 0.0, 1.0);
         dist_atten *= dist_atten;
         dist_atten *= 2.0f;
-
-        if (dist_atten <= 0.0)
-        {
+        if (dist_atten <= 0.0){
             return col;
         }
 
@@ -127,31 +122,30 @@ vec3 calcPointLightOrSpotLight(vec3 light_col, vec3 npos, vec3 diffuse, vec4 spe
         {
             lit = max(da * dist_atten, 0.0);
             col = lit * light_col * diffuse;
-            amb_da += (da*0.5 + 0.5) * ambiance;
+            amb_da += fma(da, 0.5, 0.5) * ambiance;
         }
-        amb_da += (da*da*0.5 + 0.5) * ambiance;
+        amb_da += fma(da*da,0.5, 0.5) * ambiance;
         amb_da *= dist_atten;
         amb_da = min(amb_da, 1.0f - lit);
 
         // SL-10969 need to see why these are blown out
         //col.rgb += amb_da * light_col * diffuse;
 
-        if (spec.a > 0.0)
-        {
+
             //vec3 ref = dot(pos+lv, norm);
             vec3 h = normalize(lv + npos);
             float nh = dot(n, h);
             float nv = dot(n, npos);
             float vh = dot(npos, h);
             float sa = nh;
-            float fres = pow(1 - dot(h, npos), 5)*0.4 + 0.5;
+            float fres = fma(pow(1 - dot(h, npos), 5),0.4, 0.5);
 
             float gtdenom = 2 * nh;
             float gt = max(0, min(gtdenom * nv / vh, gtdenom * da / vh));
 
             if (nh > 0.0)
             {
-                float scol = fres*texture2D(lightFunc, vec2(nh, spec.a)).r*gt / (nh*da);
+                float scol = fres * texture2D(lightFunc, vec2(nh, spec.a)).r * gt / (nh * da);
                 vec3 speccol = lit*scol*light_col.rgb*spec.rgb;
                 speccol = clamp(speccol, vec3(0), vec3(1));
                 col += speccol;
@@ -161,7 +155,7 @@ vec3 calcPointLightOrSpotLight(vec3 light_col, vec3 npos, vec3 diffuse, vec4 spe
                 glare = max(glare, speccol.r);
                 glare += max(cur_glare, 0.0);
             }
-        }
+
     }
 
     return max(col, vec3(0.0, 0.0, 0.0));
@@ -195,10 +189,9 @@ uniform float minimum_alpha;
 #endif
 
 #ifdef HAS_NORMAL_MAP
-in vec3 vary_mat0;
-in vec3 vary_mat1;
-in vec3 vary_mat2;
 in vec2 vary_texcoord1;
+in mat3 TBN;
+
 #else
 in vec3 vary_normal;
 #endif
@@ -206,8 +199,47 @@ in vec3 vary_normal;
 in vec4 vertex_color;
 in vec2 vary_texcoord0;
 
-vec2 encode_normal(vec3 n);
 
+//Cook Torrance BRDF Stuff
+// ----------------------------------------------------------------------------
+const float PI = 3.14159265359;
+float DistributionGGX(vec3 N, vec3 H, float roughness){
+    float a = roughness*roughness;
+    float a2 = a*a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+    float nom   = a2;
+    float denom = fma(NdotH2, (a2 - 1.0), 1.0);
+    denom = PI * denom * denom;
+    return nom / denom;
+}
+// ----------------------------------------------------------------------------
+float GeometrySchlickGGX(float NdotV, float roughness){
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+    float nom   = NdotV;
+    float denom = fma(NdotV, (1.0 - k), k);
+    return nom / denom;
+}
+// ----------------------------------------------------------------------------
+float GeometrySmith(vec3 N, vec3 eyeDirection, vec3 L, float roughness){
+    float NdotV = max(dot(N, eyeDirection), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+    return ggx1 * ggx2;
+}
+// ----------------------------------------------------------------------------
+vec3 fresnelSchlick(float cosTheta, vec3 F0){
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+// ----------------------------------------------------------------------------
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness){
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
+}
+// ----------------------------------------------------------------------------
+
+vec2 encode_normal(vec3 n);
 void main()
 {
     vec2 pos_screen = vary_texcoord0.xy;
@@ -229,6 +261,7 @@ void main()
 	vec3 gamma_diff = diffcol.rgb;
 	diffcol.rgb = srgb_to_linear(diffcol.rgb);
 #endif
+vec4 final_color = diffcol;
 
 #ifdef HAS_SPECULAR_MAP
     vec4 spec = texture2D(specularMap, vary_texcoord2.xy);
@@ -237,24 +270,31 @@ void main()
     vec4 spec = vec4(specular_color.rgb, 1.0);
 #endif
 
+// #ifdef HAS_NORMAL_MAP
+// 	vec4 norm = vec4(texture2D(bumpMap, vary_texcoord1.xy).xyz  * 2 - 1 , 1.0);
+//   norm.xyz = normalize(norm.xyz * transpose(TBN)); //This makes no sense
+// #else
+// 	vec4 norm = vec4(normalize(vary_normal), 1.0);
+// #endif
+
 #ifdef HAS_NORMAL_MAP
 	vec4 norm = texture2D(bumpMap, vary_texcoord1.xy);
-
 	norm.xyz = norm.xyz * 2 - 1;
-
-	vec3 tnorm = vec3(dot(norm.xyz,vary_mat0),
-			  dot(norm.xyz,vary_mat1),
-			  dot(norm.xyz,vary_mat2));
+	vec3 tnorm = norm.xyz * transpose(TBN);
 #else
 	vec4 norm = vec4(0,0,0,1.0);
 	vec3 tnorm = vary_normal;
 #endif
 
-    norm.xyz = normalize(tnorm.xyz);
 
-    vec2 abnormal = encode_normal(norm.xyz);
-
-    vec4 final_color = diffcol;
+vec4 final_specular = spec;
+#ifdef HAS_SPECULAR_MAP
+  vec4 final_normal = vec4(encode_normal(normalize(tnorm)), env_intensity * spec.a, 0.0);
+	final_specular.a = specular_color.a * norm.a;
+#else
+  vec4 final_normal = vec4(encode_normal(normalize(tnorm)), env_intensity, 0.0);
+	final_specular.a = specular_color.a;
+#endif
 
 #if (DIFFUSE_ALPHA_MODE != DIFFUSE_ALPHA_MODE_EMISSIVE)
 	final_color.a = emissive_brightness;
@@ -262,161 +302,117 @@ void main()
 	final_color.a = max(final_color.a, emissive_brightness);
 #endif
 
-    vec4 final_specular = spec;
-
-#ifdef HAS_SPECULAR_MAP
-    vec4 final_normal = vec4(encode_normal(normalize(tnorm)), env_intensity * spec.a, 0.0);
-	final_specular.a = specular_color.a * norm.a;
-#else
-	vec4 final_normal = vec4(encode_normal(normalize(tnorm)), env_intensity, 0.0);
-	final_specular.a = specular_color.a;
-#endif
-
 #if (DIFFUSE_ALPHA_MODE == DIFFUSE_ALPHA_MODE_BLEND)
-
-    //forward rendering, output just lit sRGBA
-    vec3 pos = vary_position;
-
-    float shadow = 1.0f;
-
+  //forward rendering, output just lit sRGBA
+  vec3 pos = vary_position;
+  float shadow = 1.0f;
 #ifdef HAS_SUN_SHADOW
     shadow = sampleDirectionalShadow(pos.xyz, norm.xyz, pos_screen);
 #endif
+  vec3 color = vec3(0,0,0);
+  float bloom = 0.0;
 
-    spec = final_specular;
-    vec4 diffuse = final_color;
-    float envIntensity = final_normal.z;
 
-    vec3 color = vec3(0,0,0);
+  vec4 albedo = final_color;
+  albedo.rgb  = linear_to_srgb(albedo.rgb);
+  vec3 Normal = normalize(tnorm.xyz);
+  float Metallic = final_normal.z;
+  spec = final_specular;
+  float Roughness = clamp(1.00 - final_specular.a, 0.0, 1.0);
+  vec3 F0 = vec3(0.04);
+    F0 = mix(F0, albedo.rgb,  Metallic);
 
-    vec3 light_dir = (sun_up_factor == 1) ? sun_dir : moon_dir;
+  vec3 light_dir = (sun_up_factor == 1) ? sun_dir : moon_dir;
+  float da = clamp(dot(normalize(tnorm.xyz), light_dir.xyz), 0.0, 1.0);
+  da = pow(da, 1.0 / 1.3);
 
-    float bloom = 0.0;
-    vec3 sunlit;
-    vec3 amblit;
-    vec3 additive;
-    vec3 atten;
+  vec3 sunlit;
+  vec3 amblit;
+  vec3 additive;
+  vec3 atten;
+  calcAtmosphericVars(pos.xyz, light_dir, 1.0, sunlit, amblit, additive, atten, false);
 
-    calcAtmosphericVars(pos.xyz, light_dir, 1.0, sunlit, amblit, additive, atten, false);
+  float ambient = min(abs(dot(normalize(tnorm.xyz), light_dir)), 1.0);
+  ambient *= 0.5;
+  ambient *= ambient;
+  ambient = (1.0 - ambient);
+  amblit *= ambient;
+  vec3 sun_contrib = min(da, shadow) * sunlit;
 
-        // This call breaks the Mac GLSL compiler/linker for unknown reasons (17Mar2020)
-        // The call is either a no-op or a pure (pow) gamma adjustment, depending on GPU level
-        // TODO: determine if we want to re-apply the gamma adjustment, and if so understand & fix Mac breakage
-        //color = fullbrightScaleSoftClip(color);
+  vec3 radiance = sun_contrib;
+  vec3 Lo = vec3(0.0);
+  vec3 L = normalize(light_dir);
+  vec3 eyeDirection = normalize(-pos.xyz);
+  vec3 R = reflect(-eyeDirection, Normal.xyz);
+  vec3 H    = normalize(eyeDirection + L);
+  float NDF = DistributionGGX(Normal.xyz, H, Roughness);
+  float G   = GeometrySmith(Normal.xyz, eyeDirection, L, Roughness);
+  vec3 F    = fresnelSchlick(max(dot(H, eyeDirection), 0.0), F0);
+  vec3 nominator    = NDF * G * F;
+  float denominator = 4 * max(dot(Normal.xyz, eyeDirection), 0.0) * max(dot(Normal.xyz, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+  vec3 specular = nominator / denominator;
+  vec3 kS = F;
+  vec3 kD = vec3(1.0) - kS;
+  kD *= 1.0 - Metallic;
+  float NdotL = max(dot(Normal.xyz, L), 0.0);
+  Lo += ((kD * albedo.rgb)  / PI + specular * spec.rgb) * radiance  * NdotL;
+  vec3 ambientF = amblit * albedo.rgb;
+  color.rgb += ambientF + Lo;
+  color.rgb = mix(color.rgb, albedo.rgb, albedo.a);
 
-    vec3 refnormpersp = normalize(reflect(pos.xyz, norm.xyz));
 
-    //we're in sRGB space, so gamma correct this dot product so
-    // lighting from the sun stays sharp
-    float da = clamp(dot(normalize(norm.xyz), light_dir.xyz), 0.0, 1.0);
-    da = pow(da, 1.0 / 1.3);
+  float NdotH = dot(Normal.xyz, H);
+  float NdotV = dot(Normal.xyz, eyeDirection);
+  float VdotH = dot(eyeDirection, H);
+  float gtdenom = 2 * NdotH;
+  float gt = max(0, min(gtdenom * NdotV / VdotH, gtdenom * da / VdotH));
 
-    color = amblit;
+  vec3 refnormpersp = normalize(reflect(pos.xyz, normalize(tnorm.xyz)));
+  float sa        = dot(refnormpersp, sun_dir.xyz);
 
-    //darken ambient for normals perpendicular to light vector so surfaces in shadow
-    // and facing away from light still have some definition to them.
-    // do NOT gamma correct this dot product so ambient lighting stays soft
-    float ambient = min(abs(dot(norm.xyz, sun_dir.xyz)), 1.0);
-    ambient *= 0.5;
-    ambient *= ambient;
-    ambient = (1.0 - ambient);
+  float scontrib = F.r * texture2D(lightFunc, vec2(sa, spec.a)).r  * gt / (NdotH * da);
+  vec3 sp = sun_contrib * scontrib * 0.166667;
+  sp = clamp(sp, vec3(0), vec3(1));
+  //TODO: INTEGRATE THIS WITH THE BLOOM SETTINGS.
+  bloom += dot(sp, sp) * 0.25;
+  bloom = clamp(bloom, 0.0, 1.0);
+  color += sp * spec.rgb;
 
-    vec3 sun_contrib = min(da, shadow) * sunlit;
+  float glare = 0.0;
+  if (Metallic > 0.0){
+    float NoH = dot(Normal.xyz, H);
+    float VoH = dot(eyeDirection, H);
+    float NoV = dot(Normal.xyz, eyeDirection);
+    vec3 refnormpersp = normalize(reflect(pos.xyz, Normal.xyz));
+    vec3 env_vec = env_mat * refnormpersp;
+    vec3 reflected_color = texture(environmentMap, env_vec).rgb ;
+    // reflected_color = clamp((reflected_color * G * F * VoH) / denominator, vec3(0.0), vec3(1.0)) * albedo.rgb;
+    reflected_color = (reflected_color * G * F * VoH) / ( NoH * NoV);
+    reflected_color *= albedo.rgb;
+    glare = max(reflected_color.r, reflected_color.g);
+    glare = max(glare, reflected_color.b);
+    color.rgb += reflected_color;
+  }
+  color = atmosFragLighting(color, additive, atten);
+  //convert to linear before adding local lights
+  color = srgb_to_linear(color);
+  vec3 npos = normalize(-pos.xyz);
+  vec3 light = vec3(0, 0, 0);
+  final_specular.rgb = srgb_to_linear(final_specular.rgb);// <FS:Beq/> Colour space and shader fixes for BUG-228586 (Rye)
 
-    color *= ambient;
-
-    color += sun_contrib;
-
-    color *= gamma_diff.rgb;
-
-    float glare = 0.0;
-
-    if (spec.a > 0.0)  // specular reflection
-    {
-        /*  // Reverting this specular calculation to previous 'dumbshiny' version - DJH 6/17/2020
-            // Preserving the refactored version as a comment for potential reconsideration,
-            // overriding the general rule to avoid pollutiong the source with commented code.
-            //
-            //  If you're reading this in 2021+, feel free to obliterate.
-
-        vec3 npos = -normalize(pos.xyz);
-
-        //vec3 ref = dot(pos+lv, norm);
-        vec3 h = normalize(light_dir.xyz + npos);
-        float nh = dot(norm.xyz, h);
-        float nv = dot(norm.xyz, npos);
-        float vh = dot(npos, h);
-        float sa = nh;
-        float fres = pow(1 - dot(h, npos), 5)*0.4 + 0.5;
-
-        float gtdenom = 2 * nh;
-        float gt = max(0, min(gtdenom * nv / vh, gtdenom * da / vh));
-
-        if (nh > 0.0)
-        {
-            float scol = fres*texture2D(lightFunc, vec2(nh, spec.a)).r*gt / (nh*da);
-            vec3 sp = sun_contrib*scol / 6.0f;
-            sp = clamp(sp, vec3(0), vec3(1));
-            bloom = dot(sp, sp) / 4.0;
-            color += sp * spec.rgb;
-        }
-        */
-
-        float sa        = dot(refnormpersp, sun_dir.xyz);
-        vec3  dumbshiny = sunlit * shadow * (texture2D(lightFunc, vec2(sa, spec.a)).r);
-
-        // add the two types of shiny together
-        vec3 spec_contrib = dumbshiny * spec.rgb;
-        bloom             = dot(spec_contrib, spec_contrib) / 6;
-
-        glare = max(spec_contrib.r, spec_contrib.g);
-        glare = max(glare, spec_contrib.b);
-
-        color += spec_contrib;
-    }
-
-    color = mix(color.rgb, diffcol.rgb, diffuse.a);
-
-    if (envIntensity > 0.0)
-    {
-        //add environmentmap
-        vec3 env_vec = env_mat * refnormpersp;
-
-        vec3 reflected_color = textureCube(environmentMap, env_vec).rgb;
-
-        color = mix(color, reflected_color, envIntensity);
-
-        float cur_glare = max(reflected_color.r, reflected_color.g);
-        cur_glare = max(cur_glare, reflected_color.b);
-        cur_glare *= envIntensity*4.0;
-        glare += cur_glare;
-    }
-
-    color = atmosFragLighting(color, additive, atten);
-    color = scaleSoftClipFrag(color);
-
-    //convert to linear before adding local lights
-    color = srgb_to_linear(color);
-
-    vec3 npos = normalize(-pos.xyz);
-
-    vec3 light = vec3(0, 0, 0);
-    final_specular.rgb = srgb_to_linear(final_specular.rgb);// <FS:Beq/> Colour space and shader fixes for BUG-228586 (Rye)
-
-#define LIGHT_LOOP(i) light.rgb += calcPointLightOrSpotLight(light_diffuse[i].rgb, npos, diffuse.rgb, final_specular, pos.xyz, norm.xyz, light_position[i], light_direction[i].xyz, light_attenuation[i].x, light_attenuation[i].y, light_attenuation[i].z, glare, light_attenuation[i].w );
-
-    LIGHT_LOOP(1)
-        LIGHT_LOOP(2)
-        LIGHT_LOOP(3)
-        LIGHT_LOOP(4)
-        LIGHT_LOOP(5)
-        LIGHT_LOOP(6)
-        LIGHT_LOOP(7)
+#define LIGHT_LOOP(i) light.rgb += calcPointLightOrSpotLight(light_diffuse[i].rgb, npos, albedo.rgb, final_specular, pos.xyz, tnorm.xyz, light_position[i], light_direction[i].xyz, light_attenuation[i].x, light_attenuation[i].y, light_attenuation[i].z, glare, light_attenuation[i].w );
+  LIGHT_LOOP(1)
+  LIGHT_LOOP(2)
+  LIGHT_LOOP(3)
+  LIGHT_LOOP(4)
+  LIGHT_LOOP(5)
+  LIGHT_LOOP(6)
+  LIGHT_LOOP(7)
 
     color += light;
 
     glare = min(glare, 1.0);
-    float al = max(diffcol.a, glare)*vertex_color.a;
+    float al = max(diffcol.a, glare) *vertex_color.a;
 
     //convert to srgb as this color is being written post gamma correction
     color = linear_to_srgb(color);

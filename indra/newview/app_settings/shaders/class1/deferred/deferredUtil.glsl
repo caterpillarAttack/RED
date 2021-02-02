@@ -41,7 +41,7 @@ vec2 getScreenCoordinate(vec2 screenpos)
 
 vec3 getNorm(vec2 screenpos)
 {
-   vec2 enc = texture2DRect(normalMap, screenpos.xy).xy;
+   vec2 enc = texture(normalMap, screenpos.xy).xy;
    vec2 fenc = enc*4-2;
    float f = dot(fenc,fenc);
    float g = sqrt(1-(f * 0.25));
@@ -53,7 +53,7 @@ vec3 getNorm(vec2 screenpos)
 
 float getDepth(vec2 pos_screen)
 {
-    float depth = texture2DRect(depthMap, pos_screen).r;
+    float depth = texture(depthMap, pos_screen).r;
     return depth;
 }
 
