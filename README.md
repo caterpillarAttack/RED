@@ -2,7 +2,7 @@
 
 These are some Second Life shader and client modifications I conducted to the 3rd party client called firestorm. Most of the work here done was implemented based on the tutorials from https://learnopengl.com/ and from plenty of help from patient and brilliant individuals in a graphics programming discord. Most of this stuff is nothing more than an exercise of learning and teaching myself 3D graphics, but I have sadly reached the point where I need to work on rendering engines from scratch to really understand them rather than just modifying them. However, I still intend to keep poking at this project when I have time.
 
-So whats changed?
+**So whats changed?**
 - **Shader Side:** Proper layout qualifiers instead of the dated varyings and out qualifiers.
 - **Shader Side:** Modified the SSAO shader and utilities in aoUtil.glsl to require a bit less math and added a few samples.
 - **Shader Side:** Small optimizations like reimplementing operations to use multiply, add, and divide operations to hopefully boost performance if the compiler misses them.
@@ -11,7 +11,7 @@ So whats changed?
 - **Client Side:** Gutted as much as possible of preOpenGL 4.2 code and am currently remove as much fixed function or software rendering code from the client.
 
 
-What needs to be done?
+**What needs to be done?**
 - **Shader Side:** Currently there are three shader classes for different hardware spec, some of it very ancient, and I intent to do some pruning to simplify the amount of code that needs to be maintained.
 - **Shader Side:** Investigate going tall with the shaders and making some uber shaders that handle more or less all of the lighting.
 - **Shader Side:** Modernizing spotlights.
@@ -27,13 +27,13 @@ What needs to be done?
 -  **Overall:** Write unit tests or some form of bug testing for bits and pieces of the code, as there doesnt seem to be much for the rendering side of things.
 
 
-Why did I do this?
+**Why did I do this?**
 - I got tired of the game looking like garbage, running like garbage, and the lack of meaningful graphics development on the platform.
 - People have been dreaming and salivating at the thought of physically based rendering in Second Life for quite some time, and I had hoped that if I fixed stuff up enough, it might force the developers to invest more in the graphics side of the game.
 - I create and sell content in Second Life, and Ive looked at the rendering engine and noticed there is no shortage of data to work with and things should be able to look better. Specifically, I want metallic items to not resemble a grey muddied smear.
 - TLDR: I know its possible, and I want to prove it can be done.
 
-Eye Candy
+**Eye Candy**
 ![Alt Text](https://i.gyazo.com/d5d902f64c963adcdf658dee114c33b1.png)
 ![Alt Text](https://i.gyazo.com/938ff7f52defdbd0dce54f718eefd2be.png)
 
