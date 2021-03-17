@@ -34,8 +34,11 @@ Why did I do this?
 - TLDR: I know its possible, and I want to prove it can be done.
 
 Eye Candy
-![Alt Text](https://i.gyazo.com/75df3048684a095ab5d2b6a8eb3957d3.gif)
+![Alt Text](https://i.gyazo.com/d5d902f64c963adcdf658dee114c33b1.png)
+![Alt Text](https://i.gyazo.com/938ff7f52defdbd0dce54f718eefd2be.png)
 
-
+**Video:** https://i.gyazo.com/75df3048684a095ab5d2b6a8eb3957d3.mp4
+**Video:** https://i.gyazo.com/c121f969750c891f752fb7ea27ffab8e.mp4
+**Video:** https://i.gyazo.com/3ccc1925f38409231ea6e391a0c77860.mp4
 
 
