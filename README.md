@@ -1,4 +1,4 @@
-# ProjectRED
+# Project RED
 
 These are some Second Life shader and client modifications I conducted to the 3rd party client called firestorm. Most of the work here done was implemented based on the tutorials from https://learnopengl.com/ and from plenty of help from patient and brilliant individuals in a graphics programming discord. Most of this stuff is nothing more than an exercise of learning and teaching myself 3D graphics, but I have sadly reached the point where I need to work on rendering engines from scratch to really understand them rather than just modifying them. However, I still intend to keep poking at this project when I have time.
 
