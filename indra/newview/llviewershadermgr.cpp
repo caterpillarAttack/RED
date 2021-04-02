@@ -35,7 +35,6 @@
 
 #include "llrender.h"
 #include "llenvironment.h"
-#include "llatmosphere.h"
 #include "llworld.h"
 #include "llsky.h"
 #include "llvosky.h"

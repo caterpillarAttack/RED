@@ -36,6 +36,7 @@
 #include "llsettingswater.h"
 #include "llsettingsdaycycle.h"
 
+//TODO: Figure out why commenting this out breaks shit.
 #include "llatmosphere.h"
 
 #include <boost/signals2.hpp>

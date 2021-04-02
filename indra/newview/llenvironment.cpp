@@ -57,7 +57,6 @@
 
 #include <boost/make_shared.hpp>
 
-#include "llatmosphere.h"
 #include "llagent.h"
 #include "roles_constants.h"
 #include "llestateinfomodel.h"
@@ -2731,12 +2730,6 @@ void LLEnvironment::DayInstance::setSky(const LLSettingsSky::ptr_t &psky)
     mSky->update();
     mBlenderSky.reset();
 
-    if (gAtmosphere)
-    {
-        AtmosphericModelSettings settings;
-        LLEnvironment::getAtmosphericModelSettings(settings, psky);
-        gAtmosphere->configureAtmosphericModel(settings);
-    }
 }
 
 void LLEnvironment::DayInstance::setWater(const LLSettingsWater::ptr_t &pwater)
