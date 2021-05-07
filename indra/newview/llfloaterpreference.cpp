@@ -2147,8 +2147,7 @@ void LLFloaterPreference::refreshEnabledState()
 	//BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
 	//					bumpshiny &&
 	//					transparent_water &&
-	//					shaders && 
-	//					gGLManager.mHasFramebufferObject &&
+	//					shaders &&
 	//					gSavedSettings.getBOOL("RenderAvatarVP") &&
 	//					(ctrl_wind_light->get()) ? TRUE : FALSE;
 
@@ -2168,8 +2167,7 @@ void LLFloaterPreference::refreshEnabledState()
 	childSetEnabled("FSRestrictMaxTextureSize", false);
 #endif
 
-	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderVBOEnable") ||
-		!gGLManager.mHasVertexBufferObject)
+	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderVBOEnable"))
 	{
 		getChildView("vbo")->setEnabled(FALSE);
 		getChildView("vbo_stream")->setEnabled(FALSE);
@@ -2182,8 +2180,7 @@ void LLFloaterPreference::refreshEnabledState()
 		getChildView("vbo_stream")->setEnabled(LLVertexBuffer::sEnableVBOs);
 #endif
 
-	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderCompressTextures") ||
-		!gGLManager.mHasVertexBufferObject)
+	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderCompressTextures"))
 	{
 		getChildView("texture compression")->setEnabled(FALSE);
 	}
@@ -2280,7 +2277,6 @@ void LLFloaterPreference::refreshEnabledState()
 	BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
 						((bumpshiny_ctrl && bumpshiny_ctrl->get()) ? TRUE : FALSE) &&
 						((transparent_water_ctrl && transparent_water_ctrl->get()) ? TRUE : FALSE) &&
-						gGLManager.mHasFramebufferObject &&
 						gSavedSettings.getBOOL("RenderAvatarVP") &&
 						(ctrl_wind_light->get()) ? TRUE : FALSE;
 
@@ -2404,7 +2400,6 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
     BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
                         ((bumpshiny_ctrl && bumpshiny_ctrl->get()) ? TRUE : FALSE) &&
                         ((transparent_water_ctrl && transparent_water_ctrl->get()) ? TRUE : FALSE) &&
-                        gGLManager.mHasFramebufferObject &&
                         gSavedSettings.getBOOL("RenderAvatarVP") &&
                         (ctrl_wind_light->get()) ? TRUE : FALSE;
 
@@ -2435,14 +2430,12 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 	getChild<LLSliderCtrl>("GraphicsCardTextureMemory")->setMinValue(min_tex_mem.value());
 	getChild<LLSliderCtrl>("GraphicsCardTextureMemory")->setMaxValue(max_tex_mem.value());
 
-	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderVBOEnable") ||
-		!gGLManager.mHasVertexBufferObject)
+	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderVBOEnable"))
 	{
 		getChildView("vbo")->setEnabled(FALSE);
 	}
 
-	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderCompressTextures") ||
-		!gGLManager.mHasVertexBufferObject)
+	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderCompressTextures"))
 	{
 		getChildView("texture compression")->setEnabled(FALSE);
 	}
@@ -2536,8 +2529,7 @@ void LLFloaterPreference::disableUnavailableSettings()
 	}
 
 	// disabled deferred
-	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") ||
-		!gGLManager.mHasFramebufferObject)
+	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred"))
 	{
 		ctrl_shadows->setEnabled(FALSE);
 		ctrl_shadows->setValue(0);
@@ -2644,8 +2636,7 @@ void LLFloaterPreferenceGraphicsAdvanced::disableUnavailableSettings()
 	}
 
 	// disabled deferred
-	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") ||
-		!gGLManager.mHasFramebufferObject)
+	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred"))
 	{
 		ctrl_shadows->setEnabled(FALSE);
 		ctrl_shadows->setValue(0);

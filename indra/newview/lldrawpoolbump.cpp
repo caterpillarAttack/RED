@@ -1525,11 +1525,7 @@ void LLDrawPoolBump::pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL 
 void LLDrawPoolInvisible::render(S32 pass)
 { //render invisiprims
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_INVISIBLE);
-
-	if (gPipeline.canUseVertexShaders())
-	{
-		gOcclusionProgram.bind();
-	}
+	gOcclusionProgram.bind();
 
 	U32 invisi_mask = LLVertexBuffer::MAP_VERTEX;
 	glStencilMask(0);
@@ -1538,11 +1534,7 @@ void LLDrawPoolInvisible::render(S32 pass)
 	gGL.setColorMask(true, false);
 	glStencilMask(0xFFFFFFFF);
 
-	if (gPipeline.canUseVertexShaders())
-	{
-		gOcclusionProgram.unbind();
-	}
-
+	gOcclusionProgram.unbind();
 	if (gPipeline.hasRenderBatches(LLRenderPass::PASS_INVISI_SHINY))
 	{
 		beginShiny(true);

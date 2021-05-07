@@ -72,7 +72,7 @@ vec4 applyWaterFogView(vec3 pos, vec4 color);
 vec3 srgb_to_linear(vec3 c);
 vec3 linear_to_srgb(vec3 c);
 
-vec2 encode_normal (vec3 n);
+vec2 encodeNorm (vec3 n);
 vec3 scaleSoftClipFrag(vec3 l);
 vec3 atmosFragLighting(vec3 light, vec3 additive, vec3 atten);
 
@@ -219,7 +219,7 @@ void main()
 
     calcAtmosphericVars(pos.xyz, light_dir, 1.0, sunlit, amblit, additive, atten, false);
 
-    vec2 abnormal = encode_normal(norm.xyz);
+    vec2 abnormal = encodeNorm(norm.xyz);
 
     float da = dot(norm.xyz, light_dir.xyz);
           da = clamp(da, -1.0, 1.0);

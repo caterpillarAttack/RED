@@ -840,11 +840,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7aa6be7859afda1f765e4c90dbbd4e4c</string>
+              <string>cd4f14f4f23a4f49697a5d8e408c5dab</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///C:/Users/Artemis/Desktop/SecondLifeVanillaDev/PullerDevFirestorm/3p-fmodstudio/fmodstudio-2.01.07-windows-210250207.tar.bz2</string>
+              <string>file:///C:/Users/Artemis/Desktop/SecondLifeVanillaDev/PullerDevFirestorm/3p-fmodstudio/fmodstudio-2.01.07-windows-211041935.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -854,11 +854,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6958b4e6e654acb822e99aeeda23a6dd</string>
+              <string>13d1ca7526bc64e4b6a7ac26820b5647</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///C:/Users/Artemis/Desktop/SecondLifeVanillaDev/PullerDevFirestorm/3p-fmodstudio/fmodstudio-2.01.07-windows64-210250207.tar.bz2</string>
+              <string>file:///C:/Users/Artemis/Desktop/SecondLifeVanillaDev/PullerDevFirestorm/3p-fmodstudio/fmodstudio-2.01.07-windows64-211041935.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>

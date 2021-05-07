@@ -1045,7 +1045,6 @@ void FloaterQuickPrefs::refreshSettings()
 						bumpshiny &&
 						transparent_water &&
 						shaders &&
-						gGLManager.mHasFramebufferObject &&
 						gSavedSettings.getBOOL("RenderAvatarVP") &&
 						(mCtrlWindLight->get()) ? TRUE : FALSE;
 
@@ -1086,9 +1085,7 @@ void FloaterQuickPrefs::refreshSettings()
 	}
 
 	// disabled deferred
-	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") ||
-		!gGLManager.mHasFramebufferObject)
-	{
+	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred")){
 		mCtrlShadowDetail->setEnabled(FALSE);
 		mCtrlShadowDetail->setValue(0);
 

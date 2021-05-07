@@ -58,7 +58,7 @@ in vec4 refCoord;
 in vec4 littleWave;
 in vec4 view;
 
-vec2 encode_normal(vec3 n);
+vec2 encodeNorm(vec3 n);
 
 void main() 
 {
@@ -78,5 +78,5 @@ void main()
 
 	frag_data[0] = vec4(fb.rgb, 1.0); // diffuse
 	frag_data[1] = vec4(0.5,0.5,0.5, 0.95); // speccolor*spec, spec
-	frag_data[2] = vec4(encode_normal(wavef), 0.0, 0.0); // normalxyz, env intens, atmo kill
+	frag_data[2] = vec4(encodeNorm(wavef), 0.0, 0.0); // normalxyz, env intens, atmo kill
 }

@@ -35,7 +35,7 @@ in vec3 vary_normal;
 in vec4 vertex_color;
 in vec2 vary_texcoord0;
 
-vec2 encode_normal(vec3 n);
+vec2 encodeNorm(vec3 n);
 vec3 linear_to_srgb(vec3 c);
 
 void main() 
@@ -48,5 +48,5 @@ void main()
 	frag_data[0] = vec4(col, 0.0);
 	frag_data[1] = vec4(spec, vertex_color.a); // spec
 	vec3 nvn = normalize(vary_normal);
-	frag_data[2] = vec4(encode_normal(nvn.xyz), vertex_color.a, 0.0);
+	frag_data[2] = vec4(encodeNorm(nvn.xyz), vertex_color.a, 0.0);
 }

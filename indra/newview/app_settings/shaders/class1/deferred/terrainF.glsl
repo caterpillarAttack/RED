@@ -42,7 +42,7 @@ in vec3 vary_normal;
 in vec4 vary_texcoord0;
 in vec4 vary_texcoord1;
 
-vec2 encode_normal(vec3 n);
+vec2 encodeNorm(vec3 n);
 
 void main()
 {
@@ -63,6 +63,6 @@ void main()
     frag_data[0] = outColor;
     frag_data[1] = vec4(0.0,0.0,0.0,-1.0);
     vec3 nvn = normalize(vary_normal);
-    frag_data[2] = vec4(encode_normal(nvn.xyz), 0.0, 0.0);
+    frag_data[2] = vec4(encodeNorm(nvn.xyz), 0.0, 0.0);
 }
 

@@ -53,11 +53,9 @@ in vec2 vary_rectcoord; //[0,  screen_res]
 in vec4 vary_fragcoord; //[-1, 1]
 
 
-vec3 getNorm(vec2 pos_screen);
-vec4 getPositionWithDepth(vec2 pos_screen, float depth);
+vec3 decodeNorm(vec2 pos_screen);
 
-void calcAtmosphericVars(vec3 inPositionEye, vec3 lightDirection, float ambFactor, out vec3 sunlit, out vec3 amblit, out vec3 additive, out vec3 atten, bool use_ao);
-float getAmbientClamp();
+void  calcAtmosphericVars(vec3 inPositionEye, vec3 lightDirection, float ambFactor, out vec3 sunlit, out vec3 amblit, out vec3 additive, out vec3 atten, bool use_ao);
 vec3  atmosFragLighting(vec3 l, vec3 additive, vec3 atten);
 vec3  scaleSoftClipFrag(vec3 l);
 vec3  fullbrightAtmosTransportFrag(vec3 light, vec3 additive, vec3 atten);
@@ -126,7 +124,7 @@ void main(){
     // </FS:Beq>
     vec4 albedo = texture(diffuseRect, vary_rectcoord.xy);
     albedo.rgb = linear_to_srgb(albedo.rgb);
-    vec3  Normal  = getNorm(vary_rectcoord.xy);
+    vec3  Normal  = decodeNorm(vary_rectcoord.xy);
     float Metallic = texture(normalMap, vary_rectcoord.xy).z;
 
     vec4 spec    = texture(specularRect, vary_rectcoord.xy);
@@ -171,6 +169,7 @@ void main(){
     float NDF = DistributionGGX(Normal.xyz, H, Roughness);
     float G   = GeometrySmith(Normal.xyz, eyeDirection, L, Roughness);
     vec3 F    = fresnelSchlick(max(dot(H, eyeDirection), 0.0), F0);
+
     vec3 nominator    = NDF * G * F;
     float denominator = 4 * max(dot(Normal.xyz, eyeDirection), 0.0) * max(dot(Normal.xyz, L), 0.0) + 0.001; // 0.001 to prevent divide by zero.
     vec3 specular = nominator / denominator;
@@ -179,7 +178,7 @@ void main(){
     kD *= 1.0 - Metallic;
     float NdotL = max(dot(Normal.xyz, L), 0.0);
     Lo += ((kD * albedo.rgb)  / PI + specular * spec.rgb) * radiance  * NdotL;
-    vec3 ambientF = amblit * albedo.rgb; //*ao
+    vec3 ambientF = amblit * albedo.rgb * vec3(ambocc); //*ao
     color.rgb += ambientF + Lo;
     color.rgb = mix(color.rgb, albedo.rgb, albedo.a);
 
@@ -213,9 +212,10 @@ color = mix(atmosFragLighting(color, additive, atten), fullbrightAtmosTransportF
     color       = fogged.rgb;
     bloom       = fogged.a;
 #endif
-
     // convert to linear as fullscreen lights need to sum in linear colorspace
     // and will be gamma (re)corrected downstream...
     frag_color.rgb = srgb_to_linear(color);
+    // frag_color.rgb = srgb_to_linear(vec3(ambocc));
+
     frag_color.a   = bloom;
 }

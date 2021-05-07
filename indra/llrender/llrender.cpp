@@ -118,6 +118,7 @@ void LLTexUnit::refreshState(void){
 	// We set dirty to true so that the tex unit knows to ignore caching
 	// and we reset the cached tex unit state
 	gGL.flush();
+
 	glActiveTextureARB(GL_TEXTURE0 + mIndex);
 	// Per apple spec, don't call glEnable/glDisable when index exceeds max texture units
 	// http://www.mailinglistarchive.com/html/mac-opengl@lists.apple.com/2008-07/msg00653.html
@@ -125,6 +126,7 @@ void LLTexUnit::refreshState(void){
 	//fairly certain we can just bypass the enable or disable check and go straight to texture binding.
 	if (mCurrTexType != TT_NONE){
 		glBindTexture(sGLTextureType[mCurrTexType], mCurrTexture);
+
 	}
 	else{
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -159,7 +161,7 @@ void LLTexUnit::disable(void){
 		activate();
 		unbind(mCurrTexType);
 		gGL.flush();
-    setTextureColorSpace(TCS_LINEAR);
+    	setTextureColorSpace(TCS_LINEAR);
 		mCurrTexType = TT_NONE;
 	}
 }
@@ -167,10 +169,13 @@ void LLTexUnit::disable(void){
 bool LLTexUnit::bind(LLTexture* texture, bool for_rendering, bool forceBind)
 {
 
-	if (mIndex >= 0)
-	{
+	if(mIndex < 0){
+		// mIndex < 0
+		return false;
+	}
+	else{
+		//(mIndex >= 0){
 		gGL.flush();
-
 		LLImageGL* gl_tex = NULL ;
 
 		if (texture != NULL && (gl_tex = texture->getGLTexture()))
@@ -211,17 +216,9 @@ bool LLTexUnit::bind(LLTexture* texture, bool for_rendering, bool forceBind)
 			if (texture){
 				LL_DEBUGS() << "NULL LLTexUnit::bind GL image" << LL_ENDL;
 			}
-			else{
-				LL_DEBUGS() << "NULL LLTexUnit::bind texture" << LL_ENDL;
-			}
 			return false;
 		}
 	}
-	else
-	{ // mIndex < 0
-		return false;
-	}
-
 	return true;
 }
 
@@ -786,15 +783,11 @@ void LLRender::init()
 	//mBuffer->getColorStrider(mColorsp);
 	initVB();
 	// </FS:Ansariel>
-
-
 	// <FS:Ansariel> Don't ignore OpenGL max line width
 	GLint range[2];
 	glGetIntegerv(GL_ALIASED_LINE_WIDTH_RANGE, range);
-
 	mMaxLineWidthAliased = F32(range[1]);
 	glGetIntegerv(GL_SMOOTH_LINE_WIDTH_RANGE, range);
-
 	mMaxLineWidthSmooth = F32(range[1]);
 	// </FS:Ansariel>
 }
@@ -818,11 +811,9 @@ void LLRender::shutdown()
 }
 
 // <FS:Ansariel> Reset VB during TP
-void LLRender::initVB()
-{
+void LLRender::initVB(){
 	mBuffer = new LLVertexBuffer(immediate_mask, 0);
-	if (!mBuffer->allocateBuffer(4096, 0, true))
-	{
+	if (!mBuffer->allocateBuffer(4096, 0, true)){
 		// If this doesn't work, we're knee-deep in trouble!
 		LL_WARNS() << "Failed to allocate Vertex Buffer for common rendering" << LL_ENDL;
 	}
@@ -831,8 +822,7 @@ void LLRender::initVB()
 	mBuffer->getColorStrider(mColorsp);
 }
 
-void LLRender::destroyVB()
-{
+void LLRender::destroyVB(){
 	mBuffer = NULL;
 }
 // </FS:Ansariel>
@@ -2014,17 +2004,3 @@ glh::matrix4f gl_perspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloa
 						 0, 0, -1.f, 0);
 }
 
-glh::matrix4f gl_lookat(LLVector3 eye, LLVector3 center, LLVector3 up)
-{
-	LLVector3 f = center-eye;
-	f.normVec();
-	up.normVec();
-	LLVector3 s = f % up;
-	LLVector3 u = s % f;
-
-	return glh::matrix4f(s[0], s[1], s[2], 0,
-					  u[0], u[1], u[2], 0,
-					  -f[0], -f[1], -f[2], 0,
-					  0, 0, 0, 1);
-
-}

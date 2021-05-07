@@ -41,12 +41,12 @@ uniform float kern_scale;
 in vec2 vary_fragcoord;
 
 vec4 getPosition(vec2 pos_screen);
-vec3 getNorm(vec2 pos_screen);
+vec3 decodeNorm(vec2 pos_screen);
 
 void main()
 {
     vec2 tc = vary_fragcoord.xy;
-    vec3 norm = getNorm(tc);
+    vec3 norm = decodeNorm(tc);
     vec3 pos = getPosition(tc).xyz;
     vec4 ccol = texture(lightMap, tc).rgba;
 

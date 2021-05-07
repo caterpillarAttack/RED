@@ -54,7 +54,7 @@ uniform vec2 screen_res;
 uniform mat4 inv_proj;
 uniform vec4 viewport;
 
-vec3 getNorm(vec2 pos_screen);
+vec3 decodeNorm(vec2 pos_screen);
 vec4 getPosition(vec2 pos_screen);
 vec3 srgb_to_linear(vec3 c);
 
@@ -74,7 +74,7 @@ void main()
         discard;
     }
     
-    vec3 norm = getNorm(frag.xy);
+    vec3 norm = decodeNorm(frag.xy);
 
     float da = dot(norm, lv);
     if (da < 0.0)

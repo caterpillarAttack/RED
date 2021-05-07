@@ -39,7 +39,7 @@ out vec4 frag_color;
 VARYING vec2 vary_fragcoord;
 
 vec4 getPosition(vec2 pos_screen);
-vec3 getNorm(vec2 pos_screen);
+vec3 decodeNorm(vec2 pos_screen);
 
 float sampleDirectionalShadow(vec3 pos, vec3 norm, vec2 pos_screen); 
 float sampleSpotShadow(vec3 pos, vec3 norm, int index, vec2 pos_screen); 
@@ -48,7 +48,7 @@ void main()
 {
 	vec2 pos_screen = vary_fragcoord.xy;
 	vec4 pos = getPosition(pos_screen);
-	vec3 norm = getNorm(pos_screen);
+	vec3 norm = decodeNorm(pos_screen);
 
 	frag_color.r = sampleDirectionalShadow(pos.xyz, norm, pos_screen);
 	frag_color.g = 1.0f;

@@ -1144,11 +1144,7 @@ void LLPipeline::refreshCachedSettings()
 	LLPipeline::sRenderAttachedParticles = gSavedSettings.getBOOL("RenderAttachedParticles");
 	// </FS:Ansariel>
 
-	LLPipeline::sUseOcclusion =
-			(!gUseWireframe
-			&& LLFeatureManager::getInstance()->isFeatureAvailable("UseOcclusion")
-			&& gSavedSettings.getBOOL("UseOcclusion")
-			&& gGLManager.mHasOcclusionQuery) ? 2 : 0;
+	LLPipeline::sUseOcclusion = (!gUseWireframe && LLFeatureManager::getInstance()->isFeatureAvailable("UseOcclusion") && gSavedSettings.getBOOL("UseOcclusion"));
 
 	RenderAvatarVP = gSavedSettings.getBOOL("RenderAvatarVP");
 	WindLightUseAtmosShaders = gSavedSettings.getBOOL("WindLightUseAtmosShaders");
@@ -1352,13 +1348,12 @@ void LLPipeline::createGLBuffers()
     mScreenWidth = 0;
     mScreenHeight = 0;
 
-    if (sRenderDeferred)
-    {
-		if (!mNoiseMap)
-		{
+    if (sRenderDeferred){
+    	//If there is no noise map make one.
+		if (!mNoiseMap){
 			const U32 noiseRes = 128;
+			//Generates Noise Texture Data
 			LLVector3 noise[noiseRes*noiseRes];
-
 			F32 scaler = gSavedSettings.getF32("RenderDeferredNoise")/100.f;
 			for (U32 i = 0; i < noiseRes*noiseRes; ++i)
 			{
@@ -1366,13 +1361,52 @@ void LLPipeline::createGLBuffers()
 				noise[i].normVec();
 				noise[i].mV[2] = ll_frand()*scaler+1.f-scaler/2.f;
 			}
-
+			//-----------------------------------------------------------------------------------
+			//Generates 1 texture name.
 			LLImageGL::generateTextures(1, &mNoiseMap);
-
+//			void LLImageGL::generateTextures(S32 numTextures, U32 *textures){
+//				LL_RECORD_BLOCK_TIME(FTM_GENERATE_TEXTURES);
+//				glGenTextures(numTextures, textures);
+//			}
+			//Binds
 			gGL.getTexUnit(0)->bindManual(LLTexUnit::TT_TEXTURE, mNoiseMap);
-			LLImageGL::setManualImage(LLTexUnit::getInternalType(LLTexUnit::TT_TEXTURE), 0, GL_RGB16F, noiseRes, noiseRes, GL_RGB, GL_FLOAT, noise, false);
+//			bool LLTexUnit::bindManual(eTextureType type, U32 texture, bool hasMips){
+//				if (mIndex < 0){
+//					return false;
+//				}
+//				else if(mCurrTexture != texture){
+//					gGL.flush();
+
+			//-----------------------------------------------------------------------------------
+			//Selects which texture unit to make active
+//					activate();
+		//			void LLTexUnit::activate(void){
+		//				if (mIndex < 0) return;
+		//				if ((S32)gGL.mCurrTextureUnitIndex != mIndex || gGL.mDirty){
+		//					gGL.flush();
+		//					glActiveTextureARB(GL_TEXTURE0 + mIndex);
+		//					gGL.mCurrTextureUnitIndex = mIndex;
+		//				}
+		//			}
+
+//					enable(type);
+//					mCurrTexture = texture;
+
+//					glBindTexture(sGLTextureType[type], texture);
+//					mHasMipMaps = hasMips;
+//					setTextureColorSpace(mTexColorSpace);
+//				}
+//				return true;
+//			}
+			//technically this doesnt need to be called.
+//			LLImageGL::setManualImage(LLTexUnit::getInternalType(LLTexUnit::TT_TEXTURE), 0, GL_RGB16F, noiseRes, noiseRes, GL_RGB, GL_FLOAT, noise, false);
+			LLImageGL::setManualImage(GL_TEXTURE_2D, 0, GL_RGB16F, noiseRes, noiseRes, GL_RGB, GL_FLOAT, noise, false);
+
+
 			gGL.getTexUnit(0)->setTextureFilteringOption(LLTexUnit::TFO_POINT);
-		}
+
+
+        }
 
 		if (!mTrueNoiseMap)
 		{
@@ -1385,7 +1419,8 @@ void LLPipeline::createGLBuffers()
 
 			LLImageGL::generateTextures(1, &mTrueNoiseMap);
 			gGL.getTexUnit(0)->bindManual(LLTexUnit::TT_TEXTURE, mTrueNoiseMap);
-			LLImageGL::setManualImage(LLTexUnit::getInternalType(LLTexUnit::TT_TEXTURE), 0, GL_RGB16F, noiseRes, noiseRes, GL_RGB,GL_FLOAT, noise, false);
+//			LLImageGL::setManualImage(LLTexUnit::getInternalType(LLTexUnit::TT_TEXTURE), 0, GL_RGB16F, noiseRes, noiseRes, GL_RGB,GL_FLOAT, noise, false);
+			LLImageGL::setManualImage(GL_TEXTURE_2D, 0, GL_RGB16F, noiseRes, noiseRes, GL_RGB,GL_FLOAT, noise, false);
 			gGL.getTexUnit(0)->setTextureFilteringOption(LLTexUnit::TFO_POINT);
 		}
 
@@ -1431,15 +1466,13 @@ void LLPipeline::createLUTBuffers(){
 			}
 
 			U32 pix_format = GL_R16F;
-#if LL_DARWIN
-			// Need to work around limited precision with 10.6.8 and older drivers
-			//
-			pix_format = GL_R32F;
-#endif
+
 			LLImageGL::generateTextures(1, &mLightFunc);
 			gGL.getTexUnit(0)->bindManual(LLTexUnit::TT_TEXTURE, mLightFunc);
-			LLImageGL::setManualImage(LLTexUnit::getInternalType(LLTexUnit::TT_TEXTURE), 0, pix_format, lightResX, lightResY, GL_RED, GL_FLOAT, ls, false);
-			gGL.getTexUnit(0)->setTextureAddressMode(LLTexUnit::TAM_CLAMP);
+//			LLImageGL::setManualImage(LLTexUnit::getInternalType(LLTexUnit::TT_TEXTURE), 0, pix_format, lightResX, lightResY, GL_RED, GL_FLOAT, ls, false);
+			LLImageGL::setManualImage(GL_TEXTURE_2D, 0, pix_format, lightResX, lightResY, GL_RED, GL_FLOAT, ls, false);
+
+		gGL.getTexUnit(0)->setTextureAddressMode(LLTexUnit::TAM_CLAMP);
 			gGL.getTexUnit(0)->setTextureFilteringOption(LLTexUnit::TFO_TRILINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -1474,17 +1507,7 @@ void LLPipeline::restoreGL()
 }
 
 
-bool LLPipeline::canUseVertexShaders()
-{
-	if (sDisableShaders || !gGLManager.mHasVertexShader || !gGLManager.mHasFragmentShader || (assertInitialized() && mVertexShadersLoaded != 1) )
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
-}
+
 
 bool LLPipeline::canUseWindLightShaders() const
 {
@@ -1499,10 +1522,8 @@ bool LLPipeline::canUseWindLightShadersOnObjects() const
 
 
 
-void LLPipeline::unloadShaders()
-{
+void LLPipeline::unloadShaders(){
 	LLViewerShaderMgr::instance()->unloadShaders();
-
 	mVertexShadersLoaded = 0;
 }
 
@@ -1669,17 +1690,13 @@ LLDrawPool *LLPipeline::findPool(const U32 type, LLViewerTexture *tex0)
 }
 
 
-LLDrawPool *LLPipeline::getPool(const U32 type,	LLViewerTexture *tex0)
-{
+LLDrawPool *LLPipeline::getPool(const U32 type,	LLViewerTexture *tex0){
 	LLDrawPool *poolp = findPool(type, tex0);
-	if (poolp)
-	{
+	if (poolp){
 		return poolp;
 	}
-
 	LLDrawPool *new_poolp = LLDrawPool::createPool(type, tex0);
 	addPool( new_poolp );
-
 	return new_poolp;
 }
 
@@ -2417,7 +2434,6 @@ static LLTrace::BlockTimerStatHandle FTM_CULL("Object Culling");
 void LLPipeline::updateCull(LLCamera& camera, LLCullResult& result, S32 water_clip, LLPlane* planep, bool hud_attachments)
 {
 	static LLCachedControl<bool> use_occlusion(gSavedSettings,"UseOcclusion");
-	static bool can_use_occlusion = LLFeatureManager::getInstance()->isFeatureAvailable("UseOcclusion") && gGLManager.mHasOcclusionQuery;
 
 	LL_RECORD_BLOCK_TIME(FTM_CULL);
 
@@ -2431,12 +2447,10 @@ void LLPipeline::updateCull(LLCamera& camera, LLCullResult& result, S32 water_cl
 	bool to_texture = LLPipeline::sUseOcclusion > 1;
 
 	if (to_texture){
-		if (LLPipeline::sRenderDeferred && can_use_occlusion)
-		{
+		if (LLPipeline::sRenderDeferred){
 			mOcclusionDepth.bindTarget();
 		}
-		else
-		{
+		else{
 			mScreen.bindTarget();
 		}
 		gGL.setColorMask(false, false);
@@ -2498,7 +2512,7 @@ void LLPipeline::updateCull(LLCamera& camera, LLCullResult& result, S32 water_cl
 		LLVOCachePartition* vo_part = region->getVOCachePartition();
 		if(vo_part)
 		{
-			bool do_occlusion_cull = can_use_occlusion && use_occlusion && !gUseWireframe && 0 > water_clip /* && !gViewerWindow->getProgressView()->getVisible()*/;
+			bool do_occlusion_cull = use_occlusion && !gUseWireframe && 0 > water_clip /* && !gViewerWindow->getProgressView()->getVisible()*/;
             do_occlusion_cull &= !sReflectionRender;
 			vo_part->cull(camera, do_occlusion_cull);
 		}
@@ -2518,17 +2532,16 @@ void LLPipeline::updateCull(LLCamera& camera, LLCullResult& result, S32 water_cl
 		gSky.updateCull();
 
 	}
-	if (hasRenderType(LLPipeline::RENDER_TYPE_GROUND) &&
-		!gPipeline.canUseWindLightShaders() &&
-		gSky.mVOGroundp.notNull() &&
-		gSky.mVOGroundp->mDrawable.notNull() &&
-		!LLPipeline::sWaterReflections)
-	{
-		gSky.mVOGroundp->mDrawable->setVisible(camera);
-		sCull->pushDrawable(gSky.mVOGroundp->mDrawable);
-	}
+//	if (hasRenderType(LLPipeline::RENDER_TYPE_GROUND) &&
+//		!gPipeline.canUseWindLightShaders() &&
+//		gSky.mVOGroundp.notNull() &&
+//		gSky.mVOGroundp->mDrawable.notNull() &&
+//		!LLPipeline::sWaterReflections)
+//	{
+//		gSky.mVOGroundp->mDrawable->setVisible(camera);
+//		sCull->pushDrawable(gSky.mVOGroundp->mDrawable);
+//	}
   if (hasRenderType(LLPipeline::RENDER_TYPE_WL_SKY) &&
-      gPipeline.canUseWindLightShaders() &&
       gSky.mVOWLSkyp.notNull() &&
       gSky.mVOWLSkyp->mDrawable.notNull())
   {
@@ -2548,7 +2561,7 @@ void LLPipeline::updateCull(LLCamera& camera, LLCullResult& result, S32 water_cl
 	gGL.popMatrix();
 	if (to_texture){
 		gGL.setColorMask(true, false);
-		if (LLPipeline::sRenderDeferred && can_use_occlusion)
+		if (LLPipeline::sRenderDeferred)
 		{
 			mOcclusionDepth.flush();
 		}
@@ -9516,14 +9529,12 @@ static LLTrace::BlockTimerStatHandle FTM_SHADOW_ALPHA_TREE("Alpha Tree");
 static LLTrace::BlockTimerStatHandle FTM_SHADOW_ALPHA_GRASS("Alpha Grass");
 static LLTrace::BlockTimerStatHandle FTM_SHADOW_FULLBRIGHT_ALPHA_MASKED("Fullbright Alpha Masked");
 
-void LLPipeline::renderShadow(glh::matrix4f& view, glh::matrix4f& proj, LLCamera& shadow_cam, LLCullResult &result, bool use_shader, bool use_occlusion, U32 target_width)
-{
+void LLPipeline::renderShadow(glh::matrix4f& view, glh::matrix4f& proj, LLCamera& shadow_cam, LLCullResult &result, bool use_shader, bool use_occlusion, U32 target_width){
 	LL_RECORD_BLOCK_TIME(FTM_SHADOW_RENDER);
 
 	//clip out geometry on the same side of water as the camera
 	S32 occlude = LLPipeline::sUseOcclusion;
-	if (!use_occlusion)
-	{
+	if (!use_occlusion){
 		LLPipeline::sUseOcclusion = 0;
 	}
 	LLPipeline::sShadowRender = true;
@@ -9576,26 +9587,18 @@ void LLPipeline::renderShadow(glh::matrix4f& view, glh::matrix4f& proj, LLCamera
     LLEnvironment& environment = LLEnvironment::instance();
 
 	LLVertexBuffer::unbind();
-
 	{
-
         gDeferredShadowProgram.bind();
         gDeferredShadowProgram.uniform1i(LLShaderMgr::SUN_UP_FACTOR, environment.getIsSunUp() ? 1 : 0);
 		gGL.diffuseColor4f(1,1,1,1);
-
         S32 shadow_detail = gSavedSettings.getS32("RenderShadowDetail");
-
         // if not using VSM, disable color writes
-        if (shadow_detail <= 2)
-        {
+        if (shadow_detail <= 2){
 		gGL.setColorMask(false, false);
         }
-
 		LL_RECORD_BLOCK_TIME(FTM_SHADOW_SIMPLE);
-
 		gGL.getTexUnit(0)->disable();
-		for (U32 i = 0; i < sizeof(types)/sizeof(U32); ++i)
-		{
+		for (U32 i = 0; i < sizeof(types)/sizeof(U32); ++i){
 			renderObjects(types[i], LLVertexBuffer::MAP_VERTEX, FALSE);
 		}
 		gGL.getTexUnit(0)->enable(LLTexUnit::TT_TEXTURE);

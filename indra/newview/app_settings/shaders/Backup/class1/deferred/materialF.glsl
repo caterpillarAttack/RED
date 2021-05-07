@@ -210,7 +210,7 @@ VARYING vec3 vary_normal;
 VARYING vec4 vertex_color;
 VARYING vec2 vary_texcoord0;
 
-vec2 encode_normal(vec3 n);
+vec2 encodeNorm(vec3 n);
 
 void main()
 {
@@ -256,7 +256,7 @@ void main()
 
     norm.xyz = normalize(tnorm.xyz);
 
-    vec2 abnormal = encode_normal(norm.xyz);
+    vec2 abnormal = encodeNorm(norm.xyz);
 
     vec4 final_color = diffcol;
 
@@ -269,10 +269,10 @@ void main()
     vec4 final_specular = spec;
     
 #ifdef HAS_SPECULAR_MAP
-    vec4 final_normal = vec4(encode_normal(normalize(tnorm)), env_intensity * spec.a, 0.0);
+    vec4 final_normal = vec4(encodeNorm(normalize(tnorm)), env_intensity * spec.a, 0.0);
 	final_specular.a = specular_color.a * norm.a;
 #else
-	vec4 final_normal = vec4(encode_normal(normalize(tnorm)), env_intensity, 0.0);
+	vec4 final_normal = vec4(encodeNorm(normalize(tnorm)), env_intensity, 0.0);
 	final_specular.a = specular_color.a;
 #endif
 

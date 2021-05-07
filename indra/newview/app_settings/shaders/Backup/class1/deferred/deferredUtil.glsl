@@ -39,7 +39,7 @@ vec2 getScreenCoordinate(vec2 screenpos)
     return sc - vec2(1.0, 1.0);
 }
 
-vec3 getNorm(vec2 screenpos)
+vec3 decodeNorm(vec2 screenpos)
 {
    vec2 enc = texture2DRect(normalMap, screenpos.xy).xy;
    vec2 fenc = enc*4-2;

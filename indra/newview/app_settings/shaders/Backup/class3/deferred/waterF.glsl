@@ -61,7 +61,7 @@ VARYING vec4 view;
 VARYING vec4 vary_position;
 
 vec3 scaleSoftClip(vec3 c);
-vec2 encode_normal(vec3 n);
+vec2 encodeNorm(vec3 n);
 
 vec3 BlendNormal(vec3 bump1, vec3 bump2)
 {
@@ -170,5 +170,5 @@ void main()
 	
 	frag_data[0] = vec4(color.rgb, color); // diffuse
 	frag_data[1] = vec4(spec * specular, spec);		// speccolor, spec
-	frag_data[2] = vec4(encode_normal(wavef.xyz), 0.05, 0);// normalxy, 0, 0
+	frag_data[2] = vec4(encodeNorm(wavef.xyz), 0.05, 0);// normalxy, 0, 0
 }

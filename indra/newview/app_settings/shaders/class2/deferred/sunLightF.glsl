@@ -37,7 +37,7 @@ in vec2 vary_fragcoord;
 uniform vec3 sun_dir;
 uniform float shadow_bias;
 
-vec3 getNorm(vec2 pos_screen);
+vec3 decodeNorm(vec2 pos_screen);
 vec4 getPosition(vec2 pos_screen);
 
 float sampleDirectionalShadow(vec3 pos, vec3 norm, vec2 pos_screen);
@@ -47,7 +47,7 @@ void main()
 {
     vec2 pos_screen = vary_fragcoord.xy;
     vec4 pos        = getPosition(pos_screen);
-    vec3 norm       = getNorm(pos_screen);
+    vec3 norm       = decodeNorm(pos_screen);
 
     frag_color.r = sampleDirectionalShadow(pos.xyz, norm, pos_screen);
     frag_color.g = 1.0f;

@@ -2527,25 +2527,18 @@ class LLAdvancedCheckViewAdminOptions : public view_listener_t
 /////////////////////////////////////
 // Enable Object Object Occlusion ///
 /////////////////////////////////////
-class LLAdvancedEnableObjectObjectOcclusion: public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-	
-		bool new_value = gGLManager.mHasOcclusionQuery; // && LLFeatureManager::getInstance()->isFeatureAvailable(userdata.asString());
-		return new_value;
-}
+class LLAdvancedEnableObjectObjectOcclusion: public view_listener_t{
+	bool handleEvent(const LLSD& userdata){
+		return true;
+	}
 };
 
 /////////////////////////////////////
 // Enable Framebuffer Objects	  ///
 /////////////////////////////////////
-class LLAdvancedEnableRenderFBO: public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		bool new_value = gGLManager.mHasFramebufferObject;
-		return new_value;
+class LLAdvancedEnableRenderFBO: public view_listener_t{
+	bool handleEvent(const LLSD& userdata){
+		return true;
 	}
 };
 
@@ -2556,7 +2549,7 @@ class LLAdvancedEnableRenderDeferred: public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = gGLManager.mHasFramebufferObject && LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_WINDLIGHT) > 1 &&
+		bool new_value = LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_WINDLIGHT) > 1 &&
 			LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_AVATAR) > 0;
 		return new_value;
 	}
@@ -2569,7 +2562,7 @@ class LLAdvancedEnableRenderDeferredOptions: public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = gGLManager.mHasFramebufferObject && LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_WINDLIGHT) > 1 &&
+		bool new_value = LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_WINDLIGHT) > 1 &&
 			LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_AVATAR) > 0 && gSavedSettings.getBOOL("RenderDeferred");
 		return new_value;
 	}

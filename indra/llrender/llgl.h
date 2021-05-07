@@ -96,7 +96,7 @@ public:
 	BOOL mHasBlendFuncSeparate;
 
 	// ARB Extensions
-	BOOL mHasVertexBufferObject;
+	BOOL mHasVertexBufferObject; //Cannot delete this without advanced lighting breaking for some fucking reason
 	BOOL mHasVertexArrayObject;
 	BOOL mHasSync;
 	BOOL mHasMapBufferRange;
@@ -495,8 +495,6 @@ extern BOOL gClothRipple;
 extern BOOL gHeadlessClient;
 extern BOOL gGLActive;
 
-// Deal with changing glext.h definitions for newer SDK versions, specifically
-// with MAC OSX 10.5 -> 10.6
 
 
 #ifndef GL_DEPTH_ATTACHMENT

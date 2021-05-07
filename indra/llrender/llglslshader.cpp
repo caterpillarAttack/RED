@@ -909,12 +909,6 @@ void LLGLSLShader::bind() {
 
 void LLGLSLShader::unbind() {
     gGL.flush();
-    if (gGLManager.mIsNVIDIA) {
-        for (U32 i = 0; i < mAttribute.size(); ++i) {
-            vertexAttrib4f(i, 0,0,0,1);
-
-        }
-    }
     LLVertexBuffer::unbind();
     glUseProgramObjectARB(0);
     sCurBoundShader = 0;

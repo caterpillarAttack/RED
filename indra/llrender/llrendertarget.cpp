@@ -133,12 +133,9 @@ bool LLRenderTarget::allocate(U32 resx, U32 resy, U32 color_fmt, bool depth, boo
 	mUsage = usage;
 	mUseDepth = depth;
 
-	if ((sUseFBO || use_fbo) && gGLManager.mHasFramebufferObject)
-	{
-		if (depth)
-		{
-			if (!allocateDepth())
-			{
+	if ((sUseFBO || use_fbo)){
+		if (depth){
+			if (!allocateDepth()){
 				LL_WARNS() << "Failed to allocate depth buffer for render target." << LL_ENDL;
 				return false;
 			}
@@ -185,13 +182,7 @@ bool LLRenderTarget::addColorAttachment(U32 color_fmt)
 		llassert( offset < 4 );
 		return false;
 	}
-	if( offset > 0 && (mFBO == 0 || !gGLManager.mHasDrawBuffers) )
-	{
-		LL_WARNS() << "FBO not used or no drawbuffers available; mFBO=" << (U32)mFBO << " gGLManager.mHasDrawBuffers=" << (U32)gGLManager.mHasDrawBuffers << LL_ENDL;
-		llassert(  mFBO != 0 );
-		llassert( gGLManager.mHasDrawBuffers );
-		return false;
-	}
+
 
 	U32 tex;
 	LLImageGL::generateTextures(1, &tex);
@@ -201,7 +192,7 @@ bool LLRenderTarget::addColorAttachment(U32 color_fmt)
 
 
 	{
-		clear_glerror();
+
 		LLImageGL::setManualImage(LLTexUnit::getInternalType(mUsage), 0, color_fmt, mResX, mResY, GL_RGBA, GL_UNSIGNED_BYTE, NULL, false);
 		if (glGetError() != GL_NO_ERROR)
 		{
@@ -274,10 +265,12 @@ bool LLRenderTarget::allocateDepth()
 		glGenRenderbuffers(1, (GLuint *) &mDepth);
 		glBindRenderbuffer(GL_RENDERBUFFER, mDepth);
 
-		clear_glerror();
+
+
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mResX, mResY);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
+	//Todo: Below likely can be axed needed
 	else
 	{
 		LLImageGL::generateTextures(1, &mDepth);
@@ -285,7 +278,6 @@ bool LLRenderTarget::allocateDepth()
 		
 		U32 internal_type = LLTexUnit::getInternalType(mUsage);
 
-		clear_glerror();
 		LLImageGL::setManualImage(internal_type, 0, GL_DEPTH_COMPONENT24, mResX, mResY, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL, false);
 		gGL.getTexUnit(0)->setTextureFilteringOption(LLTexUnit::TFO_POINT);
 	}
@@ -429,16 +421,13 @@ void LLRenderTarget::bindTarget()
 		mPreviousFBO = sCurFBO;
 		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 		sCurFBO = mFBO;
-		
+		//setup multiple render targets
+		GLenum drawbuffers[] = {GL_COLOR_ATTACHMENT0,
+								GL_COLOR_ATTACHMENT1,
+								GL_COLOR_ATTACHMENT2,
+								GL_COLOR_ATTACHMENT3};
+		glDrawBuffersARB(mTex.size(), drawbuffers);
 
-		if (gGLManager.mHasDrawBuffers)
-		{ //setup multiple render targets
-			GLenum drawbuffers[] = {GL_COLOR_ATTACHMENT0,
-									GL_COLOR_ATTACHMENT1,
-									GL_COLOR_ATTACHMENT2,
-									GL_COLOR_ATTACHMENT3};
-			glDrawBuffersARB(mTex.size(), drawbuffers);
-		}
 			
 		if (mTex.empty())
 		{ //no color buffer to draw to

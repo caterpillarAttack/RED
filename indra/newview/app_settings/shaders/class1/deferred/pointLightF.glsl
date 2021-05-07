@@ -51,7 +51,7 @@ in vec3 trans_center;
 uniform vec2 screen_res;
 uniform mat4 inv_proj;
 
-vec3 getNorm(vec2 pos_screen);
+vec3 decodeNorm(vec2 pos_screen);
 vec4 getPosition(vec2 pos_screen);
 vec3 srgb_to_linear(vec3 c);
 vec3 linear_to_srgb(vec3 c);
@@ -109,7 +109,7 @@ void main(){
   distance /= size;
   vec3 Diffuse = texture2D(diffuseRect, frag.xy).rgb;
     Diffuse.rgb = srgb_to_linear(Diffuse.rgb);
-  vec3 Normal = getNorm(frag.xy);
+  vec3 Normal = decodeNorm(frag.xy);
   vec4 Specular = texture2D(specularRect, frag.xy);
   float rough = 1.00 - Specular.a;
   float metallic = texture2D(normalMap, frag.xy).z;

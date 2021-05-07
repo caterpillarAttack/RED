@@ -148,20 +148,11 @@ S32 LLDrawPoolAvatar::getShaderLevel() const
 	return (S32) LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_AVATAR);
 }
 
-void LLDrawPoolAvatar::prerender()
-{
+void LLDrawPoolAvatar::prerender(){
 	mShaderLevel = LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_AVATAR);
-
 	sShaderLevel = mShaderLevel;
+	sBufferUsage = GL_DYNAMIC_DRAW;
 
-	if (sShaderLevel > 0)
-	{
-		sBufferUsage = GL_DYNAMIC_DRAW;
-	}
-	else
-	{
-		sBufferUsage = GL_STREAM_DRAW;
-	}
 
 	if (!mDrawFace.empty())
 	{
@@ -439,12 +430,9 @@ void LLDrawPoolAvatar::beginShadowPass(S32 pass)
 	if (pass == SHADOW_PASS_AVATAR_OPAQUE)
 	{
 		sVertexProgram = &gDeferredAvatarShadowProgram;
+		sRenderingSkinned = TRUE;
+		sVertexProgram->bind();
 
-		if ((sShaderLevel > 0))  // for hardware blending
-		{
-			sRenderingSkinned = TRUE;
-			sVertexProgram->bind();
-		}
 
 		gGL.diffuseColor4f(1,1,1,1);
 	}
@@ -459,12 +447,9 @@ void LLDrawPoolAvatar::beginShadowPass(S32 pass)
         {
             sDiffuseChannel = sVertexProgram->enableTexture(LLViewerShaderMgr::DIFFUSE_MAP);
 		}
+		sRenderingSkinned = TRUE;
+		sVertexProgram->bind();
 
-		if ((sShaderLevel > 0))  // for hardware blending
-		{
-			sRenderingSkinned = TRUE;
-			sVertexProgram->bind();
-		}
 
 		gGL.diffuseColor4f(1,1,1,1);
 	}
@@ -479,13 +464,8 @@ void LLDrawPoolAvatar::beginShadowPass(S32 pass)
         {
             sDiffuseChannel = sVertexProgram->enableTexture(LLViewerShaderMgr::DIFFUSE_MAP);
 		}
-
-		if ((sShaderLevel > 0))  // for hardware blending
-		{
-			sRenderingSkinned = TRUE;
-			sVertexProgram->bind();
-		}
-
+		sRenderingSkinned = TRUE;
+        sVertexProgram->bind();
 		gGL.diffuseColor4f(1,1,1,1);
 	}
     else if (pass == SHADOW_PASS_ATTACHMENT_ALPHA_BLEND)
@@ -495,17 +475,11 @@ void LLDrawPoolAvatar::beginShadowPass(S32 pass)
         // bind diffuse tex so we can reference the alpha channel...
         S32 loc = sVertexProgram->getUniformLocation(LLViewerShaderMgr::DIFFUSE_MAP);
         sDiffuseChannel = 0;
-        if (loc != -1)
-        {
+        if (loc != -1) {
             sDiffuseChannel = sVertexProgram->enableTexture(LLViewerShaderMgr::DIFFUSE_MAP);
 		}
-
-		if ((sShaderLevel > 0))  // for hardware blending
-		{
-			sRenderingSkinned = TRUE;
-			sVertexProgram->bind();
-		}
-
+		sRenderingSkinned = TRUE;
+		sVertexProgram->bind();
 		gGL.diffuseColor4f(1,1,1,1);
 	}
     else if (pass == SHADOW_PASS_ATTACHMENT_ALPHA_MASK)
@@ -515,17 +489,11 @@ void LLDrawPoolAvatar::beginShadowPass(S32 pass)
         // bind diffuse tex so we can reference the alpha channel...
 		S32 loc = sVertexProgram->getUniformLocation(LLViewerShaderMgr::DIFFUSE_MAP);
         sDiffuseChannel = 0;
-        if (loc != -1)
-        {
+        if (loc != -1) {
             sDiffuseChannel = sVertexProgram->enableTexture(LLViewerShaderMgr::DIFFUSE_MAP);
 		}
-
-		if ((sShaderLevel > 0))  // for hardware blending
-		{
-			sRenderingSkinned = TRUE;
-			sVertexProgram->bind();
-		}
-
+		sRenderingSkinned = TRUE;
+		sVertexProgram->bind();
 		gGL.diffuseColor4f(1,1,1,1);
 	}
 	else // SHADOW_PASS_ATTACHMENT_OPAQUE
@@ -545,15 +513,10 @@ void LLDrawPoolAvatar::endShadowPass(S32 pass)
 {
 	LL_RECORD_BLOCK_TIME(FTM_SHADOW_AVATAR);
 
-	if (pass == SHADOW_PASS_ATTACHMENT_OPAQUE)
-	{
+	if (pass == SHADOW_PASS_ATTACHMENT_OPAQUE){
 		LLVertexBuffer::unbind();
 	}
-
-    if (sShaderLevel > 0)
-	{
-		sVertexProgram->unbind();
-	}
+	sVertexProgram->unbind();
     sVertexProgram = NULL;
     sRenderingSkinned = FALSE;
     LLDrawPoolAvatar::sShadowPass = -1;
@@ -804,36 +767,24 @@ void LLDrawPoolAvatar::endImpostor(){
 	gPipeline.enableLightsDynamic();
 }
 
-void LLDrawPoolAvatar::beginRigid()
-{
-	if (gPipeline.canUseVertexShaders())
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gObjectAlphaMaskNoColorWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gObjectAlphaMaskNoColorProgram;
-		}
-
-		if (sVertexProgram != NULL)
-		{	//eyeballs render with the specular shader
-			sVertexProgram->bind();
-			sVertexProgram->setMinimumAlpha(LLDrawPoolAvatar::sMinimumAlpha);
-            if (LLPipeline::sRenderingHUDs)
-	        {
-		        sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
-	        }
-	        else
-	        {
-		        sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-	        }
-		}
+void LLDrawPoolAvatar::beginRigid(){
+	if (LLPipeline::sUnderWaterRender){
+		sVertexProgram = &gObjectAlphaMaskNoColorWaterProgram;
 	}
-	else
-	{
-		sVertexProgram = NULL;
+	else{
+		sVertexProgram = &gObjectAlphaMaskNoColorProgram;
+	}
+
+	if (sVertexProgram != NULL){
+		//eyeballs render with the specular shader
+		sVertexProgram->bind();
+		sVertexProgram->setMinimumAlpha(LLDrawPoolAvatar::sMinimumAlpha);
+		if (LLPipeline::sRenderingHUDs){
+			sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
+		}
+		else{
+			sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
+		}
 	}
 }
 
@@ -898,140 +849,63 @@ void LLDrawPoolAvatar::endDeferredRigid()
 }
 
 
-void LLDrawPoolAvatar::beginSkinned()
-{
-	if (sShaderLevel > 0)
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gAvatarWaterProgram;
-			sShaderLevel = llmin((U32) 1, sShaderLevel);
-		}
-		else
-		{
-			sVertexProgram = &gAvatarProgram;
-		}
+void LLDrawPoolAvatar::beginSkinned(){
+
+	if (LLPipeline::sUnderWaterRender){
+		sVertexProgram = &gAvatarWaterProgram;
+		sShaderLevel = llmin((U32) 1, sShaderLevel);
 	}
-	else
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gObjectAlphaMaskNoColorWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gObjectAlphaMaskNoColorProgram;
-		}
+	else{
+		sVertexProgram = &gAvatarProgram;
 	}
 
-	if (sShaderLevel > 0)  // for hardware blending
-	{
-		sRenderingSkinned = TRUE;
-
-		sVertexProgram->bind();
-		sVertexProgram->enableTexture(LLViewerShaderMgr::BUMP_MAP);
-        if (LLPipeline::sRenderingHUDs)
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
-	    }
-	    else
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-	    }
-		gGL.getTexUnit(0)->activate();
+	// for hardware blending
+	sRenderingSkinned = TRUE;
+	sVertexProgram->bind();
+	sVertexProgram->enableTexture(LLViewerShaderMgr::BUMP_MAP);
+	if (LLPipeline::sRenderingHUDs){
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
 	}
-	else
-	{
-		if(gPipeline.canUseVertexShaders())
-		{
-			// software skinning, use a basic shader for windlight.
-			// TODO: find a better fallback method for software skinning.
-			sVertexProgram->bind();
-            if (LLPipeline::sRenderingHUDs)
-	        {
-		        sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
-	        }
-	        else
-	        {
-		        sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-	        }
-		}
+	else{
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
 	}
+	gGL.getTexUnit(0)->activate();
 	sVertexProgram->setMinimumAlpha(LLDrawPoolAvatar::sMinimumAlpha);
 }
 
-void LLDrawPoolAvatar::endSkinned()
-{
+void LLDrawPoolAvatar::endSkinned(){
 	// if we're in software-blending, remember to set the fence _after_ we draw so we wait till this rendering is done
-	if (sShaderLevel > 0)
-	{
-		sRenderingSkinned = FALSE;
-		sVertexProgram->disableTexture(LLViewerShaderMgr::BUMP_MAP);
-		gGL.getTexUnit(0)->activate();
-		sVertexProgram->unbind();
-		sShaderLevel = mShaderLevel;
-	}
-	else
-	{
-		if(gPipeline.canUseVertexShaders())
-		{
-			// software skinning, use a basic shader for windlight.
-			// TODO: find a better fallback method for software skinning.
-			sVertexProgram->unbind();
-		}
-	}
-
+	sRenderingSkinned = FALSE;
+	sVertexProgram->disableTexture(LLViewerShaderMgr::BUMP_MAP);
+	gGL.getTexUnit(0)->activate();
+	sVertexProgram->unbind();
+	sShaderLevel = mShaderLevel;
 	gGL.getTexUnit(0)->activate();
 }
 
-void LLDrawPoolAvatar::beginRiggedSimple()
-{
-	if (sShaderLevel > 0)
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gSkinnedObjectSimpleWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gSkinnedObjectSimpleProgram;
-		}
+void LLDrawPoolAvatar::beginRiggedSimple(){
+
+	if (LLPipeline::sUnderWaterRender){
+		sVertexProgram = &gSkinnedObjectSimpleWaterProgram;
 	}
-	else
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gObjectSimpleNonIndexedWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gObjectSimpleNonIndexedProgram;
-		}
+	else{
+		sVertexProgram = &gSkinnedObjectSimpleProgram;
+	}
+	sDiffuseChannel = 0;
+	sVertexProgram->bind();
+	if (LLPipeline::sRenderingHUDs){
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
+	}
+	else{
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
 	}
 
-	if (sShaderLevel > 0 || gPipeline.canUseVertexShaders())
-	{
-		sDiffuseChannel = 0;
-		sVertexProgram->bind();
-        if (LLPipeline::sRenderingHUDs)
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
-	    }
-	    else
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-	    }
-	}
 }
 
-void LLDrawPoolAvatar::endRiggedSimple()
-{
+void LLDrawPoolAvatar::endRiggedSimple(){
 	LLVertexBuffer::unbind();
-	if (sShaderLevel > 0 || gPipeline.canUseVertexShaders())
-	{
-		sVertexProgram->unbind();
-		sVertexProgram = NULL;
-	}
+	sVertexProgram->unbind();
+	sVertexProgram = NULL;
 }
 
 void LLDrawPoolAvatar::beginRiggedAlpha()
@@ -1055,51 +929,27 @@ void LLDrawPoolAvatar::endRiggedFullbrightAlpha()
 	endRiggedFullbright();
 }
 
-void LLDrawPoolAvatar::beginRiggedGlow()
-{
-	if (sShaderLevel > 0)
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gSkinnedObjectEmissiveWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gSkinnedObjectEmissiveProgram;
-		}
+void LLDrawPoolAvatar::beginRiggedGlow() {
+
+	if (LLPipeline::sUnderWaterRender){
+		sVertexProgram = &gSkinnedObjectEmissiveWaterProgram;
 	}
-	else
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gObjectEmissiveNonIndexedWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gObjectEmissiveNonIndexedProgram;
-		}
+	else{
+		sVertexProgram = &gSkinnedObjectEmissiveProgram;
 	}
-
-	if (sShaderLevel > 0 || gPipeline.canUseVertexShaders())
-	{
-		sDiffuseChannel = 0;
-		sVertexProgram->bind();
-
-		sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, LLPipeline::sRenderDeferred ? 2.2f : 1.1f);
-
-        if (LLPipeline::sRenderingHUDs)
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
-	    }
-	    else
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-	    }
-
-		//F32 gamma = gSavedSettings.getF32("RenderDeferredDisplayGamma");
-		static LLCachedControl<F32> gamma(gSavedSettings, "RenderDeferredDisplayGamma");
-		sVertexProgram->uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
+	sDiffuseChannel = 0;
+	sVertexProgram->bind();
+	sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, LLPipeline::sRenderDeferred ? 2.2f : 1.1f);
+	if (LLPipeline::sRenderingHUDs) {
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
 	}
+	else{
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
+	}
+	//F32 gamma = gSavedSettings.getF32("RenderDeferredDisplayGamma");
+	static LLCachedControl<F32> gamma(gSavedSettings, "RenderDeferredDisplayGamma");
+	sVertexProgram->uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
+
 }
 
 void LLDrawPoolAvatar::endRiggedGlow()
@@ -1107,200 +957,120 @@ void LLDrawPoolAvatar::endRiggedGlow()
 	endRiggedFullbright();
 }
 
-void LLDrawPoolAvatar::beginRiggedFullbright()
-{
-	if (sShaderLevel > 0)
-	{
-		if (LLPipeline::sUnderWaterRender)
+void LLDrawPoolAvatar::beginRiggedFullbright(){
+
+	if (LLPipeline::sUnderWaterRender){
+		sVertexProgram = &gSkinnedObjectFullbrightWaterProgram;
+	}
+	else{
+		if (LLPipeline::sRenderDeferred)
 		{
-			sVertexProgram = &gSkinnedObjectFullbrightWaterProgram;
+			sVertexProgram = &gDeferredSkinnedFullbrightProgram;
 		}
 		else
 		{
-			if (LLPipeline::sRenderDeferred)
-			{
-				sVertexProgram = &gDeferredSkinnedFullbrightProgram;
-			}
-			else
-			{
-				sVertexProgram = &gSkinnedObjectFullbrightProgram;
-			}
+			sVertexProgram = &gSkinnedObjectFullbrightProgram;
 		}
 	}
-	else
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gObjectFullbrightNonIndexedWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gObjectFullbrightNonIndexedProgram;
-		}
+	sDiffuseChannel = 0;
+	sVertexProgram->bind();
+
+	if (LLPipeline::sRenderingHUDs){
+		sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 1.0f);
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
+	}
+	else if (LLPipeline::sRenderDeferred){
+		sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 2.2f);
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
+		//F32 gamma = gSavedSettings.getF32("RenderDeferredDisplayGamma");
+		static LLCachedControl<F32> gamma(gSavedSettings, "RenderDeferredDisplayGamma");
+		sVertexProgram->uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
+	}
+	else{
+		sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 1.0f);
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
 	}
 
-	if (sShaderLevel > 0 || gPipeline.canUseVertexShaders())
-	{
-		sDiffuseChannel = 0;
-		sVertexProgram->bind();
-
-        if (LLPipeline::sRenderingHUDs)
-        {
-            sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 1.0f);
-            sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
-        }
-		else if (LLPipeline::sRenderDeferred)
-		{
-            sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 2.2f);
-            sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-			//F32 gamma = gSavedSettings.getF32("RenderDeferredDisplayGamma");
-			static LLCachedControl<F32> gamma(gSavedSettings, "RenderDeferredDisplayGamma");
-			sVertexProgram->uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
-		}
-		else
-		{
-            sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 1.0f);
-            sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-		}
-	}
 }
 
-void LLDrawPoolAvatar::endRiggedFullbright()
-{
+void LLDrawPoolAvatar::endRiggedFullbright() {
 	LLVertexBuffer::unbind();
-	if (sShaderLevel > 0 || gPipeline.canUseVertexShaders())
-	{
-		sVertexProgram->unbind();
-		sVertexProgram = NULL;
-	}
+	sVertexProgram->unbind();
+	sVertexProgram = NULL;
 }
 
-void LLDrawPoolAvatar::beginRiggedShinySimple()
-{
-	if (sShaderLevel > 0)
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gSkinnedObjectShinySimpleWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gSkinnedObjectShinySimpleProgram;
-		}
+void LLDrawPoolAvatar::beginRiggedShinySimple(){
+
+	if (LLPipeline::sUnderWaterRender){
+		sVertexProgram = &gSkinnedObjectShinySimpleWaterProgram;
 	}
-	else
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gObjectShinyNonIndexedWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gObjectShinyNonIndexedProgram;
-		}
+	else{
+		sVertexProgram = &gSkinnedObjectShinySimpleProgram;
 	}
 
-	if (sShaderLevel > 0 || gPipeline.canUseVertexShaders())
-	{
-		sVertexProgram->bind();
-        if (LLPipeline::sRenderingHUDs)
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
-	    }
-	    else
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-	    }
-		LLDrawPoolBump::bindCubeMap(sVertexProgram, 2, sDiffuseChannel, cube_channel, false);
+	sVertexProgram->bind();
+	if (LLPipeline::sRenderingHUDs){
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
 	}
+	else{
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
+	}
+	LLDrawPoolBump::bindCubeMap(sVertexProgram, 2, sDiffuseChannel, cube_channel, false);
+
 }
 
-void LLDrawPoolAvatar::endRiggedShinySimple()
-{
+void LLDrawPoolAvatar::endRiggedShinySimple(){
 	LLVertexBuffer::unbind();
-	if (sShaderLevel > 0 || gPipeline.canUseVertexShaders())
-	{
-		LLDrawPoolBump::unbindCubeMap(sVertexProgram, 2, sDiffuseChannel, cube_channel, false);
-		sVertexProgram->unbind();
-		sVertexProgram = NULL;
-	}
+	LLDrawPoolBump::unbindCubeMap(sVertexProgram, 2, sDiffuseChannel, cube_channel, false);
+	sVertexProgram->unbind();
+	sVertexProgram = NULL;
 }
 
-void LLDrawPoolAvatar::beginRiggedFullbrightShiny()
-{
-	if (sShaderLevel > 0)
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gSkinnedObjectFullbrightShinyWaterProgram;
+void LLDrawPoolAvatar::beginRiggedFullbrightShiny(){
+	if (LLPipeline::sUnderWaterRender){
+		sVertexProgram = &gSkinnedObjectFullbrightShinyWaterProgram;
+	}
+	else{
+		if (LLPipeline::sRenderDeferred){
+			sVertexProgram = &gDeferredSkinnedFullbrightShinyProgram;
 		}
-		else
-		{
-			if (LLPipeline::sRenderDeferred)
-			{
-				sVertexProgram = &gDeferredSkinnedFullbrightShinyProgram;
-			}
-			else
-			{
-				sVertexProgram = &gSkinnedObjectFullbrightShinyProgram;
-			}
+		else{
+			sVertexProgram = &gSkinnedObjectFullbrightShinyProgram;
 		}
 	}
-	else
-	{
-		if (LLPipeline::sUnderWaterRender)
-		{
-			sVertexProgram = &gObjectFullbrightShinyNonIndexedWaterProgram;
-		}
-		else
-		{
-			sVertexProgram = &gObjectFullbrightShinyNonIndexedProgram;
-		}
+	sVertexProgram->bind();
+	if (LLPipeline::sRenderingHUDs){
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
+	}
+	else{
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
+	}
+	LLDrawPoolBump::bindCubeMap(sVertexProgram, 2, sDiffuseChannel, cube_channel, false);
+
+	if (LLPipeline::sRenderingHUDs){
+		sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 1.0f);
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
+	}
+	else if (LLPipeline::sRenderDeferred){
+		sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 2.2f);
+		//F32 gamma = gSavedSettings.getF32("RenderDeferredDisplayGamma");
+		static LLCachedControl<F32> gamma(gSavedSettings, "RenderDeferredDisplayGamma");
+		sVertexProgram->uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
+	}
+	else{
+		sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 1.0f);
+		sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
 	}
 
-	if (sShaderLevel > 0 || gPipeline.canUseVertexShaders())
-	{
-		sVertexProgram->bind();
-        if (LLPipeline::sRenderingHUDs)
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
-	    }
-	    else
-	    {
-		    sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-	    }
-		LLDrawPoolBump::bindCubeMap(sVertexProgram, 2, sDiffuseChannel, cube_channel, false);
-
-        if (LLPipeline::sRenderingHUDs)
-		{
-			sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 1.0f);
-            sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 1);
-        }
-		else if (LLPipeline::sRenderDeferred)
-		{
-            sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 2.2f);
-			//F32 gamma = gSavedSettings.getF32("RenderDeferredDisplayGamma");
-			static LLCachedControl<F32> gamma(gSavedSettings, "RenderDeferredDisplayGamma");
-			sVertexProgram->uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
-            sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-        }
-        else
-        {
-			sVertexProgram->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 1.0f);
-            sVertexProgram->uniform1i(LLShaderMgr::NO_ATMO, 0);
-		}
-	}
 }
 
-void LLDrawPoolAvatar::endRiggedFullbrightShiny()
-{
+void LLDrawPoolAvatar::endRiggedFullbrightShiny(){
 	LLVertexBuffer::unbind();
-	if (sShaderLevel > 0 || gPipeline.canUseVertexShaders())
-	{
-		LLDrawPoolBump::unbindCubeMap(sVertexProgram, 2, sDiffuseChannel, cube_channel, false);
-		sVertexProgram->unbind();
-		sVertexProgram = NULL;
-	}
+	LLDrawPoolBump::unbindCubeMap(sVertexProgram, 2, sDiffuseChannel, cube_channel, false);
+	sVertexProgram->unbind();
+	sVertexProgram = NULL;
+
 }
 
 
@@ -1847,15 +1617,7 @@ bool LLDrawPoolAvatar::getRiggedGeometry(
 	if (buffer.isNull() || buffer->getTypeMask() != data_mask || !buffer->isWriteable())
 	{
         // make a new buffer
-		if (sShaderLevel > 0)
-		{
-			buffer = new LLVertexBuffer(data_mask, GL_DYNAMIC_DRAW);
-		}
-		else
-		{
-			buffer = new LLVertexBuffer(data_mask, GL_STREAM_DRAW);
-		}
-
+        buffer = new LLVertexBuffer(data_mask, GL_DYNAMIC_DRAW);
 		if (!buffer->allocateBuffer(vol_face.mNumVertices, vol_face.mNumIndices, true))
 		{
 			LL_WARNS("LLDrawPoolAvatar") << "Failed to allocate Vertex Buffer to "
@@ -2342,8 +2104,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 
 		if (buff)
 		{
-			if (sShaderLevel > 0)
-			{
+			if (sShaderLevel > 0){
 				// upload matrix palette to shader
 
 				//<FS:Beq> per frame cache of skinning matrices

@@ -239,7 +239,7 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness){
 }
 // ----------------------------------------------------------------------------
 
-vec2 encode_normal(vec3 n);
+vec2 encodeNorm(vec3 n);
 void main()
 {
     vec2 pos_screen = vary_texcoord0.xy;
@@ -289,10 +289,10 @@ vec4 final_color = diffcol;
 
 vec4 final_specular = spec;
 #ifdef HAS_SPECULAR_MAP
-  vec4 final_normal = vec4(encode_normal(normalize(tnorm)), env_intensity * spec.a, 0.0);
+  vec4 final_normal = vec4(encodeNorm(normalize(tnorm)), env_intensity * spec.a, 0.0);
 	final_specular.a = specular_color.a * norm.a;
 #else
-  vec4 final_normal = vec4(encode_normal(normalize(tnorm)), env_intensity, 0.0);
+  vec4 final_normal = vec4(encodeNorm(normalize(tnorm)), env_intensity, 0.0);
 	final_specular.a = specular_color.a;
 #endif
 

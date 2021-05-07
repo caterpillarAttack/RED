@@ -373,11 +373,8 @@ void LLViewerCamera::setPerspective(BOOL for_selection,
 	}
 
 	calcProjection(z_far); // Update the projection matrix cache
-
 	proj_mat *= gl_perspective(fov_y,aspect,z_near,z_far);
-
 	gGL.loadMatrix(proj_mat.m);
-
 	for (U32 i = 0; i < 16; i++)
 	{
 		gGLProjection[i] = proj_mat.m[i];

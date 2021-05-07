@@ -68,13 +68,10 @@ void LLDrawPoolTree::beginRenderPass(S32 pass)
 	{
 		shader = &gTreeProgram;
 	}
+	shader->bind();
+	shader->setMinimumAlpha(0.5f);
+	gGL.diffuseColor4f(1,1,1,1);
 
-	if (gPipeline.canUseVertexShaders())
-	{
-		shader->bind();
-		shader->setMinimumAlpha(0.5f);
-		gGL.diffuseColor4f(1,1,1,1);
-	}
 
 }
 

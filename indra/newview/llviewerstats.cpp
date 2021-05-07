@@ -539,8 +539,7 @@ void send_stats()
 	{
 		shader_level = 2;
 	}
-	else if (gPipeline.canUseVertexShaders())
-	{
+	else{
 		shader_level = 1;
 	}
 

@@ -53,7 +53,7 @@ uniform mat4  inv_proj;
 VARYING vec4 vary_fragcoord;
 
 vec4 getPosition(vec2 pos_screen);
-vec3 getNorm(vec2 pos_screen);
+vec3 decodeNorm(vec2 pos_screen);
 vec3 srgb_to_linear(vec3 c);
 
 void main()
@@ -70,7 +70,7 @@ void main()
         discard;
     }
 
-    vec3 norm = getNorm(frag.xy);
+    vec3 norm = decodeNorm(frag.xy);
 
     vec4 spec = texture2DRect(specularRect, frag.xy);
     // spec.rgb  = srgb_to_linear(spec.rgb);// <FS:Beq/> Colour space and shader fixes for BUG-228586 (Rye)

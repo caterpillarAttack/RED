@@ -49,7 +49,7 @@ in vec4 vary_fragcoord;	//[-1, 1]
 uniform vec2 screen_res;
 
 
-vec3 getNorm(vec2 pos_screen);
+vec3 decodeNorm(vec2 pos_screen);
 vec3 srgb_to_linear(vec3 c);
 vec3 linear_to_srgb(vec3 c);
 
@@ -109,7 +109,7 @@ void main(){
 
   vec3 Diffuse = texture2D(diffuseRect, vary_rectcoord.xy).rgb;
     Diffuse.rgb = srgb_to_linear(Diffuse.rgb);
-	vec3 Normal = getNorm(vary_rectcoord.xy);
+	vec3 Normal = decodeNorm(vary_rectcoord.xy);
   vec4 Specular = texture2D(specularRect, vary_rectcoord.xy);
   float Roughness = clamp(1.00 -  Specular.a, 0.0, 1.0);
   float Metallic = texture2D(normalMap, vary_rectcoord.xy).z;

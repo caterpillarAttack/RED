@@ -231,7 +231,7 @@ LLColor4 LLAtmospherics::calcSkyColorInDir(const LLSettingsSky::ptr_t &psky, Atm
 		{
 			col = LLColor4(desat_fog, 0.f);
 		}
-		else 
+		else
 		{
 			col = LLColor4(desat_fog * 0.5f, 0.f);
 		}

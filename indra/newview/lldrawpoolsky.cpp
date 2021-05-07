@@ -69,7 +69,7 @@ void LLDrawPoolSky::render(S32 pass)
 		return;
 	}
 	
-	// don't render sky under water (background just gets cleared to fog color)
+	// don't render sky under water (background just gets cleared to fog color)s
 	if(mShaderLevel > 0 && LLPipeline::sUnderWaterRender)
 	{
 		return;

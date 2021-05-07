@@ -330,8 +330,6 @@ protected:
 
 	mutable LLGLFence* mFence;
 
-	void placeFence() const;
-	void waitFence() const;
 
 	static S32 determineUsage(S32 usage);
 

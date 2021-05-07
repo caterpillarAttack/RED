@@ -228,7 +228,6 @@ public:
 
 	void		setUseVertexShaders(bool use_shaders);
 	bool		getUseVertexShaders() const { return mVertexShadersEnabled; }
-	bool		canUseVertexShaders();
 	bool		canUseWindLightShaders() const;
 	bool		canUseWindLightShadersOnObjects() const;
 

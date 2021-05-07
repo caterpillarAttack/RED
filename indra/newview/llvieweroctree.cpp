@@ -917,10 +917,8 @@ void LLOcclusionCullingGroup::handleChildAddition(const OctreeNode* parent, Octr
 	((LLViewerOctreeGroup*)child->getListener(0))->unbound();
 }
 
-void LLOcclusionCullingGroup::releaseOcclusionQueryObjectNames()
-{
-	if (gGLManager.mHasOcclusionQuery)
-	{
+void LLOcclusionCullingGroup::releaseOcclusionQueryObjectNames(){
+
 		for (U32 i = 0; i < LLViewerCamera::NUM_CAMERAS; ++i)
 		{
 			if (mOcclusionQuery[i])
@@ -929,7 +927,7 @@ void LLOcclusionCullingGroup::releaseOcclusionQueryObjectNames()
 				mOcclusionQuery[i] = 0;
 			}
 		}
-	}
+
 }
 
 void LLOcclusionCullingGroup::setOcclusionState(U32 state, S32 mode) 

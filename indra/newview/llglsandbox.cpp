@@ -1139,7 +1139,7 @@ private:
 //-----------------------------------------------------------------------------
 F32 gpu_benchmark()
 {
-	if (!gGLManager.mHasShaderObjects || !gGLManager.mHasTimerQuery)
+	if (!gGLManager.mHasTimerQuery)
 	{// or venerable drivers which don't support accurate timing anyway
       // and are likely to be correctly identified by the GPU table already.
 		return -1.f;

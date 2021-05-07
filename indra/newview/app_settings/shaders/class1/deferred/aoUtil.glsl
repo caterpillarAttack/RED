@@ -35,8 +35,7 @@ uniform float ssao_factor_inv;
 uniform mat4 inv_proj;
 uniform vec2 screen_res;
 
-vec2 getScreenCoordinateAo(vec2 screenpos)
-{
+vec2 getScreenCoordinateAo(vec2 screenpos){
     vec2 sc = screenpos.xy * 2.0;
     if (screen_res.x > 0 && screen_res.y > 0)
     {
@@ -45,15 +44,10 @@ vec2 getScreenCoordinateAo(vec2 screenpos)
     return sc - vec2(1.0, 1.0);
 }
 
-float getDepthAo(vec2 pos_screen)
-{
-    float depth = texture(depthMap, pos_screen).r;
-    return depth;
-}
 
-vec4 getPositionAo(vec2 pos_screen)
-{
-    float depth = getDepthAo(pos_screen);
+
+vec4 getPositionAo(vec2 pos_screen){
+    float depth = texture(depthMap, pos_screen).r;
     vec2 sc = getScreenCoordinateAo(pos_screen);
     vec4 ndc = vec4(sc.xy, fma(depth,2.0,-1.0), 1.0);
     vec4 pos = inv_proj * ndc;
@@ -62,8 +56,7 @@ vec4 getPositionAo(vec2 pos_screen)
     return pos;
 }
 
-vec2 getKern(int i)
-{
+vec2 getKern(int i){
     vec2 kern[32];
     // exponentially (^2) distant occlusion samples spread around origin
     kern[0] = vec2(0.5588, -0.6478);
@@ -98,49 +91,61 @@ vec2 getKern(int i)
     kern[29] = vec2(0.0888, -0.0179);
     kern[30] = vec2(-0.062, -0.0607);
     kern[31] = vec2(0.0075, 0.0016);
-
     return kern[i];
 }
 
+
+
 //calculate decreases in ambient lighting when crowded out (SSAO)
-float calcAmbientOcclusion(vec4 pos, vec3 norm, vec2 pos_screen)
-{
+float calcAmbientOcclusion(vec4 pos, vec3 norm, vec2 pos_screen){
     float ret = 1.0;
     vec3 pos_world = pos.xyz;
-    vec2 noise_reflect = texture2D(noiseMap, pos_screen.xy/128.0).xy;
+    vec2 randomVec = texture2D(noiseMap, pos_screen.xy/128).xy;
 
     float angle_hidden = 0.0;
     float points = 0;
-    float bias = 0.025;
-    float scale = min(ssao_radius / -pos_world.z, ssao_max_radius);
+    float bias = 0.3;
+    float radius_depth = min(ssao_radius / -pos_world.z, ssao_max_radius);
+
+
+
+    vec3 random = normalize(texture2D(noiseMap, pos_screen.xy/128).rgb);
+    vec3 normal = norm;
+    vec3 position = pos.xyz;
+    float occlusion = 0.0;
 
     // it was found that keeping # of samples a constant was the fastest, probably due to compiler optimizations (unrolling?)
-    for (int i = 0; i < 32; i++)
-    {
-        vec2 samppos_screen = pos_screen + scale * reflect(getKern(i), noise_reflect);
-        vec3 samppos_world = getPositionAo(samppos_screen).xyz;
-
+    // for (int i = 0; i < 32; i++){
+    for (int i = 0; i < 32; i++){
+        vec2 samppos_screen = pos_screen + radius_depth * reflect(getKern(i), randomVec); //Screen space position of the sample.
+        vec3 samppos_world = getPositionAo(samppos_screen).xyz;                           //View space position of sample
         vec3 diff = pos_world - samppos_world;
         float dist2 = dot(diff, diff);
 
-        // assume each sample corresponds to an occluding sphere with constant radius, constant x-sectional area
-        // --> solid angle shrinking by the square of distance
-        //radius is somewhat arbitrary, can approx with just some constant k * 1 / dist^2
-        //(k should vary inversely with # of samples, but this is taken care of later)
+        // // assume each sample corresponds to an occluding sphere with constant radius, constant x-sectional area
+        // // --> solid angle shrinking by the square of distance
+        // // radius is somewhat arbitrary, can approx with just some constant k * 1 / dist^2
+        // // (k should vary inversely with # of samples, but this is taken care of later)
 
-        float funky_val = (dot((samppos_world - bias * norm - pos_world), norm) > 0.0) ? 1.0 : 0.0;
-        angle_hidden = angle_hidden + funky_val * min(1.0/dist2, ssao_factor_inv);
+        // float funky_val = (dot((samppos_world - bias * norm - pos_world), norm) > 0.0) ? 1.0 : 0.0;
+        float funky_val = float(dot((samppos_world - bias * norm - pos_world), norm) > 0.0);
+
+        // angle_hidden = angle_hidden + funky_val * min(1.0 / dist2, ssao_factor_inv);
+        //^ No idea why they are using an inverted ssao factor here for the hidden stuff, we do the ssao summing after finding the visible points.
+        angle_hidden = angle_hidden + funky_val  * min(1.0/dist2, ssao_factor_inv);
+                                                  //This portion gets rid of halos
 
         // 'blocked' samples (significantly closer to camera relative to pos_world) are "no data", not "no occlusion"
-        float diffz_val = (diff.z > -1.0) ? 1.0 : 0.0;
+        float diffz_val = float(diff.z > -1.0);
         points = points + diffz_val;
+
     }
 
-    angle_hidden = min(ssao_factor*angle_hidden/points, 1.0);
-
-    float points_val = (points > 0.0) ? 1.0 : 0.0;
+    // angle_hidden = min(ssao_factor * angle_hidden / points, 1.0);
+    angle_hidden = clamp(ssao_factor * angle_hidden / points, 0.0, 1.0);
+    float points_val = clamp(points, 0.0, 1.0);
     ret = (1.0 - (points_val * angle_hidden));
+    return ret ;
 
-    ret = max(ret, 0.0);
-    return min(ret, 1.0);
+
 }

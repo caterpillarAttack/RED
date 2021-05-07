@@ -42,7 +42,7 @@ uniform float spot_shadow_bias;
 uniform float spot_shadow_offset;
 
 float getDepth(vec2 screenpos);
-vec3 getNorm(vec2 screenpos);
+vec3 decodeNorm(vec2 screenpos);
 vec4 getPosition(vec2 pos_screen);
 
 float ReduceLightBleeding(float p_max, float Amount)

@@ -249,8 +249,7 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 		}
 	}
 
-    if (features->encodesNormal)
-	{
+    if (features->encodesNormal) {
         if (!shader->attachFragmentObject("environment/encodeNormF.glsl"))
 		{
 			return FALSE;
@@ -752,34 +751,23 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 		extra_code_text[extra_code_count++] = strdup("{\n");
 
 
-		//TODO: Clean this up.
 		if (texture_index_channels == 1){ //don't use flow control, that's silly
 			extra_code_text[extra_code_count++] = strdup("return texture2D(tex0, texcoord);\n");
 			extra_code_text[extra_code_count++] = strdup("}\n");
 		}
 		else if (major_version > 1 || minor_version >= 30){  //switches are supported in GLSL 1.30 and later
-			if (gGLManager.mIsNVIDIA){ //switches are unreliable on some NVIDIA drivers
-				for (U32 i = 0; i < texture_index_channels; ++i){
-					std::string if_string = llformat("\t%sif (vary_texture_index == %d) { return texture2D(tex%d, texcoord); }\n", i > 0 ? "else " : "", i, i);
-					extra_code_text[extra_code_count++] = strdup(if_string.c_str());
-				}
-				extra_code_text[extra_code_count++] = strdup("\treturn vec4(1,0,1,1);\n");
-				extra_code_text[extra_code_count++] = strdup("}\n");
+			extra_code_text[extra_code_count++] = strdup("\tvec4 ret = vec4(1,0,1,1);\n");
+			extra_code_text[extra_code_count++] = strdup("\tswitch (vary_texture_index)\n");
+			extra_code_text[extra_code_count++] = strdup("\t{\n");
+			//switch body
+			for (S32 i = 0; i < texture_index_channels; ++i){
+				std::string case_str = llformat("\t\tcase %d: return texture2D(tex%d, texcoord);\n", i, i);
+				extra_code_text[extra_code_count++] = strdup(case_str.c_str());
 			}
-			else{
-				extra_code_text[extra_code_count++] = strdup("\tvec4 ret = vec4(1,0,1,1);\n");
-				extra_code_text[extra_code_count++] = strdup("\tswitch (vary_texture_index)\n");
-				extra_code_text[extra_code_count++] = strdup("\t{\n");
-				//switch body
-				for (S32 i = 0; i < texture_index_channels; ++i)
-				{
-					std::string case_str = llformat("\t\tcase %d: return texture2D(tex%d, texcoord);\n", i, i);
-					extra_code_text[extra_code_count++] = strdup(case_str.c_str());
-				}
-				extra_code_text[extra_code_count++] = strdup("\t}\n");
-				extra_code_text[extra_code_count++] = strdup("\treturn ret;\n");
-				extra_code_text[extra_code_count++] = strdup("}\n");
-			}
+			extra_code_text[extra_code_count++] = strdup("\t}\n");
+			extra_code_text[extra_code_count++] = strdup("\treturn ret;\n");
+			extra_code_text[extra_code_count++] = strdup("}\n");
+
 		}
 		else{
 			LL_ERRS() << "Indexed texture rendering requires GLSL 1.30 or later." << LL_ENDL;

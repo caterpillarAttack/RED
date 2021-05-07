@@ -53,8 +53,10 @@ in vec2 vary_fragcoord;
 uniform mat4 inv_proj;
 uniform vec2 screen_res;
 
-vec3 getNorm(vec2 pos_screen);
+vec3 decodeNorm(vec2 pos_screen);
 vec4 getPositionWithDepth(vec2 pos_screen, float depth);
+vec4 getPosition(vec2 pos_screen);
+
 
 void calcAtmosphericVars(vec3 inPositionEye, vec3 light_dir, float ambFactor, out vec3 sunlit, out vec3 amblit, out vec3 additive, out vec3 atten, bool use_ao);
 float getAmbientClamp();
@@ -70,14 +72,15 @@ vec3 srgb_to_linear(vec3 c);
 vec4 applyWaterFogView(vec3 pos, vec4 color);
 #endif
 
-void main()
-{
+void main(){
     vec2 tc = vary_fragcoord.xy;
     float depth = texture(depthMap, tc.xy).r;
-    vec4 pos = getPositionWithDepth(tc, depth);
+//    vec4 pos = getPositionWithDepth(tc, depth);
+    vec4 pos = getPosition(tc);
+
     vec4 norm = texture(normalMap, tc);
     float envIntensity = norm.z;
-    norm.xyz = getNorm(tc);
+    norm.xyz = decodeNorm(tc);
 
     vec3 light_dir = (sun_up_factor == 1) ? sun_dir : moon_dir;
     float da = clamp(dot(norm.xyz, light_dir.xyz), 0.0, 1.0);

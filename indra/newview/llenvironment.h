@@ -37,7 +37,7 @@
 #include "llsettingsdaycycle.h"
 
 //TODO: Figure out why commenting this out breaks shit.
-#include "llatmosphere.h"
+
 
 #include <boost/signals2.hpp>
 
@@ -128,7 +128,6 @@ public:
     LLSettingsSky::ptr_t        getCurrentSky() const;
     LLSettingsWater::ptr_t      getCurrentWater() const;
 
-    static void                 getAtmosphericModelSettings(AtmosphericModelSettings& settingsOut, const LLSettingsSky::ptr_t &psky);
 
     void                        update(const LLViewerCamera * cam);
 

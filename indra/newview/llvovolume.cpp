@@ -5963,15 +5963,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 									pool->addRiggedFace(facep, fullbright ? LLDrawPoolAvatar::RIGGED_FULLBRIGHT_ALPHA : LLDrawPoolAvatar::RIGGED_ALPHA);
 								}
 							}
-							else if (gPipeline.canUseVertexShaders()
-								&& LLPipeline::sRenderBump
-								&& te->getShiny()
-								&& can_be_shiny)
-							{
+							else if (LLPipeline::sRenderBump && te->getShiny() && can_be_shiny){
 								pool->addRiggedFace(facep, fullbright ? LLDrawPoolAvatar::RIGGED_FULLBRIGHT_SHINY : LLDrawPoolAvatar::RIGGED_SHINY);
 							}
-							else
-							{
+							else{
 								pool->addRiggedFace(facep, fullbright ? LLDrawPoolAvatar::RIGGED_FULLBRIGHT : LLDrawPoolAvatar::RIGGED_SIMPLE);
 							}
 						}
@@ -6983,8 +6978,7 @@ U32 LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace
 				{
 					registerFace(group, facep, LLRenderPass::PASS_ALPHA);
 				}
-				else if (gPipeline.canUseVertexShaders()
-					&& LLPipeline::sRenderBump
+				else if (LLPipeline::sRenderBump
 					&& te->getShiny()
 					&& can_be_shiny)
 				{
@@ -7018,8 +7012,7 @@ U32 LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace
 					registerFace(group, facep, LLRenderPass::PASS_ALPHA);
 				}
 			}
-			else if (gPipeline.canUseVertexShaders()
-				&& LLPipeline::sRenderBump
+			else if (LLPipeline::sRenderBump
 				&& te->getShiny()
 				&& can_be_shiny)
 			{ //shiny
@@ -7099,8 +7092,7 @@ U32 LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace
 				}
 
 
-				if (!gPipeline.canUseVertexShaders() &&
-					!is_alpha &&
+				if (!is_alpha &&
 					te->getShiny() &&
 					LLPipeline::sRenderBump)
 				{ //shiny as an extra pass when shaders are disabled

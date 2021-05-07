@@ -444,8 +444,7 @@ LLImageGL::~LLImageGL()
     }
 }
 
-void LLImageGL::init(BOOL usemipmaps)
-{
+void LLImageGL::init(BOOL usemipmaps){
 	// keep these members in the same order as declared in llimagehl.h
 	// so that it is obvious by visual inspection if we forgot to
 	// init a field.
@@ -762,30 +761,23 @@ BOOL LLImageGL::setImage(const U8* data_in, BOOL data_hasmips)
 
 			}
 		}
-		else if (!is_compressed)
-		{
-			if (mAutoGenMips)
-			{
+		else if (!is_compressed){
 
 				{
 // 					LL_RECORD_BLOCK_TIME(FTM_TEMP4);
-
-					if(mFormatSwapBytes)
-					{
+					if(mFormatSwapBytes){
 						glPixelStorei(GL_UNPACK_SWAP_BYTES, 1);
 
 					}
 
 					S32 w = getWidth(mCurrentDiscardLevel);
 					S32 h = getHeight(mCurrentDiscardLevel);
-
 					mMipLevels = wpo2(llmax(w, h));
 
 					//use legacy mipmap generation mode (note: making this condional can cause rendering issues)
 					// -- but making it not conditional triggers deprecation warnings when core profile is enabled
 					//		(some rendering issues while core profile is enabled are acceptable at this point in time)
-					if (!LLRender::sGLCoreProfile)
-					{
+					if (!LLRender::sGLCoreProfile){
 						glTexParameteri(mTarget, GL_GENERATE_MIPMAP, GL_TRUE);
 					}
 
@@ -798,125 +790,14 @@ BOOL LLImageGL::setImage(const U8* data_in, BOOL data_hasmips)
 
 					updatePickMask(w, h, data_in);
 
-					if(mFormatSwapBytes)
-					{
+					if(mFormatSwapBytes){
 						glPixelStorei(GL_UNPACK_SWAP_BYTES, 0);
 
 					}
-
-					if (LLRender::sGLCoreProfile)
-					{
+					if (LLRender::sGLCoreProfile) {
 						glGenerateMipmap(mTarget);
 					}
-
 				}
-			}
-			else
-			{
-				// Create mips by hand
-				// ~4x faster than gluBuild2DMipmaps
-				S32 width = getWidth(mCurrentDiscardLevel);
-				S32 height = getHeight(mCurrentDiscardLevel);
-				S32 nummips = mMaxDiscardLevel - mCurrentDiscardLevel + 1;
-				S32 w = width, h = height;
-
-
-				const U8* new_data = 0;
-				(void)new_data;
-
-				const U8* prev_mip_data = 0;
-				const U8* cur_mip_data = 0;
-#ifdef SHOW_ASSERT
-				S32 cur_mip_size = 0;
-#endif
-				mMipLevels = nummips;
-
-				for (int m=0; m<nummips; m++)
-				{
-					if (m==0)
-					{
-						cur_mip_data = data_in;
-#ifdef SHOW_ASSERT
-						cur_mip_size = width * height * mComponents;
-#endif
-					}
-					else
-					{
-						S32 bytes = w * h * mComponents;
-#ifdef SHOW_ASSERT
-						llassert(prev_mip_data);
-						llassert(cur_mip_size == bytes*4);
-#endif
-						U8* new_data = new(std::nothrow) U8[bytes];
-						if (!new_data)
-						{
-
-
-							if (prev_mip_data)
-								delete[] prev_mip_data;
-							if (cur_mip_data)
-								delete[] cur_mip_data;
-
-							mGLTextureCreated = false;
-							return FALSE;
-						}
-						else
-						{
-
-#ifdef SHOW_ASSERT
-							llassert(prev_mip_data);
-							llassert(cur_mip_size == bytes * 4);
-#endif
-
-							LLImageBase::generateMip(prev_mip_data, new_data, w, h, mComponents);
-							cur_mip_data = new_data;
-#ifdef SHOW_ASSERT
-							cur_mip_size = bytes;
-#endif
-						}
-
-					}
-					llassert(w > 0 && h > 0 && cur_mip_data);
-					(void)cur_mip_data;
-					{
-// 						LL_RECORD_BLOCK_TIME(FTM_TEMP4);
-						if(mFormatSwapBytes)
-						{
-							glPixelStorei(GL_UNPACK_SWAP_BYTES, 1);
-
-						}
-
-						LLImageGL::setManualImage(mTarget, m, mFormatInternal, w, h, mFormatPrimary, mFormatType, cur_mip_data, mAllowCompression);
-						if (m == 0)
-						{
-							analyzeAlpha(data_in, w, h);
-						}
-
-						if (m == 0)
-						{
-							updatePickMask(w, h, cur_mip_data);
-						}
-
-						if(mFormatSwapBytes)
-						{
-							glPixelStorei(GL_UNPACK_SWAP_BYTES, 0);
-
-						}
-					}
-					if (prev_mip_data && prev_mip_data != data_in)
-					{
-						delete[] prev_mip_data;
-					}
-					prev_mip_data = cur_mip_data;
-					w >>= 1;
-					h >>= 1;
-				}
-				if (prev_mip_data && prev_mip_data != data_in)
-				{
-					delete[] prev_mip_data;
-					prev_mip_data = NULL;
-				}
-			}
 		}
 		else
 		{
@@ -1196,6 +1077,8 @@ void LLImageGL::generateTextures(S32 numTextures, U32 *textures)
 {
 	LL_RECORD_BLOCK_TIME(FTM_GENERATE_TEXTURES);
 	glGenTextures(numTextures, textures);
+
+
 }
 
 // static
@@ -1214,8 +1097,7 @@ void LLImageGL::setManualImage(U32 target, S32 miplevel, S32 intformat, S32 widt
 	LL_RECORD_BLOCK_TIME(FTM_SET_MANUAL_IMAGE);
 	bool use_scratch = false;
 	U32* scratch = NULL;
-	if (LLRender::sGLCoreProfile)
-	{
+	if (LLRender::sGLCoreProfile){
 		if (pixformat == GL_ALPHA && pixtype == GL_UNSIGNED_BYTE)
 		{ //GL_ALPHA is deprecated, convert to RGBA
 			use_scratch = true;
@@ -1520,23 +1402,8 @@ BOOL LLImageGL::createGLTexture(S32 discard_level, const U8* data_in, BOOL data_
 		LL_WARNS() << "LLImageGL::createGLTexture failed to make texture" << LL_ENDL;
 		return FALSE;
 	}
-
-	if (mUseMipMaps)
-	{
-		mAutoGenMips = gGLManager.mHasMipMapGeneration;
-#if LL_DARWIN
-		// On the Mac GF2 and GF4MX drivers, auto mipmap generation doesn't work right with alpha-only textures.
-		if(gGLManager.mIsGF2or4MX && (mFormatInternal == GL_ALPHA8) && (mFormatPrimary == GL_ALPHA))
-		{
-			mAutoGenMips = FALSE;
-		}
-#endif
-	}
-
 	mCurrentDiscardLevel = discard_level;
-
-	if (!setImage(data_in, data_hasmips))
-	{
+	if (!setImage(data_in, data_hasmips)){
 
 		return FALSE;
 	}

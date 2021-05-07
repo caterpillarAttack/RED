@@ -77,7 +77,7 @@ vec3 GetSkyLuminanceToPoint(vec3 camPos, vec3 pos, float shadow_length, vec3 dir
 vec3 ColorFromRadiance(vec3 radiance);
 vec4 getPositionWithDepth(vec2 pos_screen, float depth);
 vec4 getPosition(vec2 pos_screen);
-vec3 getNorm(vec2 pos_screen);
+vec3 decodeNorm(vec2 pos_screen);
 
 #ifdef WATER_FOG
 vec4 applyWaterFogView(vec3 pos, vec4 color);
@@ -90,7 +90,7 @@ void main()
     vec3 pos = getPositionWithDepth(tc, depth).xyz;
     vec4 norm = texture2DRect(normalMap, tc);
     float envIntensity = norm.z;
-    norm.xyz = getNorm(tc);
+    norm.xyz = decodeNorm(tc);
 
     float da = max(dot(norm.xyz, sun_dir.xyz), 0.0);
 

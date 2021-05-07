@@ -37,7 +37,7 @@ in vec3 vary_normal;
 in vec4 vertex_color;
 in vec2 vary_texcoord0;
 
-vec2 encode_normal(vec3 n);
+vec2 encodeNorm(vec3 n);
 
 void main() 
 {
@@ -46,6 +46,6 @@ void main()
 	frag_data[1] = vertex_color.aaaa; // spec
 	//frag_data[1] = vec4(vec3(vertex_color.a), vertex_color.a+(1.0-vertex_color.a)*vertex_color.a); // spec - from former class3 - maybe better, but not so well tested
 	vec3 nvn = normalize(vary_normal);
-	frag_data[2] = vec4(encode_normal(nvn.xyz), vertex_color.a, 0.0);
+	frag_data[2] = vec4(encodeNorm(nvn.xyz), vertex_color.a, 0.0);
 }
 

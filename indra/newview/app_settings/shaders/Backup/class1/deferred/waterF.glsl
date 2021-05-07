@@ -63,7 +63,7 @@ VARYING vec4 littleWave;
 VARYING vec4 view;
 VARYING vec4 vary_position;
 
-vec2 encode_normal(vec3 n);
+vec2 encodeNorm(vec3 n);
 vec3 scaleSoftClip(vec3 l);
 vec3 srgb_to_linear(vec3 c);
 vec3 linear_to_srgb(vec3 c);
@@ -180,5 +180,5 @@ void main()
 
 
     frag_data[1] = vec4(0);		// speccolor, spec
-	frag_data[2] = vec4(encode_normal(screenspacewavef.xyz), 0.05, 0);// normalxy, 0, 0
+	frag_data[2] = vec4(encodeNorm(screenspacewavef.xyz), 0.05, 0);// normalxy, 0, 0
 }
